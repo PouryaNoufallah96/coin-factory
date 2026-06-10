@@ -1,0 +1,31 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  // Ultracite presets carry the house style: space/2, lineWidth 80, lf,
+  // double quotes, semicolons always, trailing commas.
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/next"
+  ],
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!build",
+      "!out",
+      "!coverage",
+      "!**/*.tsbuildinfo",
+      "!pnpm-lock.yaml",
+      "!drizzle",
+      "!docs/resources",
+      "!docs/goals",
+      "!.*"
+    ]
+  }
+}

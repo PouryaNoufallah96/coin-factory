@@ -1,0 +1,200 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Kept so `dark:` utilities inside vendored shadcn components can never
+   activate (no `.dark` class is ever rendered — this theme is dark-only
+   by design). Without this line they would fall
+   back to prefers-color-scheme and double-apply on dark-OS machines. */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
+  --font-logo: var(--font-parkinsans);
+  --font-cta: var(--font-comfortaa);
+  --font-legal: var(--font-ibm-plex);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-cf-charcoal-900: var(--cf-charcoal-900);
+  --color-cf-charcoal-700: var(--cf-charcoal-700);
+  --color-cf-charcoal-600: var(--cf-charcoal-600);
+  --color-cf-cream: var(--cf-cream);
+  --color-cf-cream-bright: var(--cf-cream-bright);
+  --color-cf-cream-soft: var(--cf-cream-soft);
+  --color-cf-gray-500: var(--cf-gray-500);
+  --color-cf-gray-400: var(--cf-gray-400);
+  --color-cf-error: var(--cf-error);
+  --color-cf-text-on-error: var(--cf-text-on-error);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ── CoinFactory tokens ─────────────────────────────────────────────────
+   CoinFactory token system. Keep this aligned with DESIGN.md.
+   Single-accent dark system: charcoal canvas, champagne cream as the ONLY
+   highlight, with --cf-error reserved for the top alert. Never blue/green/
+   purple. Never pure black. Dark-only. */
+:root {
+  /* Base palette */
+  --cf-charcoal-900: #232832; /* canvas start / surface dark / input fill */
+  --cf-charcoal-700: #434954; /* canvas end */
+  --cf-charcoal-600: #3e4452; /* hairline on dark */
+  --cf-cream: #fff2d1; /* the accent */
+  --cf-cream-bright: #fff4d7; /* CTA fill / selected text */
+  --cf-cream-soft: #fffaed; /* spotlight core / glow color */
+  --cf-white: #ffffff;
+  --cf-gray-500: #8f8f8f; /* inactive pill borders */
+  --cf-gray-400: #b0b0b0; /* placeholder text */
+  --cf-error: #ef4444; /* top unanswered-step alert only */
+  --cf-text-on-error: var(--cf-white);
+
+  /* Semantic aliases */
+  --cf-canvas-start: var(--cf-charcoal-900);
+  --cf-canvas-end: var(--cf-charcoal-700);
+  --cf-surface-dark: var(--cf-charcoal-900); /* active inputs, selected rows */
+  --cf-surface-muted: rgb(35 40 50 / 40%); /* inactive option cards */
+  --cf-accent: var(--cf-cream);
+  --cf-accent-strong: var(--cf-cream-bright);
+  --cf-text-primary: var(--cf-white); /* body/questions on dark */
+  --cf-text-accent: var(--cf-cream); /* logo, input value, labels */
+  --cf-text-muted: var(--cf-gray-400); /* placeholders */
+  --cf-text-on-accent: var(--cf-charcoal-900); /* text inside cream surfaces */
+  --cf-border-muted: var(--cf-gray-500); /* inactive pill border */
+  --cf-border-active: var(--cf-cream); /* active/focused border */
+  --cf-chip-bg: rgb(255 255 255 / 8%);
+  --cf-chip-bg-active: rgb(255 242 209 / 40%);
+  --cf-progress-on: var(--cf-cream);
+  --cf-progress-off: rgb(255 242 209 / 20%);
+  --cf-glow: rgb(255 250 237 / 24%);
+
+  /* Spacing — 8px grid */
+  --cf-space-1: 8px;
+  --cf-space-2: 16px;
+  --cf-space-3: 20px;
+  --cf-space-4: 24px;
+  --cf-space-5: 32px;
+  --cf-space-6: 48px;
+  --cf-space-7: 56px;
+
+  /* Layout */
+  --cf-page-x: 100px;
+  --cf-header-h: 96px;
+  --cf-footer-h: 80px;
+  --cf-content-w: 720px;
+  --cf-field-w: 520px;
+
+  /* Radius — pills everywhere */
+  --cf-radius-pill: 9999px;
+  --cf-radius-row: 60px; /* radio rows, search, CTA */
+  --cf-radius-panel: 40px; /* expanded search panel */
+  --cf-radius-card: 16px; /* attached file cards */
+  --cf-radius-segment: 8px; /* progress segments */
+  --cf-radius-alert: 8px; /* top error alert */
+  --cf-radius-icon: 12px; /* icon-button hit area */
+
+  /* Control sizes */
+  --cf-row-h: 72px;
+  --cf-search-h: 80px;
+  --cf-cta-h: 48px;
+  --cf-cta-w: 160px;
+  --cf-touch: 48px;
+
+  /* Elevation & effects — no Material shadows; depth = spotlight + glow */
+  --cf-canvas-gradient: linear-gradient(
+    136.17deg,
+    #232832 71.17%,
+    #434954 91.22%
+  );
+  --cf-spotlight: radial-gradient(
+    52% 58% at 50% 88%,
+    rgb(255 250 237 / 50%) 0%,
+    rgb(255 250 237 / 28%) 34%,
+    rgb(255 242 209 / 10%) 58%,
+    rgb(255 242 209 / 0%) 80%
+  );
+  --cf-glow-active: 0 0 200px 0 rgb(255 250 237 / 24%);
+  --cf-glow-soft: 0 0 100px 0 rgb(255 250 237 / 24%);
+  --cf-cta-shadow: 0 0 8px 0 rgb(0 0 0 / 24%);
+  --cf-hero-shadow: 0 4px 16px rgb(255 250 237 / 60%), 0 0 4px #fff2d1;
+  --cf-border-w: 1px;
+
+  /* Motion — calm, institutional; nothing bounces */
+  --cf-ease: cubic-bezier(0.2, 0, 0, 1);
+  --cf-dur-feedback: 140ms;
+  --cf-dur-content: 260ms;
+
+  /* Type scale (sizes; families come from next/font vars in layout.tsx) */
+  --cf-text-hero: 96px;
+  --cf-text-hero-sub: 36px;
+  --cf-text-question: 32px;
+  --cf-text-field-label: 26px;
+  --cf-text-lg: 20px;
+  --cf-text-base: 16px;
+  --cf-text-logo: 27px;
+  --cf-leading-tight: 1;
+  --cf-leading-snug: 1.1;
+  --cf-leading-body: 1.5;
+
+  /* shadcn mapping — dark-only on :root */
+  --background: var(--cf-charcoal-900);
+  --foreground: var(--cf-white);
+  --card: var(--cf-surface-muted);
+  --card-foreground: var(--cf-white);
+  --popover: var(--cf-charcoal-900);
+  --popover-foreground: var(--cf-white);
+  --primary: var(--cf-cream);
+  --primary-foreground: var(--cf-charcoal-900);
+  --secondary: var(--cf-chip-bg);
+  --secondary-foreground: var(--cf-white);
+  --muted: var(--cf-chip-bg);
+  --muted-foreground: var(--cf-gray-500);
+  --accent: var(--cf-chip-bg-active);
+  --accent-foreground: var(--cf-charcoal-900);
+  --destructive: var(--cf-error);
+  --destructive-foreground: var(--cf-text-on-error);
+  --border: var(--cf-gray-500);
+  --input: var(--cf-charcoal-900);
+  --ring: var(--cf-cream);
+  --radius: 9999px; /* everything is a pill */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--cf-canvas-gradient) fixed var(--cf-charcoal-900);
+    @apply text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
+}

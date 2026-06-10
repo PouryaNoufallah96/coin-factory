@@ -1,0 +1,7 @@
+packages:
+  - "."
+
+minimumReleaseAge: 0
+trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 525600
+blockExoticSubdeps: true

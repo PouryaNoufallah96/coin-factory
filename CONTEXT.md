@@ -44,11 +44,20 @@ other formats (images, TXT, Markdown are not accepted).
 _Avoid_: upload, asset (the asset is the real-world thing being tokenized, not the file)
 
 **Submission email**:
-The notification the company receives when an inquiry is submitted — a readable summary of the
-answers and contact details plus secure, admin-authenticated links to any supporting documents
-(never the documents as raw attachments or public links). Sent best-effort: the inquiry is
-captured and reviewable in `/admin` even if the email fails.
+The notification sent when an inquiry is submitted — a readable summary of the answers and
+contact details plus secure, admin-authenticated links to any supporting documents (never
+the documents as raw attachments or public links). Goes out as **one email addressed to
+every notification recipient** (a configured company address serves as the fallback while
+none are defined). Sent best-effort: the inquiry is captured and reviewable in `/admin`
+even if the email fails.
 _Avoid_: alert, receipt, confirmation
+
+**Notification recipient**:
+An admin-managed email address the submission email goes to — maintained in the admin
+panel's settings, multi-entry, each submission email addressed to all of them at once.
+Plain add/remove entries: no ordering, no soft-delete, no per-inquiry history (nothing
+references a recipient — removing one simply stops future emails).
+_Avoid_: subscriber, mailing list, watcher
 
 **Business category**:
 An admin-managed label a founder can pick on the landing (Luxury Hotel, Gold Mine,
@@ -74,7 +83,7 @@ instead of paying full cash fees (Yes / No / Open to discussion).
 **Admin panel**:
 The `/admin` route group in the same app (v1 phase 2, slices 0007/0008) — CF design system
 (dark cream-on-charcoal, data-table kit), behind better-auth, **admin-only**: end users
-never log in. Question CRUD + inquiry list/review.
+never log in. Question CRUD + inquiry list/review + app settings (notification recipients).
 
 **CoinFactory AG**:
 The Swiss company behind the platform — the brand in the footer legal line. **CoinFactory**

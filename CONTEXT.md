@@ -9,7 +9,8 @@ is deliberately thin — grow it as decisions crystallise.
 **Tokenization inquiry**:
 The lead — one funnel run: an `inquiries` row (contact fields: email + WhatsApp, status,
 timestamps) plus one `inquiry_answers` row per answered **radio/url** question (inquiry_id,
-question_id, value) and zero-or-more `inquiry_files` rows for attached supporting documents.
+question_id, value), zero-or-more `inquiry_files` rows for attached supporting documents,
+and zero-or-more business-category references picked on the landing.
 The `contact` question writes **no** answer row — its values are the `inquiries.email` /
 `inquiries.whatsapp` columns; the optional `url` question writes a row only when non-empty.
 Persisted by the `inquiries` oRPC router on final Submit. The answer set follows whatever
@@ -36,9 +37,10 @@ past inquiry's answers keep their original question text — rows are never phys
 _Avoid_: survey item, field config
 
 **Supporting document**:
-A file a founder optionally attaches on the landing — PDF, Word, TXT, Markdown, or image — to
-describe their asset. Carried through the funnel and stored with the inquiry on Submit; the
-review team opens it from the admin panel. Max five per inquiry.
+A file a founder optionally attaches on the landing — **PDF or Word (`.doc`/`.docx`) only** —
+to describe their asset. Carried through the funnel and stored with the inquiry on Submit;
+the review team opens it from the admin panel. **Max two per inquiry, max 5 MB each**; no
+other formats (images, TXT, Markdown are not accepted).
 _Avoid_: upload, asset (the asset is the real-world thing being tokenized, not the file)
 
 **Submission email**:
@@ -48,9 +50,15 @@ answers and contact details plus secure, admin-authenticated links to any suppor
 captured and reviewable in `/admin` even if the email fails.
 _Avoid_: alert, receipt, confirmation
 
-**Suggestion chip**:
-A pill badge under the landing search (Luxury Hotel, Gold Mine, AI Startup, …). Clicking one
-fills the search input; it does not navigate.
+**Business category**:
+An admin-managed label a founder can pick on the landing (Luxury Hotel, Gold Mine,
+AI Startup, …) — rendered as the pill badges under the search input, **multi-select**.
+Lifecycle mirrors questions: ordered, enable/disable, soft-delete with restore; the funnel
+shows only active, non-deleted rows. Selections are stored on the inquiry as multiple
+references with a **label snapshot** taken at submit (a later rename never rewrites what a
+founder picked). Categories carry **no relationship to questions** — they are lead metadata
+for the review team, and never change which questions load.
+_Avoid_: suggestion chip (the old hardcoded fill-the-input behavior), tag, industry
 
 **Project stage**:
 Q1 answer — Idea Stage / MVP / Active Business / Established Business.

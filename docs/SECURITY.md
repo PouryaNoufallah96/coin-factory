@@ -28,25 +28,31 @@ The public attack surface is small but fully open.
 
 ## Public funnel: the inquiry endpoint
 
-The public oRPC surface is exactly two procedures: `inquiries.create` (persists an
-`inquiries` row + its `inquiry_answers` + `inquiry_files` rows, stores uploaded objects in
-MinIO/S3, and triggers a best-effort post-commit notification email — ADR-0005) — the only
-public write path — and `questions.listActive` (the wizard's read of active questions).
-`inquiries.create` takes the answers to the active questions + optional project link + email
-+ WhatsApp number + optional supporting documents (up to 5 files, 10MB each, 20MB total).
-Risks and controls:
+The public oRPC surface is exactly three procedures: `inquiries.create` (persists an
+`inquiries` row + its `inquiry_answers`, `inquiry_categories`, and `inquiry_files` rows,
+stores uploaded objects in MinIO/S3, and triggers a best-effort post-commit notification
+email — ADR-0005) — the only public write path — plus two reads: `questions.listActive`
+(the wizard's active questions) and `categories.listActive` (the landing's business
+categories). `inquiries.create` takes the answers to the active questions + optional project
+link + email + WhatsApp number + optional picked categories + optional supporting documents
+(up to 2 files, 5MB each, PDF/Word only), and requires at least one of description, document,
+or category. Risks and controls:
 
 - **Input validation** — every field zod-validated in the procedure (answers checked against
   the active questions and their options; URL format gate on the project link **only when
-  non-empty** — the link is optional; email + phone formats). The wizard's client-side
-  validation is UX only; the procedure is the boundary.
+  non-empty** — the link is optional; email + phone formats; category ids deduped,
+  length-capped, and verified against active rows **inside the insert transaction**). The
+  wizard's client-side validation is UX only; the procedure is the boundary.
 - **Spam / abuse** — layered controls ship in v1 (ADR-0005): a **pre-parse** body-size cap and
   per-IP rate limit at the reverse proxy / `/rpc` route handler (before oRPC parses the body),
-  `serverActions.bodySizeLimit` (~22MB) for the action path, post-parse quotas in oRPC
-  middleware (RpcContext carries the request IP/headers), and a honeypot field on the wizard.
-- **File uploads** — anonymous bytes are hostile by default. Enforce count/size caps (5 files,
-  10MB each, 20MB total) and an allowlist (PDF/Word/TXT/MD/images) verified by magic-byte
-  sniffing, not extension or client MIME; **SVG is rejected** (XSS vector). Objects live in
+  `serverActions.bodySizeLimit` for the action path, post-parse quotas in oRPC middleware
+  (RpcContext carries the request IP/headers), and a honeypot field on the wizard. All body
+  caps derive from **one shared byte budget (~12MB)** — proxy, `Content-Length` rejection,
+  action limit, and the RPC body plugin never drift apart.
+- **File uploads** — anonymous bytes are hostile by default. Enforce count/size caps (2 files,
+  5MB each) and the allowlist (**PDF and Word only**) verified by magic-byte sniffing that
+  proves document structure — OOXML WordprocessingML for `.docx`, a Word CFB stream for
+  `.doc` — never extension, client MIME, or bare container headers. Objects live in
   private MinIO/S3 (Vercel Blob private for preview) behind the `Storage` interface — never
   public buckets or raw storage URLs. Downloads only via the admin-authenticated
   `/admin/files/[id]` route; notification emails carry those links, never attachments or
@@ -62,12 +68,12 @@ Risks and controls:
 
 ## Admin surface
 
-`/admin` (v1 phase 2, slices 0007-0008) sits behind better-auth: every admin oRPC procedure
-(question CRUD, inquiry list/review) runs behind the session middleware in
+`/admin` (v1 phase 2) sits behind better-auth: every admin oRPC procedure
+(question + category CRUD, inquiry list/review) runs behind the session middleware in
 `src/server/rpc/middleware.ts` — no admin procedure ships unguarded. Auth is **admin-only**;
 there is no end-user signup path, so any account-creation surface beyond admin provisioning
 is a defect. The public surface stays exactly `inquiries.create` + `questions.listActive`
-in v1.
++ `categories.listActive` in v1.
 
 ## Database
 
@@ -79,7 +85,7 @@ in v1.
 
 ## Dependencies
 
-- `pnpm audit` before releases and when bumping pins; pnpm only (enforce-pnpm hook).
+- `pnpm audit` before releases and when bumping pins; pnpm only.
 - Versions are pinned (Drizzle v1 RC exactly, per ADR-0002) — bumps are deliberate diffs, not
   drift.
 - New dependencies need a reason; this app's surface is one funnel — keep the tree small.

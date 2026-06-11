@@ -88,11 +88,11 @@ Mutations are oRPC procedures exposed as server actions via `.actionable()` in f
 
 `/admin` is a route group in the **same app** — no second app, no separate deployment. Same
 CF design system (dark cream-on-charcoal, data-table kit) and the **same RPC mount**: admin
-procedures (question CRUD, inquiry list/review) live alongside the public ones in
+procedures (question + category CRUD, inquiry list/review) live alongside the public ones in
 `src/server/rpc/routers/`, behind a better-auth session middleware in
 `src/server/rpc/middleware.ts`. The public surface stays exactly `inquiries.create` +
-`questions.listActive`; everything else requires an admin session. End users never
-authenticate.
+`questions.listActive` + `categories.listActive`; everything else requires an admin session.
+End users never authenticate.
 
 ## Cache-tag flow (Cache Components end-to-end)
 

@@ -133,7 +133,9 @@ function buildAnswerRows(
     activeQuestions.map((question) => [question.id, question])
   );
   const seen = new Set<string>();
-  return answers.map((answer) => {
+  const rows: InquiryAnswerInsert[] = [];
+
+  for (const answer of answers) {
     const question = questionsById.get(answer.questionId);
     if (!question || question.kind === "contact") {
       throw new ORPCError("BAD_REQUEST", {
@@ -153,14 +155,28 @@ function buildAnswerRows(
         message: `The answer to "${question.text}" is not valid.`,
       });
     }
-    return {
+    if (question.kind === "url" && value.data === "") {
+      continue;
+    }
+    rows.push({
       inquiryId,
       questionId: question.id,
       value: value.data,
       // Snapshot at submit time — admin edits never rewrite what was asked.
       questionText: question.text,
-    };
-  });
+    });
+  }
+
+  const missingRequiredAnswer = activeQuestions.some(
+    (question) => question.kind === "radio" && !seen.has(question.id)
+  );
+  if (missingRequiredAnswer) {
+    throw new ORPCError("BAD_REQUEST", {
+      message: "Please answer every required question before submitting.",
+    });
+  }
+
+  return rows;
 }
 
 interface SupportingDocument {

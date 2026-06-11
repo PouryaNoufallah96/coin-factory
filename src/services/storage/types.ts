@@ -11,7 +11,7 @@ export interface StorageObjectMetadata {
 /**
  * Backend-agnostic seam for supporting-document storage. Callers only ever
  * see this interface — which backend is running never leaks past
- * `src/lib/storage/`. Keys are opaque (`inquiries/{inquiryId}/{fileId}.{ext}`),
+ * `src/services/storage/`. Keys are opaque (`inquiries/{inquiryId}/{fileId}.{ext}`),
  * never user-supplied filenames. `getSignedUrl` is only valid where the
  * backing endpoint is externally reachable; admin downloads stream through
  * the app via `openRead` instead.

@@ -27,7 +27,7 @@ import {
   type Question,
   questionAnswerValueSchema,
 } from "@/features/questions/schemas/question";
-import { getStorage } from "@/lib/storage";
+import { getStorage } from "@/services/storage";
 
 import { payloadQuota, publicProcedure, withIpThrottle } from "../middleware";
 

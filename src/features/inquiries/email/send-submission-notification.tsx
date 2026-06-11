@@ -1,9 +1,9 @@
 import "server-only";
 
 import { env } from "@/config/env/server";
+import { resend } from "@/services/resend/client";
 
 import { setInquiryNotificationOutcome } from "../db/queries";
-import { resend } from "./resend";
 import SubmissionEmail from "./templates/submission-email";
 
 /**

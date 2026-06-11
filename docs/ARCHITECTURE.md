@@ -28,14 +28,13 @@ flowchart LR
     Handler --> RPC
 ```
 
-Shared leaves: `src/components/{ui,common,layout}`, `src/hooks`, `src/lib`, `src/config/env`
-(t3-env).
+Shared leaves: `src/components/{ui,common,layout}`, `src/hooks`, `src/lib`, `src/services`,
+`src/config/env` (t3-env).
 
-There is intentionally no top-level `src/services/` today. Feature-owned integration code lives
-inside its feature (`src/features/inquiries/email/`); cross-cutting provider seams with no domain
-owner live in `src/lib/` (`storage/`, oRPC clients, cache-tag builders). Add `src/services/<provider>`
-only when a third-party integration is shared by multiple features and cannot be owned cleanly by
-one feature or `src/lib`.
+`src/services/<provider>` is a first-class provider layer for shared third-party clients and
+adapters: storage, email delivery, and future payment/analytics/webhook providers. Feature-owned
+domain orchestration still lives inside its feature (`src/features/inquiries/email/`); pure
+framework helpers stay in `src/lib/`.
 
 ## Boundary rules (load-bearing)
 

@@ -11,7 +11,7 @@ Order of work: **schema → db → procedures → server api → client api → 
 
 - Read the feature brief and the neighboring files on the paths you'll touch.
 - Reuse before write: check `src/components/common`, `src/components/ui`, `src/lib`,
-  `src/hooks`, and `src/features/shared` for existing pieces.
+  `src/services`, `src/hooks`, and `src/features/shared` for existing pieces.
 
 ## 1. Zod schema — the single source of truth
 
@@ -96,6 +96,9 @@ cacheLife("hours");
 - React 19: no hand memoization with the Compiler on, no `forwardRef` in new/touched
   components, `Activity` only for state-preserving hidden UI, `useEffectEvent` only for
   non-reactive effect logic, and `cacheSignal()` only in server-only React `cache()` fetches.
+- Actions: use oRPC `.actionable()` + `useAction`; do not port template `{ error, message }`
+  envelopes. Add a shared `ActionButton` only after the same pending/error button composition
+  repeats.
 
 ## 8. Pages — thin RSC composition
 
@@ -107,6 +110,9 @@ cacheLife("hours");
   `<Suspense>` with a matching skeleton. Uncached request-time/admin reads use the same
   smallest-boundary rule, wrapped in the fetcher/error-boundary helpers
   (`src/components/fetcher/`).
+- Add route `error.tsx` only when the segment has a real failure surface; for repeated server
+  async sections prefer `ServerFetchResult` + `ComponentErrorBoundary` before introducing a
+  broader `AsyncSection` wrapper.
 - `generateMetadata` per page; run `pnpm typegen` after adding routes.
 
 ## 9. Audit
@@ -123,4 +129,5 @@ cacheLife("hours");
 | `api/client` fetch + React Query hooks | `api/client` oRPC `queryOptions` hooks |
 | `lib/safe-action.ts` + 3-file action folders | oRPC `.actionable()` procedures + thin `'use server'` action files |
 | `features/<f>/db/cache` tag helpers | Same shape — per-feature `db/cache/` helpers (incl. the `update<Entity>Tags` fan-out) composing `src/lib/cache-tags.ts` builders |
+| shared external provider clients | `src/services/<provider>` (`server-only` for server providers); feature orchestration remains in `src/features/<feature>` |
 | fetcher, data-table, forms, nuqs, t3-env, feature slicing | Pattern-compatible, adapted to CoinFactory's single app, Base UI, dark cf tokens, and no i18n |

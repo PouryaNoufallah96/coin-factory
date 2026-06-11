@@ -145,18 +145,26 @@ module → page.
 ### Structure guardrails
 
 - Keep domain code feature-owned under `src/features/<feature>/`.
-- Keep cross-cutting infrastructure in `src/lib/` (`storage/`, oRPC clients, cache-tag builders,
-  query client). Do **not** add a top-level `src/services/` unless a provider is shared by
-  multiple features and has no clear domain owner.
+- Keep pure shared infrastructure in `src/lib/` (oRPC clients, cache-tag builders, query
+  client).
+- Keep shared third-party provider clients/adapters in `src/services/<provider>` (storage,
+  email delivery, future payment/analytics/webhook providers). Domain orchestration stays in
+  `src/features/<feature>/`.
 - Server-internal app modules import `server-only`. Exception: Drizzle schema files are loaded by
   `drizzle-kit` outside Next, so they stay marker-free and are reached through server-only callers.
 - Server Actions stay in `'use server'` modules; do not add `server-only` to action files that
   client components must import as action references.
-- Error handling is route-first: add `error.tsx` for segment failures; use
-  `ComponentErrorBoundary` only for recoverable client islands/widgets.
-- React 19 APIs are not decoration: `useOptimistic` only for server-confirmed optimistic
-  mutations, `Activity` only for hidden UI that must preserve state/DOM, and `useEffectEvent`
-  only for non-reactive effect logic called from an effect.
+- Error handling is route-first: add `error.tsx` when a route/segment needs a failure surface;
+  use `ComponentErrorBoundary` only for recoverable client islands/widgets. Do not create
+  placeholder boundaries.
+- React 19 APIs are allowed later in their narrow cases: `useOptimistic` for
+  server-confirmed optimistic mutations, `Activity` for hidden UI that must preserve state/DOM,
+  and `useEffectEvent` for non-reactive effect logic called from an effect. Do not add them
+  speculatively.
+- Reusable async/action helpers: use the local oRPC tuple + `useAction` shape, not template
+  `{ error, message }` envelopes. Use `ServerFetchResult` + `ComponentErrorBoundary` for
+  repeated RSC async sections; introduce an `ActionButton` or `AsyncSection` wrapper only after
+  the repeated local pattern exists.
 
 ---
 

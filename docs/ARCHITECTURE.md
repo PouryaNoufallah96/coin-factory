@@ -31,6 +31,12 @@ flowchart LR
 Shared leaves: `src/components/{ui,common,layout}`, `src/hooks`, `src/lib`, `src/config/env`
 (t3-env).
 
+There is intentionally no top-level `src/services/` today. Feature-owned integration code lives
+inside its feature (`src/features/inquiries/email/`); cross-cutting provider seams with no domain
+owner live in `src/lib/` (`storage/`, oRPC clients, cache-tag builders). Add `src/services/<provider>`
+only when a third-party integration is shared by multiple features and cannot be owned cleanly by
+one feature or `src/lib`.
+
 ## Boundary rules (load-bearing)
 
 | Rule | Why |
@@ -40,6 +46,7 @@ Shared leaves: `src/components/{ui,common,layout}`, `src/hooks`, `src/lib`, `src
 | Never self-fetch `/rpc` over HTTP from RSC or server actions — use `createRouterClient` | HTTP self-calls break PPR prerendering and double latency |
 | Zod schemas in `features/*/schemas` are the contract shared by oRPC procedures and RHF forms | single source of validation truth |
 | DB access only through `src/server/db` (globalThis-cached singleton) | Next HMR exhausts the pool otherwise |
+| Server-internal app modules import `server-only`; Drizzle table files do not | `server-only` protects RSC boundaries, but `drizzle-kit` loads schema files outside Next |
 
 ## oRPC request lifecycle
 
@@ -78,7 +85,7 @@ sequenceDiagram
     A->>RC: client.inquiries.x(input) — direct function call, no fetch
     RC->>P: same middleware chain as HTTP path
     P->>D: query
-    D-->>R: typed result, rendered inside <Suspense>
+    D-->>R: typed result, cached reads render in the PPR shell; dynamic reads stream through Suspense
 ```
 
 Mutations are oRPC procedures exposed as server actions via `.actionable()` in files with
@@ -110,34 +117,39 @@ End users never authenticate.
 
 - Every awaited db/oRPC call in an RSC sits inside `<Suspense>` or a `"use cache"` scope —
   otherwise the build fails or the route silently loses its static shell.
+- Long-lived shared public reads (`questions.listActive`, `categories.listActive`) use
+  `cacheLife("hours")`; render them directly when they belong to the initial shell, or isolate
+  the smallest non-critical section under `<Suspense>` so the rest of the page does not wait.
 - Never put per-user data (headers/cookies-derived) inside `"use cache"` — pass IDs as
   arguments so they become part of the cache key.
 - `cacheLife` under ~5 minutes silently ejects a component from the PPR static shell.
-- React Compiler is on: no hand-rolled `useMemo`/`useCallback`/`memo` unless profiled.
+- React 19 + Compiler are on: no hand-rolled `useMemo`/`useCallback`/`memo` unless
+  profiled; new/touched components use `ref` as a normal prop instead of `forwardRef`;
+  `Activity`, `useEffectEvent`, and `cacheSignal()` stay limited to the rule-gated cases.
 - `typedRoutes` is on: after adding a route, run `pnpm typegen` before trusting typecheck.
 
 ## Architecture assessment (honest, current state)
 
-Greenfield with the foundation delivered (2026-06-10): the `src/` layout, the oRPC mount
-with a working `health.ping` router, the globalThis-cached db client (empty schema barrel),
-t3-env modules, and 14 cf-themed shadcn primitives all exist. What does NOT exist today:
+Current state (2026-06-11):
 
-- **No funnel/wizard UI and no domain schema** — the `questions`/`inquiries`/`inquiry_answers`/
-  `inquiry_files` tables, `relations.ts`, feature routers, and every screen ship in later
-  vertical slices.
-- **No auth yet** — the funnel is public forever (end users never log in); better-auth admin
-  sessions arrive with the admin phase (slices 0007–0008). The `authedProcedure` middleware slot
-  in `src/server/rpc/middleware.ts` is for that phase.
-- **No admin surface yet** — `/admin` (question CRUD, inquiry list/review) ships as v1
-  phase 2, slices 0007–0008.
-- **No tests in v1** — every slice gates on `pnpm validate` only; no Vitest/Playwright/
-  Storybook.
-- **No i18n** — single-locale English.
-- **No abuse controls yet** on the public inquiry endpoint — the layered v1 controls
-  (pre-parse body cap + per-IP rate limit at the proxy/route handler,
-  `serverActions.bodySizeLimit`, oRPC post-parse quotas, honeypot) ship with the funnel
-  slices per ADR-0005; see [SECURITY.md](SECURITY.md).
-- **No git remote / CI** — local repo only; commands that mention `gh` note this.
-
-What is already solid: the source layout, the direct oRPC integration, the validated env/db
-foundation, the cf design tokens, and the `pnpm validate` gate.
+- **Foundation and public persistence exist**: `src/` layout, direct oRPC mount, `health.ping`,
+  globalThis-cached Drizzle client, t3-env modules, cf-themed shadcn primitives, `questions`,
+  `categories`, `inquiries`, `inquiry_answers`, `inquiry_categories`, `inquiry_files`,
+  `relations.ts`, migrations, and seed data are in place.
+- **Public API exists**: `questions.listActive`, `categories.listActive`, and
+  `inquiries.create` are wired. The submit path stores inquiry rows, answer snapshots,
+  category label snapshots, supporting-file metadata, MinIO/S3 objects, and best-effort
+  notification status.
+- **Layered public controls are partially implemented in-app**: `/rpc` rejects oversized
+  `Content-Length`, `BodyLimitPlugin` enforces the shared byte budget, oRPC middleware applies
+  post-parse quotas and a per-IP throttle, and the `.actionable()` submit path carries request
+  headers into the same context. Reverse-proxy/edge rate limits remain deployment work.
+- **Landing UI exists**: `/` renders the CF funnel shell, file picker, independent multi-select
+  categories, and the at-least-one intake gate. `/onboarding/[step]` and `/thank-you` routes are
+  not built yet.
+- **No auth or admin surface yet**: end users never log in; better-auth admin sessions and
+  `/admin` question/category/inquiry management ship in the admin phase (slices 0007-0008).
+- **No tests in v1**: every slice gates on `pnpm validate` plus focused browser walkthroughs; no
+  Vitest/Playwright/Storybook suite exists yet.
+- **No i18n**: single-locale English.
+- **No git remote / CI**: local repo only; commands that mention `gh` note this.

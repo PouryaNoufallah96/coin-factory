@@ -30,9 +30,9 @@ function MaskIcon({ className, src }: { className?: string; src: string }) {
 export function FunnelShell({ children }: { children: ReactNode }) {
   return (
     <div className="relative isolate flex min-h-dvh flex-col overflow-hidden bg-cf-charcoal-900 text-cf-text-primary">
-      <div className="absolute inset-0 -z-10 bg-[image:var(--cf-canvas-gradient)]" />
-      <div className="absolute inset-0 -z-10 bg-[image:var(--cf-spotlight)]" />
-      <header className="flex h-[var(--cf-header-h)] shrink-0 items-center justify-between px-6 sm:px-10 lg:px-[var(--cf-page-x)]">
+      <div className="bg-(image:--cf-canvas-gradient) absolute inset-0 -z-10" />
+      <div className="bg-(image:--cf-spotlight) absolute inset-0 -z-10" />
+      <header className="flex h-(--cf-header-h) shrink-0 items-center justify-between px-6 sm:px-10 lg:px-(--cf-page-x)">
         <Link
           aria-label="CoinFactory home"
           className="flex items-center gap-3 text-cf-cream"
@@ -45,7 +45,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         </Link>
         <Button
           aria-label="Menu"
-          className="size-12 rounded-[var(--cf-radius-icon)] text-cf-cream hover:bg-cf-cream/10 [&_[data-slot=mask-icon]]:h-[18px] [&_[data-slot=mask-icon]]:w-[21px]"
+          className="size-12 rounded-(--cf-radius-icon) text-cf-cream hover:bg-cf-cream/10 **:data-[slot=mask-icon]:h-[18px] **:data-[slot=mask-icon]:w-[21px]"
           size="icon"
           type="button"
           variant="ghost"
@@ -54,7 +54,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         </Button>
       </header>
       <main className="flex min-h-0 flex-1 flex-col">{children}</main>
-      <footer className="flex h-[var(--cf-footer-h)] shrink-0 items-center justify-between gap-6 px-6 sm:px-10 lg:px-[var(--cf-page-x)]">
+      <footer className="flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-6 sm:px-10 lg:px-(--cf-page-x)">
         <nav
           aria-label="CoinFactory social links"
           className="flex items-center gap-[18px]"
@@ -63,7 +63,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
             <a
               aria-label={link.label}
               className={cn(
-                "flex size-10 shrink-0 items-center justify-center rounded-full opacity-100 transition-opacity duration-[var(--cf-dur-feedback)] ease-[var(--cf-ease)] hover:opacity-70",
+                "flex size-10 shrink-0 items-center justify-center rounded-full opacity-100 transition-opacity duration-(--cf-dur-feedback) ease-(--cf-ease) hover:opacity-70",
                 link.platform === "x"
                   ? "bg-cf-cream text-cf-text-on-accent"
                   : "border border-cf-cream/40 text-cf-cream"

@@ -221,7 +221,7 @@ Respect `prefers-reduced-motion`.
 
 | Route | Screen | Focal element |
 |---|---|---|
-| `/` | Landing | Hero search/upload pill + 7 suggestion chips; social footer |
+| `/` | Landing | Hero search/upload pill + admin-managed business-category badges; social footer |
 | `/onboarding/1..4` | Question steps | One radio-row stack, 6-segment stepper, Back + Next |
 | `/onboarding/5` | Project link | Single pill TextField "Link"; optional empty value passes |
 | `/onboarding/6` | Contact | Email + WhatsApp fields; Back + Submit |
@@ -243,9 +243,11 @@ pill relaxes into a {rounded.panel} panel: a row of file cards above the input r
 the charcoal document glyph; file name in white over its type in gray; a gray
 remove-circle sits top-right.
 
-### Suggestion chips
-Pill badges under the search. Inactive = translucent white + gray border;
-active = cream-tinted fill + charcoal text.
+### Business-category badges
+Pill badges under the search. The 7 launch labels are seed data, later admin-managed. Clicking
+toggles selection independently and never writes into the search input. The row stays on one
+line inside the content container and scrolls horizontally on overflow. Inactive = translucent
+white + gray border; active = cream-tinted fill + charcoal text.
 
 ### Radio option rows
 Full-width pills, 72px tall, leading radio dot. Selected: dark surface, cream

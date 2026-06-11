@@ -1,3 +1,5 @@
+import "server-only";
+
 import { globalTag } from "@/lib/cache-tags";
 
 export const categoryTags = {

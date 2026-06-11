@@ -1,3 +1,5 @@
+import "server-only";
+
 import { listActiveCategories } from "@/features/categories/db/queries";
 import { publicCategorySchema } from "@/features/categories/schemas/category";
 

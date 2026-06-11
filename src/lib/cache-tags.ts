@@ -1,3 +1,5 @@
+import "server-only";
+
 // Cache-tag builders consumed by feature tag helpers in
 // src/features/<feature>/db/cache/ (rule frontend/cache-components).
 // Extend the union as entities land.

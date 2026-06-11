@@ -1,3 +1,5 @@
+import "server-only";
+
 import { publicProcedure } from "../middleware";
 import { categoriesRouter } from "./categories";
 import { inquiriesRouter } from "./inquiries";

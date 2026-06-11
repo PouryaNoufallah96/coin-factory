@@ -1,3 +1,5 @@
+import "server-only";
+
 import { listActiveQuestions } from "@/features/questions/db/queries";
 import { publicQuestionSchema } from "@/features/questions/schemas/question";
 

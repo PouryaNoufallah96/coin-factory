@@ -1,3 +1,5 @@
+import "server-only";
+
 import { defineRelations } from "drizzle-orm";
 
 // biome-ignore lint/performance/noNamespaceImport: defineRelations consumes the schema barrel wholesale (server-only, no tree-shaking concern)

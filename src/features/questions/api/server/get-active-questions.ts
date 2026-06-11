@@ -1,3 +1,5 @@
+import "server-only";
+
 import { cacheLife, cacheTag } from "next/cache";
 
 import { orpcServer } from "@/lib/orpc.server";
@@ -6,7 +8,8 @@ import { questionTags } from "../../db/cache/tags";
 
 /**
  * The wizard's question list, cached once for every visitor; admin question
- * mutations refresh it through the tag. Render under a Suspense boundary.
+ * mutations refresh it through the tag. Render in the smallest UI boundary
+ * that owns question loading.
  */
 export async function getActiveQuestions() {
   "use cache";

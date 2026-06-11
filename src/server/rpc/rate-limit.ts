@@ -1,3 +1,5 @@
+import "server-only";
+
 interface RateWindow {
   count: number;
   resetAt: number;

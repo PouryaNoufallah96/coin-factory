@@ -1,3 +1,5 @@
+import "server-only";
+
 import { ORPCError, os } from "@orpc/server";
 
 import { MAX_REQUEST_BODY_BYTES } from "@/features/inquiries/schemas/file-constraints";

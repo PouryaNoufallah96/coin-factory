@@ -75,12 +75,12 @@ there is no end-user signup path, so any account-creation surface beyond admin p
 is a defect. The public surface stays exactly `inquiries.create` + `questions.listActive`
 + `categories.listActive` in v1.
 
-## Database
+## Local Services
 
-- Postgres 17 runs in Docker (`docker-compose.yml`) with credentials that are **local-only
-  throwaways** — fine in compose for dev, never reused in any deployed environment (deployed
-  creds come from env/secret store).
-- Don't expose the Postgres port beyond localhost in compose.
+- Postgres 17 and MinIO run in Docker (`docker-compose.yml`) with credentials that are
+  **local-only throwaways** — fine in compose for dev, never reused in any deployed environment
+  (deployed creds come from env/secret store).
+- Don't expose the Postgres or MinIO ports beyond localhost in compose.
 - All access goes through Drizzle parameterized queries; no string-built SQL.
 
 ## Dependencies

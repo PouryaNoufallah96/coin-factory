@@ -9,6 +9,17 @@ export const questionSchema = createSelectSchema(questions);
 
 export type Question = z.infer<typeof questionSchema>;
 
+/** What the funnel is allowed to see — admin lifecycle columns stay server-side. */
+export const publicQuestionSchema = questionSchema.pick({
+  id: true,
+  sortOrder: true,
+  text: true,
+  kind: true,
+  options: true,
+});
+
+export type PublicQuestion = z.infer<typeof publicQuestionSchema>;
+
 /** Empty passes — the link question is optional ("if any"). */
 export const optionalUrlSchema = z.literal("").or(z.url("Enter a valid link."));
 

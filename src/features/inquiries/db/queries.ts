@@ -1,4 +1,4 @@
-import { and, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { type DbExecutor, db } from "@/server/db";
 import { whereLive } from "@/server/db/filters";
@@ -39,6 +39,23 @@ export async function insertInquiryFiles(
     return;
   }
   await executor.insert(inquiryFiles).values(rows);
+}
+
+export interface InquiryNotificationOutcome {
+  notificationAttemptedAt: Date;
+  notificationError: string | null;
+  notifiedAt: Date | null;
+}
+
+export async function setInquiryNotificationOutcome(
+  inquiryId: string,
+  outcome: InquiryNotificationOutcome,
+  executor: DbExecutor = db
+): Promise<void> {
+  await executor
+    .update(inquiries)
+    .set(outcome)
+    .where(eq(inquiries.id, inquiryId));
 }
 
 /**

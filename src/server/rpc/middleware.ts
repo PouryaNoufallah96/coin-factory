@@ -3,6 +3,7 @@ import "server-only";
 import { ORPCError, os } from "@orpc/server";
 
 import { MAX_REQUEST_BODY_BYTES } from "@/features/inquiries/schemas/file-constraints";
+import { getAdminSessionFromHeaders } from "@/server/auth/session";
 
 import type { RpcContext } from "./context";
 import { consumeRateLimit } from "./rate-limit";
@@ -12,8 +13,19 @@ const base = os.$context<RpcContext>();
 /** Unauthenticated builder — the public funnel runs entirely on this. */
 export const publicProcedure = base;
 
-// authedProcedure (better-auth session middleware) arrives with the admin
-// phase — do not implement auth before then.
+const requireAdminSession = base.middleware(async ({ context, next }) => {
+  const adminSession = await getAdminSessionFromHeaders(context.headers);
+
+  if (!adminSession) {
+    throw new ORPCError("UNAUTHORIZED", {
+      message: "Admin sign-in required.",
+    });
+  }
+
+  return next({ context: { adminSession } });
+});
+
+export const adminProcedure = publicProcedure.use(requireAdminSession);
 
 /**
  * Post-parse per-IP throttle (docs/SECURITY.md). Internal calls — the RSC

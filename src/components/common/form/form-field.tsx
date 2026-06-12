@@ -135,6 +135,8 @@ type FormInputFieldProps<
   | "name"
   | "onBlur"
   | "onChange"
+  | "onInput"
+  | "onValueChange"
   | "ref"
   | "value"
 > &
@@ -175,8 +177,11 @@ function FormInputField<
       {({ controlProps, field }) => (
         <Input
           {...inputProps}
-          {...field}
           {...controlProps}
+          name={field.name}
+          onBlur={field.onBlur}
+          onChange={(event) => field.onChange(event.currentTarget.value)}
+          ref={field.ref}
           value={field.value ?? ""}
         />
       )}

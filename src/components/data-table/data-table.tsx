@@ -22,6 +22,7 @@ interface DataTableProps<TData extends RowData> {
   actionBar?: ReactNode;
   className?: string;
   emptyMessage?: string;
+  isPending?: boolean;
   table: TanStackTable<TData>;
   toolbar?: ReactNode;
 }
@@ -30,15 +31,26 @@ export function DataTable<TData extends RowData>({
   actionBar,
   className,
   emptyMessage = "No results.",
+  isPending,
   table,
   toolbar,
 }: DataTableProps<TData>) {
   const rows = table.getRowModel().rows;
 
   return (
-    <div className={cn("flex w-full flex-col gap-3", className)}>
+    <div
+      aria-busy={isPending || undefined}
+      className={cn("flex w-full flex-col gap-3", className)}
+      data-pending={isPending || undefined}
+    >
       {toolbar}
-      <div className="overflow-hidden rounded-lg border bg-card">
+      <div
+        className={cn(
+          "overflow-hidden rounded-lg border bg-card transition-opacity",
+          isPending &&
+            "pointer-events-none animate-pulse opacity-60 motion-reduce:animate-none"
+        )}
+      >
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

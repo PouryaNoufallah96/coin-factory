@@ -1,8 +1,10 @@
 import "server-only";
 
+import type { AdminSession } from "@/server/auth/auth";
 import { db } from "@/server/db";
 
 export interface RpcContext {
+  adminSession?: AdminSession;
   db: typeof db;
   /** Null when the call never crossed a request boundary (RSC router client). */
   headers: Headers | null;

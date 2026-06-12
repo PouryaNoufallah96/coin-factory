@@ -4,9 +4,9 @@
 
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
+import type React from "react";
 import {
   addTransitionType,
-  type FormEvent,
   startTransition,
   useId,
   useState,
@@ -166,7 +166,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     goTo(`/onboarding/${step + 1}` as Route, "nav-forward");
   }
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submit.isPending) {
       return;
@@ -428,7 +428,7 @@ function FunnelTextField({
         <Input
           className="text-(length:--cf-text-lg) h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
           id={id}
-          onChange={(event) => onChange(event.target.value)}
+          onValueChange={onChange}
           placeholder={placeholder}
           type={type}
           value={value}

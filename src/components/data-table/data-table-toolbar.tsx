@@ -50,7 +50,7 @@ export function DataTableToolbar({
           <Input
             aria-label={searchPlaceholder}
             className="pl-9"
-            onChange={(event) => onSearchChange?.(event.target.value)}
+            onValueChange={onSearchChange}
             placeholder={searchPlaceholder}
             value={search}
           />

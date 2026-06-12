@@ -7,15 +7,12 @@ import {
   type TransitionStartFunction,
   useTransition,
 } from "react";
-
+import { FILTER_TRANSITION_TYPE } from "@/hooks/filter-transition-types";
 import {
   DEFAULT_PAGE,
   FILTER_URL_UPDATE_THROTTLE_MS,
   filterParams,
 } from "@/lib/filter-params";
-
-/** Tag filter-driven URL updates so <ViewTransition> can map them to "none". */
-export const FILTER_TRANSITION_TYPE = "filter-params-update";
 
 const queryStateOptions: Options = {
   history: "replace",

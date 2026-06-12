@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
       fullUrl: true,
     },
     browserToTerminal: true,
+    serverFunctions: false,
   },
   // compiler: {
   //   // Strip ALL console calls in production — no exclusions. Source code must

@@ -2,11 +2,11 @@
 
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
+import type React from "react";
 import {
   addTransitionType,
   type ChangeEvent,
   createContext,
-  type FormEvent,
   type ReactNode,
   startTransition,
   use,
@@ -98,8 +98,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
     );
   }
 
-  function continueToWizard(event?: FormEvent<HTMLFormElement>) {
-    event?.preventDefault();
+  function continueToWizard(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
     if (
       !hasIntakeSignal({
         assetDescription,
@@ -163,8 +163,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   <Input
                     aria-label="Asset description"
                     className="text-(length:--cf-text-base) h-10 border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
-                    onChange={(event) => {
-                      setAssetDescription(event.target.value);
+                    onValueChange={(value) => {
+                      setAssetDescription(value);
                       if (error) {
                         setError(null);
                       }

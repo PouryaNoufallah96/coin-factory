@@ -3,8 +3,16 @@ import "server-only";
 import { env } from "@/config/env/server";
 import { resend } from "@/services/resend/client";
 
-import { setInquiryNotificationOutcome } from "../db/queries";
+import {
+  getSubmissionEmailSnapshot,
+  setInquiryNotificationOutcome,
+} from "../db/queries";
 import SubmissionEmail from "./templates/submission-email";
+
+interface SendSubmissionNotificationOptions {
+  idempotencyKey?: string;
+  throwOnFailure?: boolean;
+}
 
 /**
  * Post-commit, best-effort: the stored inquiry is the source of truth, so a
@@ -13,17 +21,26 @@ import SubmissionEmail from "./templates/submission-email";
  * the payload.
  */
 export async function sendSubmissionNotification(
-  inquiryId: string
+  inquiryId: string,
+  options: SendSubmissionNotificationOptions = {}
 ): Promise<void> {
   try {
+    const inquiry = await getSubmissionEmailSnapshot(inquiryId);
+    if (!inquiry) {
+      throw new Error("Inquiry was not found.");
+    }
+
     const { error } = await resend.emails.send(
       {
         from: env.SUBMISSION_FROM_EMAIL,
         to: env.SUBMISSION_NOTIFICATION_EMAIL,
         subject: "New tokenization inquiry",
-        react: <SubmissionEmail inquiryId={inquiryId} />,
+        react: <SubmissionEmail inquiry={inquiry} />,
       },
-      { idempotencyKey: `submission-email/${inquiryId}` }
+      {
+        idempotencyKey:
+          options.idempotencyKey ?? `submission-email/${inquiryId}`,
+      }
     );
     if (error) {
       throw new Error(error.message);
@@ -37,6 +54,16 @@ export async function sendSubmissionNotification(
     console.info(`inquiry ${inquiryId}: submission email sent`);
   } catch (cause) {
     await recordNotificationFailure(inquiryId, cause);
+    throwNotificationFailure(cause, options.throwOnFailure);
+  }
+}
+
+function throwNotificationFailure(
+  cause: unknown,
+  throwOnFailure: boolean | undefined
+) {
+  if (throwOnFailure) {
+    throw cause;
   }
 }
 

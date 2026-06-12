@@ -3,16 +3,27 @@ import "server-only";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
+import { okOutputSchema } from "@/features/admin/schemas/ok-output";
 import {
+  getInquiryNotificationState,
   type InquiryAnswerInsert,
   type InquiryFileInsert,
   insertInquiry,
   insertInquiryAnswers,
   insertInquiryCategoryPicks,
   insertInquiryFiles,
+  listAdminInquiries,
+  setAdminInquiryStatus,
 } from "@/features/inquiries/db/queries";
 import { sendSubmissionNotification } from "@/features/inquiries/email/send-submission-notification";
 import { matchesClaimedDocumentType } from "@/features/inquiries/lib/document-sniff";
+import { InquiryStatusTransitionError } from "@/features/inquiries/lib/status";
+import {
+  adminInquiryListInputSchema,
+  adminInquiryListOutputSchema,
+  resendInquiryNotificationInputSchema,
+  setInquiryStatusInputSchema,
+} from "@/features/inquiries/schemas/admin-inquiry";
 import {
   ALLOWED_DOCUMENT_MIME_TYPES,
   type AllowedDocumentMimeType,
@@ -30,7 +41,12 @@ import {
 } from "@/features/questions/schemas/question";
 import { getStorage } from "@/services/storage";
 
-import { payloadQuota, publicProcedure, withIpThrottle } from "../middleware";
+import {
+  adminProcedure,
+  payloadQuota,
+  publicProcedure,
+  withIpThrottle,
+} from "../middleware";
 
 // Generous for a human retrying a failed submit, hostile to volume abuse.
 const CREATE_LIMIT_PER_MINUTE = 5;
@@ -117,7 +133,70 @@ const create = publicProcedure
     return { id: inquiryId };
   });
 
-export const inquiriesRouter = { create };
+const listAdmin = adminProcedure
+  .input(adminInquiryListInputSchema)
+  .output(adminInquiryListOutputSchema)
+  .handler(({ context, input }) => listAdminInquiries(input, context.db));
+
+const setStatus = adminProcedure
+  .input(setInquiryStatusInputSchema)
+  .output(okOutputSchema)
+  .handler(async ({ context, input }) => {
+    try {
+      const updated = await setAdminInquiryStatus(input, context.db);
+      if (!updated) {
+        throw new ORPCError("NOT_FOUND", {
+          message: "Inquiry was not found.",
+        });
+      }
+      return { ok: true as const };
+    } catch (error) {
+      if (error instanceof InquiryStatusTransitionError) {
+        throw new ORPCError("BAD_REQUEST", { message: error.message });
+      }
+      throw error;
+    }
+  });
+
+const resendNotification = adminProcedure
+  .input(resendInquiryNotificationInputSchema)
+  .output(okOutputSchema)
+  .handler(async ({ context, input }) => {
+    const inquiry = await getInquiryNotificationState(input.id, context.db);
+    if (!inquiry) {
+      throw new ORPCError("NOT_FOUND", {
+        message: "Inquiry was not found.",
+      });
+    }
+
+    if (inquiry.notifiedAt) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Inquiry notification was already sent.",
+      });
+    }
+
+    try {
+      await sendSubmissionNotification(input.id, {
+        idempotencyKey: `submission-email/${input.id}/resend-${Date.now()}`,
+        throwOnFailure: true,
+      });
+    } catch {
+      throw new ORPCError("INTERNAL_SERVER_ERROR", {
+        message: "Email could not be resent.",
+      });
+    }
+
+    return { ok: true as const };
+  });
+
+export const inquiriesRouter = {
+  admin: {
+    list: listAdmin,
+    resendNotification,
+    setStatus,
+  },
+  create,
+};
 
 function normalizedDescription(assetDescription: string | null | undefined) {
   const trimmed = assetDescription?.trim();

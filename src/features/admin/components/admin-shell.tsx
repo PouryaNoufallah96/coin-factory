@@ -12,6 +12,14 @@ interface AdminShellProps {
   userEmail: string;
 }
 
+const adminNavFallbackItems = [
+  "overview",
+  "questions",
+  "categories",
+  "inquiries",
+  "settings",
+] as const;
+
 export function AdminShell({ children, userEmail }: AdminShellProps) {
   return (
     <div className="min-h-dvh bg-cf-charcoal-900 text-cf-text-primary">
@@ -79,7 +87,7 @@ export function AdminShellFallback({ children }: { children: ReactNode }) {
               aria-label="Admin navigation"
               className="hidden flex-col gap-1 lg:flex"
             >
-              <AdminNavList />
+              <AdminNavFallback />
             </nav>
           </div>
         </aside>
@@ -89,7 +97,7 @@ export function AdminShellFallback({ children }: { children: ReactNode }) {
               aria-label="Admin navigation"
               className="-mx-1 flex min-w-0 gap-1 overflow-x-auto lg:hidden"
             >
-              <AdminNavList compact />
+              <AdminNavFallback compact />
             </nav>
             <Skeleton className="ml-auto h-6 w-36 rounded-(--cf-radius-pill)" />
           </header>
@@ -100,5 +108,23 @@ export function AdminShellFallback({ children }: { children: ReactNode }) {
       </div>
       <output className="sr-only">Loading admin workspace</output>
     </div>
+  );
+}
+
+function AdminNavFallback({ compact }: { compact?: boolean }) {
+  return (
+    <>
+      {adminNavFallbackItems.map((item) => (
+        <Skeleton
+          aria-hidden="true"
+          className={
+            compact
+              ? "h-10 w-32 shrink-0 rounded-(--cf-radius-pill)"
+              : "h-10 w-full rounded-(--cf-radius-pill)"
+          }
+          key={item}
+        />
+      ))}
+    </>
   );
 }

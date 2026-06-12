@@ -7,6 +7,7 @@ import {
   getSubmissionEmailSnapshot,
   setInquiryNotificationOutcome,
 } from "../db/queries";
+import { buildSubmissionEmailText } from "./submission-email-content";
 import SubmissionEmail from "./templates/submission-email";
 
 interface SendSubmissionNotificationOptions {
@@ -30,12 +31,17 @@ export async function sendSubmissionNotification(
       throw new Error("Inquiry was not found.");
     }
 
+    const emailProps = {
+      appBaseUrl: env.BETTER_AUTH_URL,
+      inquiry,
+    };
     const { error } = await resend.emails.send(
       {
         from: env.SUBMISSION_FROM_EMAIL,
         to: env.SUBMISSION_NOTIFICATION_EMAIL,
         subject: "New tokenization inquiry",
-        react: <SubmissionEmail inquiry={inquiry} />,
+        react: <SubmissionEmail {...emailProps} />,
+        text: buildSubmissionEmailText(emailProps),
       },
       {
         idempotencyKey:

@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --turbopack",
+    "email:dev": "email dev --dir src/features/inquiries/email/templates --port 3001",
     "start": "next start",
     "prepare": "husky",
     "format": "biome check --write .",
@@ -63,6 +64,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
+    "@react-email/ui": "6.6.0",
     "@tailwindcss/postcss": "4.3.1",
     "@types/canvas-confetti": "1.9.0",
     "@types/node": "25.9.3",

@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 
 import { withAdminMutationRefresh } from "@/features/admin/actions/with-admin-mutation-refresh";
+import type { AdminRowActionInput } from "@/features/admin/schemas/admin-row-action";
 import { updateQuestionTags } from "@/features/questions/db/cache/tags";
 import { createRpcContext } from "@/server/rpc/context";
 import { appRouter } from "@/server/rpc/routers";
@@ -13,39 +14,35 @@ const actionOptions = {
 
 export const createQuestion = withAdminMutationRefresh(
   appRouter.questions.admin.create.actionable(actionOptions),
-  updateQuestionTags
+  () => updateQuestionTags()
 );
 
 export const updateQuestion = withAdminMutationRefresh(
   appRouter.questions.admin.update.actionable(actionOptions),
-  updateQuestionTags
+  (input) => updateQuestionTags(input.id)
 );
 
 export const reorderQuestions = withAdminMutationRefresh(
   appRouter.questions.admin.reorder.actionable(actionOptions),
-  updateQuestionTags
+  () => updateQuestionTags()
 );
 
 export const setQuestionActive = withAdminMutationRefresh(
   appRouter.questions.admin.setActive.actionable(actionOptions),
-  updateQuestionTags
+  (input) => updateQuestionTags(input.id)
 );
 
 export const softDeleteQuestion = withAdminMutationRefresh(
   appRouter.questions.admin.softDelete.actionable(actionOptions),
-  updateQuestionTags
+  (input) => updateQuestionTags(input.id)
 );
 
 export const restoreQuestion = withAdminMutationRefresh(
   appRouter.questions.admin.restore.actionable(actionOptions),
-  updateQuestionTags
+  (input) => updateQuestionTags(input.id)
 );
 
-export type QuestionRowActionInput =
-  | { ids: string[]; type: "reorder" }
-  | { id: string; type: "restore" }
-  | { active: boolean; id: string; type: "setActive" }
-  | { id: string; type: "softDelete" };
+export type QuestionRowActionInput = AdminRowActionInput;
 
 export async function runQuestionRowAction(input: QuestionRowActionInput) {
   switch (input.type) {

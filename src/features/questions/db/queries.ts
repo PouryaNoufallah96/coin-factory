@@ -11,13 +11,12 @@ import {
   isNull,
   type SQL,
 } from "drizzle-orm";
-
+import { type DbExecutor, db } from "@/server/db";
+import { likePattern, whereLive } from "@/server/db/filters";
 import {
   appendSortOrderSql,
   reorderOrderedEntity,
-} from "@/features/admin/db/ordered-entity";
-import { type DbExecutor, db } from "@/server/db";
-import { whereLive } from "@/server/db/filters";
+} from "@/server/db/ordered-entity";
 import { questions } from "@/server/db/schema";
 
 import type { AdminQuestionListInput } from "../schemas/question";
@@ -193,8 +192,4 @@ function adminQuestionOrderBy(input: AdminQuestionListInput): SQL {
   return input.orderDirection === "desc"
     ? desc(questions.sortOrder)
     : asc(questions.sortOrder);
-}
-
-function likePattern(value: string) {
-  return `%${value.replaceAll("\\", "\\\\").replaceAll("%", "\\%").replaceAll("_", "\\_")}%`;
 }

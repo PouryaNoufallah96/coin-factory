@@ -21,6 +21,7 @@ import {
   type AdminQuestion,
   createQuestionInputSchema,
   type QuestionFormInput,
+  type QuestionKind,
 } from "@/features/questions/schemas/question";
 import { applyActionErrorToForm, useAction } from "@/hooks/use-action";
 
@@ -47,8 +48,8 @@ export function QuestionForm({ onSuccess, question }: QuestionFormProps) {
     handleSubmit,
     setError,
   } = useForm<QuestionFormInput>({
-    defaultValues: toQuestionFormValues(question),
     resolver: zodResolver(createQuestionInputSchema),
+    values: toQuestionFormValues(question),
   });
   const kind = useWatch({ control, name: "kind" });
   const isPending =
@@ -124,7 +125,7 @@ function toQuestionFormValues(
   question?: Pick<AdminQuestion, "kind" | "options" | "text">
 ): QuestionFormInput {
   return {
-    kind: question?.kind ?? "radio",
+    kind: (question?.kind ?? "radio") as QuestionKind,
     options: question?.kind === "radio" ? (question.options ?? []) : null,
     text: question?.text ?? "",
   };

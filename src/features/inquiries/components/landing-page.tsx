@@ -1,5 +1,6 @@
 "use client";
 
+import { CircleX, FileText, Plus, Target } from "lucide-react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import type React from "react";
@@ -15,7 +16,6 @@ import {
 } from "react";
 import { FunnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
-import { MaskIcon } from "@/components/common/mask-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -149,7 +149,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     onClick={() => fileInputRef.current?.click()}
                     type="button"
                   >
-                    <MaskIcon className="size-4" src="/brand/icon-plus.svg" />
+                    <Plus aria-hidden="true" className="size-4" />
                   </button>
                   <input
                     accept={DOCUMENT_PICKER_ACCEPT}
@@ -174,11 +174,11 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   />
                   <Button
                     aria-label="Continue"
-                    className="size-(--cf-search-button-size) shrink-0 rounded-full bg-cf-cream text-cf-charcoal-900 shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream-bright active:translate-y-0 active:scale-[0.97] **:data-[slot=mask-icon]:size-5"
+                    className="size-(--cf-search-button-size) shrink-0 rounded-full bg-cf-cream text-cf-charcoal-900 shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream-bright active:translate-y-0 active:scale-[0.97]"
                     size="icon"
                     type="submit"
                   >
-                    <MaskIcon src="/brand/icon-target.svg" />
+                    <Target aria-hidden="true" className="size-5" />
                   </Button>
                 </div>
               </InputSurface>
@@ -210,10 +210,7 @@ function FileCardPanel({
           key={`${file.name}-${file.lastModified}-${file.size}`}
         >
           <div className="flex size-(--cf-file-card-tile) shrink-0 items-center justify-center rounded-(--cf-radius-segment) bg-cf-cream text-cf-text-on-accent">
-            <MaskIcon
-              className="h-6 w-(--cf-icon-invoice-w)"
-              src="/brand/icon-invoice.svg"
-            />
+            <FileText aria-hidden="true" className="size-6" />
           </div>
           <div className="min-w-0">
             <p className="max-w-(--cf-file-card-name-w) truncate text-base text-cf-text-primary leading-none">
@@ -229,7 +226,7 @@ function FileCardPanel({
             onClick={() => onRemove(index)}
             type="button"
           >
-            <MaskIcon className="size-5" src="/brand/icon-remove-circle.svg" />
+            <CircleX aria-hidden="true" className="size-5" />
           </button>
         </div>
       ))}

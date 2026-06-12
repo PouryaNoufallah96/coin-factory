@@ -13,7 +13,7 @@ import {
 import { useOptimistic, useState, useTransition } from "react";
 import { ResponsiveModal } from "@/components/common/responsive-modal";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { Badge } from "@/components/ui/badge";
+import { AdminActionErrorBanner } from "@/features/admin/components/admin-action-error-banner";
 import {
   AdminCreateButton,
   AdminEntityTable,
@@ -22,6 +22,10 @@ import {
   AdminRowActionButton,
   AdminRowActions,
 } from "@/features/admin/components/admin-row-action-button";
+import { EntityStatusBadge } from "@/features/admin/components/entity-status-badge";
+import { formatAdminDate } from "@/features/admin/lib/format-admin-date";
+import { moveOrderedId } from "@/features/admin/lib/move-ordered-id";
+import type { AdminRowActionInput } from "@/features/admin/schemas/admin-row-action";
 import { runCategoryRowAction } from "@/features/categories/actions/admin-category-actions";
 import { CategoryForm } from "@/features/categories/components/category-form";
 import type {
@@ -46,16 +50,7 @@ type CategoryModal =
   | { mode: "create" }
   | null;
 
-type CategoryOptimisticAction =
-  | { ids: string[]; type: "reorder" }
-  | { id: string; type: "restore" }
-  | { active: boolean; id: string; type: "setActive" }
-  | { id: string; type: "softDelete" };
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
-  timeStyle: "short",
-});
+type CategoryOptimisticAction = AdminRowActionInput;
 
 export function CategoriesAdminManager({
   filters,
@@ -90,50 +85,42 @@ export function CategoriesAdminManager({
     });
   }
 
-  async function recordAction(
-    resultPromise: Promise<{ errorMessage?: string; status: string }>
-  ) {
+  async function runOptimisticAction(action: CategoryOptimisticAction) {
     setActionError(null);
-    const result = await resultPromise;
+    const result = await rowAction.execute(action);
     if (result.status === "error") {
       setActionError(result.errorMessage ?? "Action failed.");
+      return;
     }
+    applyOptimistic(action);
   }
 
   async function moveCategory(id: string, delta: -1 | 1) {
-    const ids = moveId(orderedIds, id, delta);
+    const ids = moveOrderedId(orderedIds, id, delta);
     if (!ids) {
       return;
     }
-    applyOptimistic({ ids, type: "reorder" });
-    await recordAction(rowAction.execute({ ids, type: "reorder" }));
+    await runOptimisticAction({ ids, type: "reorder" });
   }
 
   async function deleteCategory(category: AdminCategory) {
     if (!(await confirmDelete())) {
       return;
     }
-    applyOptimistic({ id: category.id, type: "softDelete" });
-    await recordAction(
-      rowAction.execute({ id: category.id, type: "softDelete" })
-    );
+    await runOptimisticAction({ id: category.id, type: "softDelete" });
   }
 
   async function restoreCategoryRow(category: AdminCategory) {
-    applyOptimistic({ id: category.id, type: "restore" });
-    await recordAction(rowAction.execute({ id: category.id, type: "restore" }));
+    await runOptimisticAction({ id: category.id, type: "restore" });
   }
 
   async function setCategoryActiveRow(category: AdminCategory) {
     const active = !category.active;
-    applyOptimistic({ active, id: category.id, type: "setActive" });
-    await recordAction(
-      rowAction.execute({
-        active,
-        id: category.id,
-        type: "setActive",
-      })
-    );
+    await runOptimisticAction({
+      active,
+      id: category.id,
+      type: "setActive",
+    });
   }
 
   const columns: ColumnDef<AdminCategory>[] = [
@@ -161,7 +148,12 @@ export function CategoriesAdminManager({
     },
     {
       accessorKey: "active",
-      cell: ({ row }) => <CategoryStatus category={row.original} />,
+      cell: ({ row }) => (
+        <EntityStatusBadge
+          active={row.original.active}
+          deletedAt={row.original.deletedAt}
+        />
+      ),
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
       ),
@@ -170,7 +162,7 @@ export function CategoriesAdminManager({
       accessorKey: "updatedAt",
       cell: ({ row }) => (
         <span className="whitespace-nowrap text-cf-text-muted text-sm">
-          {formatDate(row.original.updatedAt)}
+          {formatAdminDate(row.original.updatedAt)}
         </span>
       ),
       header: "Updated",
@@ -261,14 +253,7 @@ export function CategoriesAdminManager({
 
   return (
     <>
-      {actionError ? (
-        <div
-          className="mx-auto mb-4 max-w-7xl rounded-(--cf-radius-alert) border border-cf-error/40 bg-cf-error/10 px-4 py-3 text-cf-error text-sm"
-          role="alert"
-        >
-          {actionError}
-        </div>
-      ) : null}
+      {actionError ? <AdminActionErrorBanner message={actionError} /> : null}
       <AdminEntityTable
         columns={columns}
         createControl={
@@ -309,32 +294,6 @@ export function CategoriesAdminManager({
   );
 }
 
-function CategoryStatus({ category }: { category: AdminCategory }) {
-  if (category.deletedAt) {
-    return <Badge variant="outline">Deleted</Badge>;
-  }
-
-  return (
-    <Badge variant={category.active ? "secondary" : "outline"}>
-      {category.active ? "Active" : "Inactive"}
-    </Badge>
-  );
-}
-
-function moveId(ids: readonly string[], id: string, delta: -1 | 1) {
-  const index = ids.indexOf(id);
-  const nextIndex = index + delta;
-
-  if (index < 0 || nextIndex < 0 || nextIndex >= ids.length) {
-    return null;
-  }
-
-  const next = [...ids];
-  [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
-
-  return next;
-}
-
 function updateOptimisticCategories(
   state: AdminCategory[],
   action: CategoryOptimisticAction
@@ -371,8 +330,4 @@ function reorderCategoryRows(rows: AdminCategory[], ids: readonly string[]) {
       const sortOrder = sortOrderById.get(category.id);
       return sortOrder ? { ...category, sortOrder } : category;
     });
-}
-
-function formatDate(value: Date | string) {
-  return dateFormatter.format(new Date(value));
 }

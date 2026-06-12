@@ -1,4 +1,5 @@
-import { MaskIcon } from "@/components/common/mask-icon";
+import { TriangleAlert, X } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 interface FunnelAlertProps {
@@ -15,10 +16,7 @@ export function FunnelAlert({ message, onDismiss }: FunnelAlertProps) {
       )}
       role="alert"
     >
-      <MaskIcon
-        className="h-(--cf-icon-warning-h) w-(--cf-icon-warning-w) shrink-0"
-        src="/brand/icon-warning.svg"
-      />
+      <TriangleAlert aria-hidden="true" className="size-5 shrink-0" />
       <p
         className={cn(
           "min-w-0 flex-1 text-cf-text-on-error",
@@ -36,7 +34,7 @@ export function FunnelAlert({ message, onDismiss }: FunnelAlertProps) {
           onClick={onDismiss}
           type="button"
         >
-          <MaskIcon className="size-3" src="/brand/icon-remove.svg" />
+          <X aria-hidden="true" className="size-3" />
         </button>
       ) : null}
     </div>

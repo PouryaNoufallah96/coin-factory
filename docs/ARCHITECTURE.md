@@ -40,7 +40,8 @@ framework helpers stay in `src/lib/`.
 
 | Rule | Why |
 |---|---|
-| `src/server/**` never imports from `src/features/**` or `src/components/**` | server is the bottom of the chain; UI churn must not ripple into it |
+| `src/server/rpc/**` may import `src/features/**/{db,schemas,email,lib}` but never `src/components/**` | routers orchestrate; DAL and Zod contracts live in feature slices; UI must not leak into server |
+| `src/server/db/**` and other non-rpc server modules must not import `src/features/**` or `src/components/**` | keep the db layer free of feature/UI coupling except through rpc routers |
 | Features reach the server **only** via the oRPC client (browser) or the `'server-only'` router client (RSC/actions) | one contract, end-to-end types |
 | Never self-fetch `/rpc` over HTTP from RSC or server actions — use `createRouterClient` | HTTP self-calls break PPR prerendering and double latency |
 | Zod schemas in `features/*/schemas` are the contract shared by oRPC procedures and RHF forms | single source of validation truth |
@@ -102,13 +103,16 @@ End users never authenticate.
 
 ## Cache-tag flow (Cache Components end-to-end)
 
-1. **Read:** `features/<feature>/api/server/*` wraps router-client calls with `"use cache"` +
-   `cacheTag(...)`. Tag strings come from helpers in `features/<feature>/db/cache/` — never
-   inline literals.
+1. **Read:** `features/<feature>/api/server/*` wraps reads with `"use cache"` +
+   `cacheTag(...)`. Public funnel reads call `orpcServer`; admin list reads call the
+   feature DAL directly (auth in the admin layout, outside cache). Tag strings come from
+   helpers in `features/<feature>/db/cache/` — never inline literals.
 2. **Mutate:** the `.actionable()` procedure (or the action wrapper) calls `updateTag(...)`
-   with the same helpers after a successful write.
-3. **Never** `router.refresh()` for invalidation; on the browser side invalidate TanStack Query
-   via `queryClient.invalidateQueries({ queryKey: orpc.x.key() })`.
+   with the same fan-out helpers after a successful write (`activeList`, `adminList`, optional
+   `idTag`). Admin action wrappers may also call server-side `refresh()` after tag updates so
+   the current RSC route re-fetches immediately.
+3. **Never** client `router.refresh()` for invalidation; on the browser side invalidate TanStack
+   Query via `queryClient.invalidateQueries({ queryKey: orpc.x.key() })`.
 
 ## PPR / cacheComponents behavior
 
@@ -116,9 +120,11 @@ End users never authenticate.
 
 - Every awaited db/oRPC call in an RSC sits inside `<Suspense>` or a `"use cache"` scope —
   otherwise the build fails or the route silently loses its static shell.
-- Long-lived shared public reads (`questions.listActive`, `categories.listActive`) use
-  `cacheLife("hours")`; render them directly when they belong to the initial shell, or isolate
-  the smallest non-critical section under `<Suspense>` so the rest of the page does not wait.
+- Long-lived shared public reads (`questions.listActive`, `categories.listActive`) and
+  admin list reads (`getAdminQuestions`, `getAdminCategories` — DAL-direct, layout auth)
+  use `cacheLife("hours")`; render them directly when they belong to the initial shell, or
+  isolate the smallest non-critical section under `<Suspense>` so the rest of the page does
+  not wait.
 - Never put per-user data (headers/cookies-derived) inside `"use cache"` — pass IDs as
   arguments so they become part of the cache key.
 - `cacheLife` under ~5 minutes silently ejects a component from the PPR static shell.
@@ -147,9 +153,10 @@ Current state (2026-06-12):
   wizard (DB-driven questions, free step navigation, final-submit validation), and
   `/thank-you` confirmation — all under `(funnel)/` with ViewTransition navigation and draft
   state in layout context.
-- **No auth or admin surface yet**: end users never log in; better-auth admin sessions and
-  `/admin` question/category/inquiry management ship in the admin phase (slices 0007-0008).
-- **Cache invalidation helpers not wired yet**: tag getters exist; `updateTag` fan-out lands with admin.
+- **Admin surface in progress**: better-auth admin sessions, `/admin` shell, categories/questions
+  CRUD with cached admin list reads and tag invalidation.
+- **Cache invalidation wired**: `updateTag` / `revalidateTag` fan-out for public active lists
+  and admin lists (`activeList`, `adminList`, optional `idTag`).
 - **No tests in v1**: every slice gates on `pnpm validate` plus focused browser walkthroughs; no
   Vitest/Playwright/Storybook suite exists yet.
 - **No i18n**: single-locale English.

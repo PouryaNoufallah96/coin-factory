@@ -38,10 +38,10 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
     handleSubmit,
     setError,
   } = useForm<CategoryFormInput>({
-    defaultValues: {
+    resolver: zodResolver(createCategoryInputSchema),
+    values: {
       label: category?.label ?? "",
     },
-    resolver: zodResolver(createCategoryInputSchema),
   });
   const isPending =
     isSubmitting || createAction.isPending || updateAction.isPending;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { buildAdminRowsVersion } from "@/features/admin/lib/build-admin-rows-version";
 import { getAdminQuestions } from "@/features/questions/api/server/get-admin-questions";
 import { QuestionsAdminManager } from "@/features/questions/components/questions-admin-manager";
 import { loadFilterParams, normalizeFilterParams } from "@/lib/filter-params";
@@ -47,7 +48,7 @@ async function AdminQuestionsContent({
     showDeleted: filters.showDeleted,
   };
   const data = await getAdminQuestions(input);
-  const rowsVersion = getQuestionRowsVersion(data.rows, input);
+  const rowsVersion = buildAdminRowsVersion(data.rows, input);
 
   return (
     <QuestionsAdminManager
@@ -63,38 +64,4 @@ async function AdminQuestionsContent({
       totalRows={data.totalRows}
     />
   );
-}
-
-function getQuestionRowsVersion(
-  rows: Awaited<ReturnType<typeof getAdminQuestions>>["rows"],
-  input: {
-    orderBy: string;
-    orderDirection: string;
-    page: number;
-    pageSize: number;
-    search: string;
-    showDeleted: boolean;
-  }
-) {
-  const queryVersion = [
-    input.orderBy,
-    input.orderDirection,
-    input.page,
-    input.pageSize,
-    input.search,
-    input.showDeleted,
-  ].join(":");
-  const rowVersion = rows
-    .map((row) =>
-      [
-        row.id,
-        row.sortOrder,
-        row.active,
-        row.updatedAt.toISOString(),
-        row.deletedAt?.toISOString() ?? "",
-      ].join(":")
-    )
-    .join("|");
-
-  return `${queryVersion}|${rowVersion}`;
 }

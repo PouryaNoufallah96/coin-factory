@@ -1,9 +1,26 @@
 import { createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod";
 
+import {
+  createAdminListInputSchema,
+  createAdminListOutputSchema,
+  createReorderInputSchema,
+  entityIdInputSchema,
+  setEntityActiveInputSchema,
+} from "@/features/admin/schemas/ordered-entity-list";
 import { questionKinds, questions } from "@/server/db/schema";
 
+const questionOrderBy = [
+  "text",
+  "kind",
+  "sortOrder",
+  "active",
+  "createdAt",
+] as const;
+
 export const questionKindSchema = z.enum(questionKinds);
+
+export type QuestionKind = z.infer<typeof questionKindSchema>;
 
 export const questionSchema = createSelectSchema(questions);
 
@@ -34,26 +51,15 @@ export const adminQuestionSchema = questionSchema.pick({
 
 export type AdminQuestion = z.infer<typeof adminQuestionSchema>;
 
-export const adminQuestionListInputSchema = z.object({
-  search: z.string(),
-  page: z.number().int().positive(),
-  pageSize: z.number().int().positive().max(100),
-  orderBy: z
-    .enum(["text", "kind", "sortOrder", "active", "createdAt"])
-    .or(z.literal("")),
-  orderDirection: z.enum(["asc", "desc"]),
-  showDeleted: z.boolean(),
-});
+export const adminQuestionListInputSchema =
+  createAdminListInputSchema(questionOrderBy);
 
 export type AdminQuestionListInput = z.infer<
   typeof adminQuestionListInputSchema
 >;
 
-export const adminQuestionListOutputSchema = z.object({
-  orderedIds: z.uuid().array(),
-  rows: adminQuestionSchema.array(),
-  totalRows: z.number().int().nonnegative(),
-});
+export const adminQuestionListOutputSchema =
+  createAdminListOutputSchema(adminQuestionSchema);
 
 const questionTextSchema = z
   .string()
@@ -96,18 +102,11 @@ export const updateQuestionInputSchema = questionMutationSchema.and(
   z.object({ id: z.uuid() })
 );
 
-export const setQuestionActiveInputSchema = z.object({
-  active: z.boolean(),
-  id: z.uuid(),
-});
+export const setQuestionActiveInputSchema = setEntityActiveInputSchema;
 
-export const questionIdInputSchema = z.object({
-  id: z.uuid(),
-});
+export const questionIdInputSchema = entityIdInputSchema;
 
-export const reorderQuestionsInputSchema = z.object({
-  ids: z.uuid().array().min(1, "Send the complete ordered question list."),
-});
+export const reorderQuestionsInputSchema = createReorderInputSchema("question");
 
 export type QuestionFormInput = z.input<typeof createQuestionInputSchema>;
 

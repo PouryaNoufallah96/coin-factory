@@ -17,7 +17,6 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -343,31 +342,24 @@ function FormRadioGroupField<
             return (
               <FieldLabel
                 className={cn(
-                  "w-full cursor-pointer font-normal",
+                  "flex w-full cursor-pointer items-center gap-3 rounded-(--cf-radius-alert) border border-border/70 p-3 font-normal has-data-checked:border-primary/30 has-data-checked:bg-primary/5",
                   optionDisabled && "cursor-not-allowed opacity-50"
                 )}
                 htmlFor={optionId}
                 key={option.value}
               >
-                <Field
-                  className="rounded-(--cf-radius-alert) border border-border/70 p-3"
-                  data-disabled={optionDisabled || undefined}
-                  data-invalid={fieldState.invalid || undefined}
-                  orientation="horizontal"
-                >
-                  <RadioGroupItem
-                    aria-invalid={fieldState.invalid || undefined}
-                    disabled={optionDisabled}
-                    id={optionId}
-                    value={option.value}
-                  />
-                  <FieldContent>
-                    <FieldTitle>{option.label}</FieldTitle>
-                    {option.description && (
-                      <FieldDescription>{option.description}</FieldDescription>
-                    )}
-                  </FieldContent>
-                </Field>
+                <RadioGroupItem
+                  aria-invalid={fieldState.invalid || undefined}
+                  disabled={optionDisabled}
+                  id={optionId}
+                  value={option.value}
+                />
+                <span className="flex min-w-0 flex-col gap-0.5 text-left">
+                  <span className="font-medium text-sm">{option.label}</span>
+                  {option.description ? (
+                    <FieldDescription>{option.description}</FieldDescription>
+                  ) : null}
+                </span>
               </FieldLabel>
             );
           })}

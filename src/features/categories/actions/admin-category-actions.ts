@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 
 import { withAdminMutationRefresh } from "@/features/admin/actions/with-admin-mutation-refresh";
+import type { AdminRowActionInput } from "@/features/admin/schemas/admin-row-action";
 import { updateCategoryTags } from "@/features/categories/db/cache/tags";
 import { createRpcContext } from "@/server/rpc/context";
 import { appRouter } from "@/server/rpc/routers";
@@ -13,39 +14,35 @@ const actionOptions = {
 
 export const createCategory = withAdminMutationRefresh(
   appRouter.categories.admin.create.actionable(actionOptions),
-  updateCategoryTags
+  () => updateCategoryTags()
 );
 
 export const updateCategory = withAdminMutationRefresh(
   appRouter.categories.admin.update.actionable(actionOptions),
-  updateCategoryTags
+  (input) => updateCategoryTags(input.id)
 );
 
 export const reorderCategories = withAdminMutationRefresh(
   appRouter.categories.admin.reorder.actionable(actionOptions),
-  updateCategoryTags
+  () => updateCategoryTags()
 );
 
 export const setCategoryActive = withAdminMutationRefresh(
   appRouter.categories.admin.setActive.actionable(actionOptions),
-  updateCategoryTags
+  (input) => updateCategoryTags(input.id)
 );
 
 export const softDeleteCategory = withAdminMutationRefresh(
   appRouter.categories.admin.softDelete.actionable(actionOptions),
-  updateCategoryTags
+  (input) => updateCategoryTags(input.id)
 );
 
 export const restoreCategory = withAdminMutationRefresh(
   appRouter.categories.admin.restore.actionable(actionOptions),
-  updateCategoryTags
+  (input) => updateCategoryTags(input.id)
 );
 
-export type CategoryRowActionInput =
-  | { ids: string[]; type: "reorder" }
-  | { id: string; type: "restore" }
-  | { active: boolean; id: string; type: "setActive" }
-  | { id: string; type: "softDelete" };
+export type CategoryRowActionInput = AdminRowActionInput;
 
 export async function runCategoryRowAction(input: CategoryRowActionInput) {
   switch (input.type) {

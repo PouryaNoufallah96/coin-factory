@@ -1,9 +1,8 @@
 import "server-only";
 
 import { ORPCError } from "@orpc/server";
-import { z } from "zod";
 
-import { OrderedEntitySetMismatchError } from "@/features/admin/db/ordered-entity";
+import { okOutputSchema } from "@/features/admin/schemas/ok-output";
 import { revalidateQuestionTags } from "@/features/questions/db/cache/tags";
 import {
   createQuestion,
@@ -25,6 +24,7 @@ import {
   setQuestionActiveInputSchema,
   updateQuestionInputSchema,
 } from "@/features/questions/schemas/question";
+import { OrderedEntitySetMismatchError } from "@/server/db/ordered-entity";
 
 import { adminProcedure, publicProcedure, withIpThrottle } from "../middleware";
 
@@ -32,7 +32,6 @@ import { adminProcedure, publicProcedure, withIpThrottle } from "../middleware";
 // direct /rpc traffic.
 const READ_LIMIT_PER_MINUTE = 60;
 const READ_WINDOW_MS = 60_000;
-const okOutput = z.object({ ok: z.literal(true) });
 
 const listActive = publicProcedure
   .use(withIpThrottle("questions-read", READ_LIMIT_PER_MINUTE, READ_WINDOW_MS))
@@ -46,7 +45,7 @@ const listAdmin = adminProcedure
 
 const create = adminProcedure
   .input(createQuestionInputSchema)
-  .output(okOutput)
+  .output(okOutputSchema)
   .handler(async ({ context, input }) => {
     const created = await createQuestion(input, context.db);
     if (!created) {
@@ -55,12 +54,12 @@ const create = adminProcedure
       });
     }
     revalidateQuestionTags();
-    return { ok: true };
+    return { ok: true as const };
   });
 
 const update = adminProcedure
   .input(updateQuestionInputSchema)
-  .output(okOutput)
+  .output(okOutputSchema)
   .handler(async ({ context, input }) => {
     const updated = await updateQuestion(input, context.db);
     if (!updated) {
@@ -68,13 +67,13 @@ const update = adminProcedure
         message: "Question was not found.",
       });
     }
-    revalidateQuestionTags();
-    return { ok: true };
+    revalidateQuestionTags(input.id);
+    return { ok: true as const };
   });
 
 const setActive = adminProcedure
   .input(setQuestionActiveInputSchema)
-  .output(okOutput)
+  .output(okOutputSchema)
   .handler(async ({ context, input }) => {
     const updated = await setQuestionActive(input, context.db);
     if (!updated) {
@@ -82,13 +81,13 @@ const setActive = adminProcedure
         message: "Question was not found.",
       });
     }
-    revalidateQuestionTags();
-    return { ok: true };
+    revalidateQuestionTags(input.id);
+    return { ok: true as const };
   });
 
 const softDelete = adminProcedure
   .input(questionIdInputSchema)
-  .output(okOutput)
+  .output(okOutputSchema)
   .handler(async ({ context, input }) => {
     const deleted = await softDeleteQuestion(input.id, context.db);
     if (!deleted) {
@@ -96,13 +95,13 @@ const softDelete = adminProcedure
         message: "Question was not found.",
       });
     }
-    revalidateQuestionTags();
-    return { ok: true };
+    revalidateQuestionTags(input.id);
+    return { ok: true as const };
   });
 
 const restore = adminProcedure
   .input(questionIdInputSchema)
-  .output(okOutput)
+  .output(okOutputSchema)
   .handler(async ({ context, input }) => {
     const restored = await restoreQuestion(input.id, context.db);
     if (!restored) {
@@ -110,18 +109,18 @@ const restore = adminProcedure
         message: "Deleted question was not found.",
       });
     }
-    revalidateQuestionTags();
-    return { ok: true };
+    revalidateQuestionTags(input.id);
+    return { ok: true as const };
   });
 
 const reorder = adminProcedure
   .input(reorderQuestionsInputSchema)
-  .output(okOutput)
+  .output(okOutputSchema)
   .handler(async ({ context, input }) => {
     try {
       await reorderQuestions(input.ids, context.db);
       revalidateQuestionTags();
-      return { ok: true };
+      return { ok: true as const };
     } catch (error) {
       if (error instanceof OrderedEntitySetMismatchError) {
         throw new ORPCError("BAD_REQUEST", { message: error.message });

@@ -15,7 +15,14 @@ export function whereNotDeleted(table: SoftDeletable): SQL {
   return isNull(table.deletedAt);
 }
 
-/** Live = visible to the public funnel: enabled and not soft-deleted. */
+/** Live = visible to public flows: enabled and not soft-deleted. */
 export function whereLive(table: Toggleable): SQL | undefined {
   return and(eq(table.active, true), whereNotDeleted(table));
+}
+
+export function likePattern(value: string) {
+  return `%${value
+    .replaceAll("\\", "\\\\")
+    .replaceAll("%", "\\%")
+    .replaceAll("_", "\\_")}%`;
 }

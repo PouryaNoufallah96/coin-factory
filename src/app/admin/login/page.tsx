@@ -13,13 +13,7 @@ export const metadata: Metadata = {
   title: "Admin sign in",
 };
 
-interface AdminLoginPageProps {
-  searchParams: Promise<{
-    redirectTo?: string | string[];
-  }>;
-}
-
-export default function AdminLoginPage({ searchParams }: AdminLoginPageProps) {
+export default function AdminLoginPage(props: PageProps<"/admin/login">) {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-cf-charcoal-900 px-4 py-10 text-cf-text-primary">
       <div className="flex w-full max-w-sm flex-col gap-8">
@@ -39,7 +33,7 @@ export default function AdminLoginPage({ searchParams }: AdminLoginPageProps) {
         </div>
         <div className="rounded-(--cf-radius-panel) border border-cf-border-muted/40 bg-cf-surface-muted p-5 shadow-(--cf-glow-soft)">
           <Suspense fallback={<AdminLoginFormFallback />}>
-            <AdminLoginPanel searchParams={searchParams} />
+            <AdminLoginPanel searchParams={props.searchParams} />
           </Suspense>
         </div>
       </div>
@@ -47,7 +41,11 @@ export default function AdminLoginPage({ searchParams }: AdminLoginPageProps) {
   );
 }
 
-async function AdminLoginPanel({ searchParams }: AdminLoginPageProps) {
+async function AdminLoginPanel({
+  searchParams,
+}: {
+  searchParams: PageProps<"/admin/login">["searchParams"];
+}) {
   await ensureSeedAdmin();
   const params = await searchParams;
   const redirectTo = adminRedirectPath(

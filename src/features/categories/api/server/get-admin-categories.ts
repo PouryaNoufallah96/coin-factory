@@ -1,11 +1,28 @@
 import "server-only";
 
-import { createRequestOrpcServer } from "@/lib/orpc.server";
+import { cacheLife, cacheTag } from "next/cache";
 
-import type { AdminCategoryListInput } from "../../schemas/category";
+import { idTag } from "@/lib/cache-tags";
+import { categoryTags } from "../../db/cache/tags";
+import { listAdminCategories } from "../../db/queries";
+import {
+  type AdminCategoryListInput,
+  adminCategoryListInputSchema,
+  adminCategoryListOutputSchema,
+} from "../../schemas/category";
 
 export async function getAdminCategories(input: AdminCategoryListInput) {
-  const orpc = await createRequestOrpcServer();
+  "use cache";
+  cacheTag(categoryTags.adminList());
+  cacheLife("hours");
+  const parsedInput = adminCategoryListInputSchema.parse(input);
+  const data = adminCategoryListOutputSchema.parse(
+    await listAdminCategories(parsedInput)
+  );
 
-  return await orpc.categories.admin.list(input);
+  for (const row of data.rows) {
+    cacheTag(idTag("category", row.id));
+  }
+
+  return data;
 }

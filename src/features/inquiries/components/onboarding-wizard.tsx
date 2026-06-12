@@ -2,6 +2,7 @@
 
 "use client";
 
+import { X } from "lucide-react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import type React from "react";
@@ -15,7 +16,6 @@ import {
 import { FunnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { inputSurfaceVariants } from "@/components/common/input-surface-variants";
-import { MaskIcon } from "@/components/common/mask-icon";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -203,12 +203,12 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   return (
-    <section className="relative flex flex-1 items-stretch justify-center px-(--cf-page-x)">
+    <section className="relative flex flex-1 justify-center px-(--cf-page-x) py-6">
       {alert ? (
         <FunnelAlert message={alert} onDismiss={() => setAlert(null)} />
       ) : null}
       <form
-        className="cf-content-container flex min-h-full flex-col items-center text-center"
+        className="cf-content-container flex w-full flex-col items-center text-center"
         onSubmit={onSubmit}
       >
         <ViewTransition
@@ -287,13 +287,15 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
           </div>
         </ViewTransition>
 
+        <div aria-hidden="true" className="h-12 w-full shrink-0" />
+
         <ViewTransition
           default="none"
           key={`wizard-actions-${step}`}
           name="wizard-actions"
           share={WIZARD_ACTIONS_TRANSITION}
         >
-          <div className="cf-field-container mt-auto mb-(--cf-wizard-actions-bottom) flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="cf-field-container mb-(--cf-wizard-actions-bottom) flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Button
               className="text-(length:--cf-text-base) h-(--cf-cta-h) w-full rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97] sm:w-(--cf-cta-w)"
               onClick={onBack}
@@ -441,7 +443,7 @@ function FunnelTextField({
             onMouseDown={(event) => event.preventDefault()}
             type="button"
           >
-            <MaskIcon className="size-3" src="/brand/icon-remove.svg" />
+            <X aria-hidden="true" className="size-3" />
           </button>
         ) : null}
       </InputSurface>

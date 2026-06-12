@@ -1,7 +1,16 @@
 import { createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod";
 
+import {
+  createAdminListInputSchema,
+  createAdminListOutputSchema,
+  createReorderInputSchema,
+  entityIdInputSchema,
+  setEntityActiveInputSchema,
+} from "@/features/admin/schemas/ordered-entity-list";
 import { categories } from "@/server/db/schema";
+
+const categoryOrderBy = ["label", "sortOrder", "active", "createdAt"] as const;
 
 export const categorySchema = createSelectSchema(categories);
 
@@ -28,26 +37,15 @@ export const adminCategorySchema = categorySchema.pick({
 
 export type AdminCategory = z.infer<typeof adminCategorySchema>;
 
-export const adminCategoryListInputSchema = z.object({
-  search: z.string(),
-  page: z.number().int().positive(),
-  pageSize: z.number().int().positive().max(100),
-  orderBy: z
-    .enum(["label", "sortOrder", "active", "createdAt"])
-    .or(z.literal("")),
-  orderDirection: z.enum(["asc", "desc"]),
-  showDeleted: z.boolean(),
-});
+export const adminCategoryListInputSchema =
+  createAdminListInputSchema(categoryOrderBy);
 
 export type AdminCategoryListInput = z.infer<
   typeof adminCategoryListInputSchema
 >;
 
-export const adminCategoryListOutputSchema = z.object({
-  orderedIds: z.uuid().array(),
-  rows: adminCategorySchema.array(),
-  totalRows: z.number().int().nonnegative(),
-});
+export const adminCategoryListOutputSchema =
+  createAdminListOutputSchema(adminCategorySchema);
 
 const categoryLabelSchema = z
   .string()
@@ -63,17 +61,11 @@ export const updateCategoryInputSchema = createCategoryInputSchema.extend({
   id: z.uuid(),
 });
 
-export const setCategoryActiveInputSchema = z.object({
-  active: z.boolean(),
-  id: z.uuid(),
-});
+export const setCategoryActiveInputSchema = setEntityActiveInputSchema;
 
-export const categoryIdInputSchema = z.object({
-  id: z.uuid(),
-});
+export const categoryIdInputSchema = entityIdInputSchema;
 
-export const reorderCategoriesInputSchema = z.object({
-  ids: z.uuid().array().min(1, "Send the complete ordered category list."),
-});
+export const reorderCategoriesInputSchema =
+  createReorderInputSchema("category");
 
 export type CategoryFormInput = z.input<typeof createCategoryInputSchema>;

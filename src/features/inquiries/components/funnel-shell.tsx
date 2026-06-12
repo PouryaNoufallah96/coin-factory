@@ -1,3 +1,4 @@
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, Suspense } from "react";
 
@@ -28,12 +29,12 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         </Link>
         <div
           aria-hidden="true"
-          className="flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream **:data-[slot=mask-icon]:h-(--cf-menu-mark-h) **:data-[slot=mask-icon]:w-(--cf-menu-mark-w)"
+          className="flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream"
         >
-          <MaskIcon src="/brand/icon-menu.svg" />
+          <Menu className="size-5" />
         </div>
       </header>
-      <main className="relative z-10 flex min-h-0 flex-1 flex-col">
+      <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto">
         {children}
       </main>
       <Suspense fallback={null}>

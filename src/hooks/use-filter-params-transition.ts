@@ -54,7 +54,10 @@ export function useFilterParamsTransition() {
 
   const updateListFilters = (
     values: Partial<
-      Pick<typeof filters, "orderBy" | "orderByDesc" | "pageSize" | "search">
+      Pick<
+        typeof filters,
+        "orderBy" | "orderByDesc" | "pageSize" | "search" | "showDeleted"
+      >
     >
   ) => setFilters({ ...values, page: DEFAULT_PAGE });
 

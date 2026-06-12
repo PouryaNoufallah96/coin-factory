@@ -51,7 +51,7 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Popup
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-(--cf-dialog-max-w) -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-popover-foreground text-sm outline-none ring-1 ring-foreground/10 sm:max-w-sm",
+          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-(--cf-dialog-max-w) -translate-x-1/2 -translate-y-1/2 gap-4 rounded-(--cf-radius-card) bg-popover p-4 text-popover-foreground text-sm outline-none ring-1 ring-foreground/10 sm:max-w-sm",
           className
         )}
         data-slot="dialog-content"
@@ -99,7 +99,7 @@ function DialogFooter({
   return (
     <div
       className={cn(
-        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end",
+        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-(--cf-radius-card) border-t bg-muted/50 p-4 sm:flex-row sm:justify-end",
         className
       )}
       data-slot="dialog-footer"

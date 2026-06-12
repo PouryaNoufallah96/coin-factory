@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 interface ControlProps {
@@ -28,6 +29,10 @@ interface ControlProps {
   "aria-invalid"?: boolean;
   disabled?: boolean;
   id: string;
+}
+
+function defaultTextareaSerialize(value: string) {
+  return value;
 }
 
 interface FormFieldRenderProps<
@@ -189,6 +194,81 @@ function FormInputField<
   );
 }
 
+type FormTextareaFieldProps<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>,
+> = Omit<
+  React.ComponentProps<typeof Textarea>,
+  | "aria-describedby"
+  | "aria-invalid"
+  | "defaultValue"
+  | "disabled"
+  | "id"
+  | "name"
+  | "onBlur"
+  | "onChange"
+  | "ref"
+  | "value"
+> &
+  Omit<BaseFormFieldProps<TFieldValues, TName>, "children"> & {
+    deserialize?: (value: unknown) => string;
+    serialize?: (value: string) => unknown;
+  };
+
+function FormTextareaField<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>,
+>({
+  className,
+  deserialize = defaultTextareaDeserialize,
+  serialize = defaultTextareaSerialize,
+  ...props
+}: FormTextareaFieldProps<TFieldValues, TName>) {
+  const {
+    control,
+    defaultValue,
+    description,
+    disabled,
+    id,
+    label,
+    name,
+    orientation,
+    rules,
+    shouldUnregister,
+    ...textareaProps
+  } = props;
+
+  return (
+    <FormField
+      className={className}
+      control={control}
+      defaultValue={defaultValue}
+      description={description}
+      disabled={disabled}
+      id={id}
+      label={label}
+      name={name}
+      orientation={orientation}
+      rules={rules}
+      shouldUnregister={shouldUnregister}
+    >
+      {({ controlProps, field }) => (
+        <Textarea
+          {...textareaProps}
+          {...controlProps}
+          name={field.name}
+          onBlur={field.onBlur}
+          onChange={(event) =>
+            field.onChange(serialize(event.currentTarget.value))
+          }
+          ref={field.ref}
+          value={deserialize(field.value)}
+        />
+      )}
+    </FormField>
+  );
+}
+
 interface FormRadioOption {
   description?: React.ReactNode;
   disabled?: boolean;
@@ -270,7 +350,7 @@ function FormRadioGroupField<
                 key={option.value}
               >
                 <Field
-                  className="rounded-lg border border-border/70 p-3"
+                  className="rounded-(--cf-radius-alert) border border-border/70 p-3"
                   data-disabled={optionDisabled || undefined}
                   data-invalid={fieldState.invalid || undefined}
                   orientation="horizontal"
@@ -324,4 +404,9 @@ export {
   FormInputField,
   FormRadioGroupField,
   FormRootError,
+  FormTextareaField,
 };
+
+function defaultTextareaDeserialize(value: unknown) {
+  return typeof value === "string" ? value : "";
+}

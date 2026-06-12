@@ -4,12 +4,13 @@ import {
   parseAsBoolean,
   parseAsInteger,
   parseAsString,
-} from "nuqs";
+} from "nuqs/server";
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_MAX_PAGE_SIZE = 100;
 export const PAGE_SIZE_OPTIONS = [10, 20, 50] as const;
+export const FILTER_URL_UPDATE_DEBOUNCE_MS = 300;
 export const FILTER_URL_UPDATE_THROTTLE_MS = 340;
 
 /** Shared list-view search params (admin tables, filtered lists). */
@@ -19,6 +20,7 @@ export const filterParams = {
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
   orderBy: parseAsString.withDefault(""),
   orderByDesc: parseAsBoolean.withDefault(false),
+  showDeleted: parseAsBoolean.withDefault(false),
 };
 
 /** RSC-side loader: const filters = loadFilterParams(await searchParams). */
@@ -46,6 +48,7 @@ export interface NormalizedFilterParams<TOrderBy extends string = string> {
   page: number;
   pageSize: number;
   search: string;
+  showDeleted: boolean;
 }
 
 interface NormalizeFilterParamsOptions<TOrderBy extends string> {
@@ -114,6 +117,7 @@ function normalizeFilterParams<TOrderBy extends string = string>(
     page,
     pageSize,
     search: params.search.trim(),
+    showDeleted: params.showDeleted,
   };
 }
 
@@ -142,7 +146,12 @@ function toListSortingState(
 }
 
 function hasActiveFilterParams(params: FilterParams): boolean {
-  return Boolean(params.search.trim() || params.orderBy || params.orderByDesc);
+  return Boolean(
+    params.search.trim() ||
+      params.orderBy ||
+      params.orderByDesc ||
+      params.showDeleted
+  );
 }
 
 export {

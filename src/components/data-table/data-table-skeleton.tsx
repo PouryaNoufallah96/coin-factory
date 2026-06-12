@@ -21,7 +21,10 @@ export function DataTableSkeleton({
   const rows = Array.from({ length: rowCount }, (_, index) => index);
 
   return (
-    <div aria-busy="true" className="overflow-hidden rounded-lg border bg-card">
+    <div
+      aria-busy="true"
+      className="overflow-hidden rounded-(--cf-radius-alert) border bg-card"
+    >
       <Table>
         <TableHeader>
           <TableRow>

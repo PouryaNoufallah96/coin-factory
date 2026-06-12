@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createRouterClient } from "@orpc/server";
+import { headers } from "next/headers";
 
 import { createRpcContext } from "@/server/rpc/context";
 import { appRouter } from "@/server/rpc/routers";
@@ -12,3 +13,16 @@ import { appRouter } from "@/server/rpc/routers";
 export const orpcServer = createRouterClient(appRouter, {
   context: () => createRpcContext(),
 });
+
+/**
+ * Request-bound oRPC client for authenticated RSC reads. Admin procedures need
+ * current request headers so Better Auth can validate the session; still no
+ * server-side HTTP hop.
+ */
+export async function createRequestOrpcServer() {
+  const requestHeaders = await headers();
+
+  return createRouterClient(appRouter, {
+    context: () => createRpcContext({ headers: requestHeaders }),
+  });
+}

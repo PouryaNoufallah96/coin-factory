@@ -46,7 +46,7 @@ export function DataTable<TData extends RowData>({
       {toolbar}
       <div
         className={cn(
-          "overflow-hidden rounded-lg border bg-card transition-opacity",
+          "overflow-hidden rounded-(--cf-radius-alert) border bg-card transition-opacity",
           isPending &&
             "pointer-events-none animate-pulse opacity-60 motion-reduce:animate-none"
         )}

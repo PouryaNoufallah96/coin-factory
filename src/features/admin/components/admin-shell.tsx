@@ -1,31 +1,16 @@
-import {
-  Inbox,
-  LayoutDashboard,
-  ListChecks,
-  Settings,
-  Tags,
-} from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { MaskIcon } from "@/components/common/mask-icon";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AdminNavList } from "@/features/admin/components/admin-nav-item";
 import { AdminSignOutButton } from "@/features/admin/components/admin-sign-out-button";
-import { cn } from "@/lib/utils";
 
 interface AdminShellProps {
   children: ReactNode;
   userEmail: string;
 }
-
-const navItems = [
-  { href: "/admin", icon: LayoutDashboard, label: "Overview" },
-  { href: "/admin/questions", icon: ListChecks, label: "Questions" },
-  { href: "/admin/categories", icon: Tags, label: "Categories" },
-  { href: "/admin/inquiries", icon: Inbox, label: "Inquiries" },
-  { href: "/admin/settings", icon: Settings, label: "Settings" },
-] as const;
 
 export function AdminShell({ children, userEmail }: AdminShellProps) {
   return (
@@ -47,9 +32,7 @@ export function AdminShell({ children, userEmail }: AdminShellProps) {
               aria-label="Admin navigation"
               className="hidden flex-col gap-1 lg:flex"
             >
-              {navItems.map((item) => (
-                <AdminNavItem key={item.href} {...item} />
-              ))}
+              <AdminNavList />
             </nav>
           </div>
         </aside>
@@ -59,9 +42,7 @@ export function AdminShell({ children, userEmail }: AdminShellProps) {
               aria-label="Admin navigation"
               className="-mx-1 flex min-w-0 gap-1 overflow-x-auto lg:hidden"
             >
-              {navItems.map((item) => (
-                <AdminNavItem compact key={item.href} {...item} />
-              ))}
+              <AdminNavList compact />
             </nav>
             <div className="ml-auto flex min-w-0 items-center gap-3">
               <Badge
@@ -98,9 +79,7 @@ export function AdminShellFallback({ children }: { children: ReactNode }) {
               aria-label="Admin navigation"
               className="hidden flex-col gap-1 lg:flex"
             >
-              {navItems.map((item) => (
-                <AdminNavItem key={item.href} {...item} />
-              ))}
+              <AdminNavList />
             </nav>
           </div>
         </aside>
@@ -110,9 +89,7 @@ export function AdminShellFallback({ children }: { children: ReactNode }) {
               aria-label="Admin navigation"
               className="-mx-1 flex min-w-0 gap-1 overflow-x-auto lg:hidden"
             >
-              {navItems.map((item) => (
-                <AdminNavItem compact key={item.href} {...item} />
-              ))}
+              <AdminNavList compact />
             </nav>
             <Skeleton className="ml-auto h-6 w-36 rounded-(--cf-radius-pill)" />
           </header>
@@ -123,25 +100,5 @@ export function AdminShellFallback({ children }: { children: ReactNode }) {
       </div>
       <output className="sr-only">Loading admin workspace</output>
     </div>
-  );
-}
-
-function AdminNavItem({
-  compact,
-  href,
-  icon: Icon,
-  label,
-}: (typeof navItems)[number] & { compact?: boolean }) {
-  return (
-    <Link
-      className={cn(
-        "inline-flex h-10 items-center gap-2 rounded-(--cf-radius-pill) border border-transparent px-3 text-cf-text-muted text-sm transition-colors hover:border-cf-border-muted/40 hover:bg-cf-chip-bg hover:text-cf-text-primary",
-        compact && "shrink-0"
-      )}
-      href={href}
-    >
-      <Icon aria-hidden="true" className="size-4" />
-      <span>{label}</span>
-    </Link>
   );
 }

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AdminPage() {
   return (
-    <div className="flex max-w-6xl flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
       <section className="flex flex-col gap-2">
         <p className="text-cf-cream text-sm">Admin</p>
         <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">

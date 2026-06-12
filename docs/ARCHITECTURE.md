@@ -129,7 +129,7 @@ End users never authenticate.
 
 ## Architecture assessment (honest, current state)
 
-Current state (2026-06-11):
+Current state (2026-06-12):
 
 - **Foundation and public persistence exist**: `src/` layout, direct oRPC mount, `health.ping`,
   globalThis-cached Drizzle client, t3-env modules, cf-themed shadcn primitives, `questions`,
@@ -143,12 +143,14 @@ Current state (2026-06-11):
   `Content-Length`, `BodyLimitPlugin` enforces the shared byte budget, oRPC middleware applies
   post-parse quotas and a per-IP throttle, and the `.actionable()` submit path carries request
   headers into the same context. Reverse-proxy/edge rate limits remain deployment work.
-- **Landing UI exists**: `/` renders the CF funnel shell, file picker, independent multi-select
-  categories, and the at-least-one intake gate. `/onboarding/[step]` and `/thank-you` routes are
-  not built yet.
+- **Public funnel UI exists**: `/` landing (search, categories, intake gate), `/onboarding/[step]`
+  wizard (DB-driven questions, free step navigation, final-submit validation), and
+  `/thank-you` confirmation — all under `(funnel)/` with ViewTransition navigation and draft
+  state in layout context.
 - **No auth or admin surface yet**: end users never log in; better-auth admin sessions and
   `/admin` question/category/inquiry management ship in the admin phase (slices 0007-0008).
+- **Cache invalidation helpers not wired yet**: tag getters exist; `updateTag` fan-out lands with admin.
 - **No tests in v1**: every slice gates on `pnpm validate` plus focused browser walkthroughs; no
   Vitest/Playwright/Storybook suite exists yet.
 - **No i18n**: single-locale English.
-- **No git remote / CI**: local repo only; commands that mention `gh` note this.
+- **GitLab remote + CI**: `origin` on GitLab; self-host deploy per ADR-0006 (manual CI deploy on runner).

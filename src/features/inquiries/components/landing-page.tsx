@@ -3,15 +3,19 @@
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import {
+  addTransitionType,
   type ChangeEvent,
   createContext,
   type FormEvent,
   type ReactNode,
+  startTransition,
   use,
   useRef,
   useState,
 } from "react";
-
+import { FunnelAlert } from "@/components/common/funnel-alert";
+import { InputSurface } from "@/components/common/input-surface";
+import { MaskIcon } from "@/components/common/mask-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,9 +28,11 @@ import {
   MAX_FILE_SIZE_BYTES,
   MAX_FILES,
 } from "@/features/inquiries/schemas/file-constraints";
-import { INTAKE_SIGNAL_MESSAGE } from "@/features/inquiries/schemas/intake-signal";
+import {
+  hasIntakeSignal,
+  INTAKE_SIGNAL_MESSAGE,
+} from "@/features/inquiries/schemas/intake-signal";
 import { cn } from "@/lib/utils";
-
 import { useFunnelDraft } from "../hooks/use-funnel-draft";
 
 const HERO_SUBLINE = "What do you want to";
@@ -44,20 +50,6 @@ const LandingAlertContext = createContext<
   ((message: string | null) => void) | null
 >(null);
 
-function MaskIcon({ className, src }: { className?: string; src: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn("block bg-current", className)}
-      data-slot="mask-icon"
-      style={{
-        WebkitMask: `url("${src}") center / contain no-repeat`,
-        mask: `url("${src}") center / contain no-repeat`,
-      }}
-    />
-  );
-}
-
 export function LandingPage({ children }: { children: ReactNode }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -69,6 +61,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
     setAssetDescription,
     setFiles,
   } = useFunnelDraft();
+
+  const searchActive = assetDescription.trim().length > 0 || files.length > 0;
 
   function addFiles(event: ChangeEvent<HTMLInputElement>) {
     const pickedFiles = Array.from(event.target.files ?? []);
@@ -107,45 +101,51 @@ export function LandingPage({ children }: { children: ReactNode }) {
   function continueToWizard(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
     if (
-      assetDescription.trim().length === 0 &&
-      files.length === 0 &&
-      selectedCategoryIds.length === 0
+      !hasIntakeSignal({
+        assetDescription,
+        categoryIds: selectedCategoryIds,
+        files,
+      })
     ) {
       setError(INTAKE_SIGNAL_MESSAGE);
       return;
     }
     setError(null);
-    router.push("/onboarding/1" as Route);
+    startTransition(() => {
+      addTransitionType("nav-forward");
+      router.push("/onboarding/1" as Route);
+    });
   }
 
   return (
     <LandingAlertContext.Provider value={setError}>
-      <section className="flex flex-1 flex-col items-center justify-center px-6 py-3 sm:px-10 lg:px-(--cf-page-x)">
+      <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
         <div className="flex w-full flex-col items-center gap-10 sm:gap-14">
-          {error ? <LandingAlert message={error} /> : null}
-          <div className="cf-content-container flex flex-col items-center gap-6 text-center">
-            <p className="font-light text-3xl text-cf-text-primary leading-none sm:text-[36px]">
+          {error ? <FunnelAlert message={error} /> : null}
+          <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
+            <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
               {HERO_SUBLINE}
             </p>
-            <h1 className="font-bold text-6xl text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none sm:text-[96px]">
+            <h1 className="text-(length:--cf-text-hero) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
               {HERO_WORD}
             </h1>
           </div>
           <div className="flex w-full flex-col items-center gap-8">
             <form className="cf-search-container" onSubmit={continueToWizard}>
-              <div
+              <InputSurface
+                active={searchActive}
                 className={cn(
-                  "flex w-full flex-col justify-center bg-cf-charcoal-900 text-cf-cream shadow-(--cf-glow-active) transition-[border-color,border-radius,box-shadow,padding] duration-(--cf-dur-content) ease-(--cf-ease)",
+                  "flex w-full flex-col justify-center text-cf-cream transition-[border-radius,padding] duration-(--cf-dur-content) ease-(--cf-ease)",
                   files.length > 0
-                    ? "min-h-[216px] gap-6 rounded-(--cf-radius-panel) border border-cf-border-active p-6"
-                    : "min-h-(--cf-search-h) rounded-(--cf-radius-row) border border-cf-border-active py-5 pr-5 pl-6"
+                    ? "min-h-(--cf-search-panel-min-h) gap-6 rounded-(--cf-radius-panel) p-6"
+                    : "min-h-(--cf-search-h) py-5 pr-5 pl-6"
                 )}
               >
                 <FileCardPanel files={files} onRemove={removeFile} />
                 <div className="flex min-h-10 w-full items-center gap-4">
                   <button
                     aria-label="Attach PDF or Word document"
-                    className="-m-1.5 flex size-10 shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10"
+                    className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10"
                     onClick={() => fileInputRef.current?.click()}
                     type="button"
                   >
@@ -162,7 +162,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   />
                   <Input
                     aria-label="Asset description"
-                    className="h-10 border-0 bg-transparent px-0 text-cf-cream text-lg shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0 md:text-xl"
+                    className="text-(length:--cf-text-base) h-10 border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
                     onChange={(event) => {
                       setAssetDescription(event.target.value);
                       if (error) {
@@ -174,32 +174,20 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   />
                   <Button
                     aria-label="Continue"
-                    className="size-12 shrink-0 rounded-full bg-cf-cream text-cf-charcoal-900 shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream-bright active:translate-y-0 active:scale-[0.97] **:data-[slot=mask-icon]:size-5"
+                    className="size-(--cf-search-button-size) shrink-0 rounded-full bg-cf-cream text-cf-charcoal-900 shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream-bright active:translate-y-0 active:scale-[0.97] **:data-[slot=mask-icon]:size-5"
                     size="icon"
                     type="submit"
                   >
                     <MaskIcon src="/brand/icon-target.svg" />
                   </Button>
                 </div>
-              </div>
+              </InputSurface>
             </form>
             {children}
           </div>
         </div>
       </section>
     </LandingAlertContext.Provider>
-  );
-}
-
-function LandingAlert({ message }: { message: string }) {
-  return (
-    <div className="cf-field-container flex min-h-14 items-center gap-3 rounded-(--cf-radius-alert) bg-cf-error px-4 text-cf-text-on-error">
-      <MaskIcon
-        className="h-[18px] w-5 shrink-0"
-        src="/brand/icon-warning.svg"
-      />
-      <p className="text-sm sm:text-base">{message}</p>
-    </div>
   );
 }
 
@@ -218,14 +206,17 @@ function FileCardPanel({
     <div className="flex w-full flex-wrap gap-5">
       {files.map((file, index) => (
         <div
-          className="relative flex h-[68px] w-full min-w-0 items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-[241px]"
+          className="relative flex h-(--cf-file-card-h) w-full min-w-0 items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
           key={`${file.name}-${file.lastModified}-${file.size}`}
         >
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-cf-cream text-cf-text-on-accent">
-            <MaskIcon className="h-6 w-[22px]" src="/brand/icon-invoice.svg" />
+          <div className="flex size-(--cf-file-card-tile) shrink-0 items-center justify-center rounded-(--cf-radius-segment) bg-cf-cream text-cf-text-on-accent">
+            <MaskIcon
+              className="h-6 w-(--cf-icon-invoice-w)"
+              src="/brand/icon-invoice.svg"
+            />
           </div>
           <div className="min-w-0">
-            <p className="max-w-[130px] truncate text-base text-cf-text-primary leading-none">
+            <p className="max-w-(--cf-file-card-name-w) truncate text-base text-cf-text-primary leading-none">
               {fileDisplayName(file)}
             </p>
             <p className="mt-2 text-base text-cf-border-muted leading-none">
@@ -277,7 +268,7 @@ export function LandingCategoryChips({
           return (
             <Badge
               className={cn(
-                "h-[35px] shrink-0 rounded-full border px-[18px] font-normal text-base transition-[background-color,border-color,color] duration-(--cf-dur-content) ease-(--cf-ease)",
+                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color] duration-(--cf-dur-content) ease-(--cf-ease)",
                 selected
                   ? "border-transparent bg-cf-chip-bg-active text-cf-text-on-accent"
                   : "border-cf-border-muted bg-cf-chip-bg text-cf-text-on-accent hover:border-cf-border-active"

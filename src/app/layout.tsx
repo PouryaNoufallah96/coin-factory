@@ -34,9 +34,12 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "coinfactory",
+  title: {
+    default: "CoinFactory",
+    template: "%s | CoinFactory",
+  },
   description:
-    "Tokenize real-world assets with CoinFactory AG. Tell us about your project and our team will contact you within 48 hours.",
+    "Swiss B2B lead qualification for real-world asset tokenization with CoinFactory AG.",
 };
 
 export default function RootLayout({

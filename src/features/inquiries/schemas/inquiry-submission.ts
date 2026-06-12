@@ -2,7 +2,7 @@ import { createInsertSchema } from "drizzle-orm/zod";
 import { z } from "zod";
 
 import { inquiries, inquiryAnswers } from "@/server/db/schema";
-
+import { emailSchema, whatsappSchema } from "./contact";
 import {
   ALLOWED_DOCUMENT_MIME_TYPES,
   MAX_CATEGORIES_PER_INQUIRY,
@@ -10,12 +10,6 @@ import {
   MAX_FILES,
 } from "./file-constraints";
 import { hasIntakeSignal, INTAKE_SIGNAL_MESSAGE } from "./intake-signal";
-
-export const emailSchema = z.email("Enter a valid email address.");
-
-export const whatsappSchema = z
-  .string()
-  .regex(/^\+?\d{7,15}$/, "Enter a WhatsApp number with 7 to 15 digits.");
 
 const inquiryInsertSchema = createInsertSchema(inquiries, {
   email: emailSchema,

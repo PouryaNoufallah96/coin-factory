@@ -22,6 +22,7 @@ import {
   type InquirySubmission,
   inquirySubmissionSchema,
 } from "@/features/inquiries/schemas/inquiry-submission";
+import { REQUIRED_ANSWER_MESSAGE } from "@/features/inquiries/schemas/validation-messages";
 import { listActiveQuestions } from "@/features/questions/db/queries";
 import {
   type Question,
@@ -174,7 +175,7 @@ function buildAnswerRows(
   );
   if (missingRequiredAnswer) {
     throw new ORPCError("BAD_REQUEST", {
-      message: "Please answer every required question before submitting.",
+      message: REQUIRED_ANSWER_MESSAGE,
     });
   }
 

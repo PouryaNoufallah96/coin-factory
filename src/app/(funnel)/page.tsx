@@ -3,16 +3,13 @@ import { Suspense } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { getActiveCategories } from "@/features/categories/api/server/get-active-categories";
+import { FunnelPageTransition } from "@/features/inquiries/components/funnel-page-transition";
+import { FunnelReveal } from "@/features/inquiries/components/funnel-reveal";
+import { FunnelRevealFallback } from "@/features/inquiries/components/funnel-reveal-fallback";
 import {
   LandingCategoryChips,
   LandingPage,
 } from "@/features/inquiries/components/landing-page";
-
-export const metadata: Metadata = {
-  title: "CoinFactory",
-  description:
-    "Swiss B2B lead qualification for real-world asset tokenization with CoinFactory AG.",
-};
 
 const CATEGORY_SKELETON_KEYS = [
   "category-loading-luxury-hotel",
@@ -24,13 +21,29 @@ const CATEGORY_SKELETON_KEYS = [
   "category-loading-factory",
 ];
 
+export const metadata: Metadata = {
+  title: "Tokenize",
+  description:
+    "Start a private CoinFactory tokenization inquiry for your real-world asset or business project.",
+};
+
 export default function Page() {
   return (
-    <LandingPage>
-      <Suspense fallback={<CategoryChipsFallback />}>
-        <LandingCategorySection />
-      </Suspense>
-    </LandingPage>
+    <FunnelPageTransition>
+      <LandingPage>
+        <Suspense
+          fallback={
+            <FunnelRevealFallback>
+              <CategoryChipsFallback />
+            </FunnelRevealFallback>
+          }
+        >
+          <FunnelReveal>
+            <LandingCategorySection />
+          </FunnelReveal>
+        </Suspense>
+      </LandingPage>
+    </FunnelPageTransition>
   );
 }
 
@@ -46,7 +59,7 @@ function CategoryChipsFallback() {
       <div className="flex w-max min-w-full flex-nowrap justify-center gap-4 px-1">
         {CATEGORY_SKELETON_KEYS.map((key) => (
           <Skeleton
-            className="h-[35px] w-28 shrink-0 rounded-full bg-cf-chip-bg"
+            className="h-(--cf-chip-h) w-28 shrink-0 rounded-full bg-cf-chip-bg"
             key={key}
           />
         ))}

@@ -100,7 +100,7 @@ export function ResponsiveModal({
           <DialogDescription className={cn(!description && "sr-only", "px-6")}>
             {description ?? title}
           </DialogDescription>
-          <div className="max-h-[80dvh] overflow-y-auto px-6 pb-6">
+          <div className="max-h-(--cf-modal-max-h) overflow-y-auto px-6 pb-6">
             {children}
           </div>
         </DialogContent>
@@ -110,7 +110,7 @@ export function ResponsiveModal({
 
   return (
     <Drawer onOpenChange={onOpenChange} open={open}>
-      <DrawerContent className="flex h-auto max-h-[80dvh] flex-col">
+      <DrawerContent className="flex h-auto max-h-(--cf-modal-max-h) flex-col">
         <DrawerHeader className="shrink-0">
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription className={cn(!description && "sr-only")}>

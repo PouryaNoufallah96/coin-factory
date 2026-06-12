@@ -164,8 +164,8 @@ highlight.
 - **Accent cream** ({colors.accent-cream}): logo, active borders, progress,
   CTA. The sole accent — never blue, green, or purple, anywhere.
 - **Error red** ({colors.error}): one exception, one place — the alert banner
-  raised when a required step is submitted unanswered. Never a fill, border,
-  icon, or text color anywhere else.
+  raised on final Submit when required answers are missing or invalid. Never a
+  fill, border, icon, or text color anywhere else.
 - **Glow cream** ({colors.glow-cream}): a 100–200px blur reserved for the one
   active/focused element on screen.
 - **Text** is white on dark ({colors.text-primary}); charcoal inside cream
@@ -228,8 +228,8 @@ Respect `prefers-reduced-motion`.
 | `/thank-you` | Confirmation | Halo "Thank You" headline; no CTA |
 
 Shared chrome everywhere: 96px header (logo lockup left, decorative hamburger right),
-charcoal gradient + cream spotlight canvas. Wizard CTAs stay enabled; submitting an
-unanswered required step raises the top error alert.
+charcoal gradient + cream spotlight canvas. Wizard CTAs stay enabled; Next moves freely,
+and final Submit raises the top error alert if required answers are missing or invalid.
 
 ### Hero search
 Dark pill, 80px tall, cream value text. Plus glyph left (attach a document),
@@ -250,19 +250,19 @@ line inside the content container and scrolls horizontally on overflow. Inactive
 white + gray border; active = cream-tinted fill + charcoal text.
 
 ### Radio option rows
-Full-width pills, 72px tall, leading radio dot. Selected: dark surface, cream
-border, glow, cream-bright label, filled dot. Unselected: muted surface, gray
-border, white label.
+Full-width pills, 72px tall, leading radio dot. Selected: same surface treatment as an
+active text input — `surface-dark` fill, cream active border, `glow-active`, cream-bright
+label, filled dot (border + glow required because surface-dark matches the canvas).
+Unselected: muted surface, gray border, white label.
 
 ### Primary CTA
 Cream pill, 160×48px, charcoal Comfortaa Bold label. Only ever "Next" or
-"Submit". It stays enabled — an unanswered required Next/Submit raises the
-error alert instead of disabling.
+"Submit". It stays enabled. Next moves freely between questions; final Submit
+raises the error alert if required answers are missing or invalid.
 
 ### Back button
 Ghost pill, same geometry, paired left of Next in a 520px space-between row.
-Transparent with a 1px cream outline and a charcoal label — it sits on the
-bright lower spotlight.
+Transparent with a 1px cream outline and a cream label on the dark wizard canvas.
 
 ### Error alert
 A 56px {colors.error} bar, {rounded.alert}, overlaid across the top of the
@@ -285,7 +285,7 @@ to clear it.
   (cream on charcoal, charcoal on cream).
 - **Don't** add sidebars, dashboards, charts, tickers, or price widgets.
 - **Don't** use blue/purple accents, neon, glassmorphism, or gradient buttons.
-- **Don't** use `{colors.error}` anywhere except the unanswered-step alert.
+- **Don't** use `{colors.error}` anywhere except the final-submit alert.
 - **Don't** use sharp corners — pills everywhere.
 - **Don't** add illustrations, stock photos, mascots, or emoji.
 - **Don't** let it feel like a consumer crypto wallet.

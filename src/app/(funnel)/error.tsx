@@ -9,7 +9,12 @@ export default function FunnelError({ reset }: { reset: () => void }) {
         <p className="font-light text-2xl text-cf-text-primary leading-tight sm:text-3xl">
           Something went wrong.
         </p>
-        <Button onClick={reset} type="button" variant="outline">
+        <Button
+          className="text-(length:--cf-text-base) h-(--cf-cta-h) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-cream shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-cream active:scale-[0.97]"
+          onClick={reset}
+          type="button"
+          variant="outline"
+        >
           Try again
         </Button>
       </div>

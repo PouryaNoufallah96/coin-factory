@@ -1,28 +1,143 @@
+name: ${COMPOSE_PROJECT_NAME:-coin-factory}
+
+x-app-build: &app-build
+  context: .
+  secrets:
+    - coinfactory_build_env
+  network: host
+
+x-app-environment: &app-environment
+  DATABASE_URL: ${APP_DATABASE_URL:-postgresql://coinfactory:coinfactory@postgres:5432/coinfactory}
+  STORAGE_DRIVER: ${STORAGE_DRIVER:-minio}
+  S3_ENDPOINT: ${APP_S3_ENDPOINT:-http://minio:9000}
+  S3_REGION: ${S3_REGION:-us-east-1}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-coinfactory}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-coinfactory-minio}
+  S3_BUCKET: ${S3_BUCKET:-coinfactory-dev}
+  BLOB_READ_WRITE_TOKEN: ${BLOB_READ_WRITE_TOKEN:-}
+  RESEND_API_KEY: ${RESEND_API_KEY:-}
+  SUBMISSION_NOTIFICATION_EMAIL: ${SUBMISSION_NOTIFICATION_EMAIL:-}
+  SUBMISSION_FROM_EMAIL: ${SUBMISSION_FROM_EMAIL:-}
+  BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
+  BETTER_AUTH_URL: ${BETTER_AUTH_URL:-}
+  NEXT_PUBLIC_AUTH_URL: ${NEXT_PUBLIC_AUTH_URL:-}
+  ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+
+x-reverse-proxy-nginx: |
+  limit_req_zone $$binary_remote_addr zone=coinfactory_public:10m rate=10r/m;
+
+  upstream coinfactory_app {
+    server 127.0.0.1:3000;
+  }
+
+  server {
+    client_max_body_size 25m;
+
+    location / {
+      limit_req zone=coinfactory_public burst=20 nodelay;
+      proxy_pass http://coinfactory_app;
+      proxy_http_version 1.1;
+      proxy_set_header Host $$host;
+      proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $$scheme;
+      proxy_set_header X-Real-IP $$remote_addr;
+      proxy_buffering off;
+    }
+
+    location /rpc/ {
+      client_max_body_size 25m;
+      limit_req zone=coinfactory_public burst=20 nodelay;
+      proxy_pass http://coinfactory_app;
+      proxy_http_version 1.1;
+      proxy_set_header Host $$host;
+      proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $$scheme;
+      proxy_set_header X-Real-IP $$remote_addr;
+      proxy_buffering off;
+    }
+  }
+
 services:
+  app:
+    image: ${APP_IMAGE:-coinfactory-app}
+    container_name: coinfactory-app
+    build:
+      <<: *app-build
+      target: runner
+    profiles:
+      - app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    environment: *app-environment
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    networks:
+      - default
+
+  migrate:
+    image: ${MIGRATE_IMAGE:-coinfactory-migrate}
+    container_name: coinfactory-migrate
+    build:
+      <<: *app-build
+      target: migrator
+    profiles:
+      - app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${APP_DATABASE_URL:-postgresql://coinfactory:coinfactory@postgres:5432/coinfactory}
+    restart: "no"
+    networks:
+      - default
+
   postgres:
     image: postgres:17-alpine
     container_name: coinfactory-postgres
     environment:
-      POSTGRES_USER: coinfactory
-      POSTGRES_PASSWORD: coinfactory
-      POSTGRES_DB: coinfactory
+      POSTGRES_USER: ${POSTGRES_USER:-coinfactory}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-coinfactory}
+      POSTGRES_DB: ${POSTGRES_DB:-coinfactory}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - coinfactory-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U coinfactory -d coinfactory"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\"",
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - default
 
   minio:
     image: minio/minio:RELEASE.2025-04-22T22-12-26Z
     container_name: coinfactory-minio
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-coinfactory}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-coinfactory-minio}
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-coinfactory}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-coinfactory-minio}
     ports:
       - "127.0.0.1:9000:9000"
       - "127.0.0.1:9001:9001"
@@ -33,6 +148,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - default
 
   minio-init:
     image: minio/mc:RELEASE.2025-04-16T18-13-26Z
@@ -41,8 +158,8 @@ services:
       minio:
         condition: service_healthy
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-coinfactory}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-coinfactory-minio}
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-coinfactory}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-coinfactory-minio}
       S3_BUCKET: ${S3_BUCKET:-coinfactory-dev}
     entrypoint: >
       /bin/sh -c "
@@ -50,6 +167,16 @@ services:
       mc mb --ignore-existing \"local/$${S3_BUCKET}\";
       "
     restart: "no"
+    networks:
+      - default
+
+secrets:
+  coinfactory_build_env:
+    file: ${COINFACTORY_BUILD_ENV_FILE:-.env}
+
+networks:
+  default:
+    name: ${COMPOSE_PROJECT_NAME:-coin-factory}_default
 
 volumes:
   coinfactory-pgdata:

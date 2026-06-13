@@ -5,4 +5,5 @@ export * from "./inquiries";
 export * from "./inquiry-answers";
 export * from "./inquiry-categories";
 export * from "./inquiry-files";
+export * from "./notification-recipients";
 export * from "./questions";

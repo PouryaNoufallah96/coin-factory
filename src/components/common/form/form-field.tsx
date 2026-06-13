@@ -88,7 +88,6 @@ function FormField<
   const { field, fieldState } = useController({
     control,
     defaultValue,
-    disabled,
     name,
     rules,
     shouldUnregister,

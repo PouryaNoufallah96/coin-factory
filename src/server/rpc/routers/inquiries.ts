@@ -175,12 +175,11 @@ const resendNotification = adminProcedure
       });
     }
 
-    try {
-      await sendSubmissionNotification(input.id, {
-        idempotencyKey: `submission-email/${input.id}/resend-${Date.now()}`,
-        throwOnFailure: true,
-      });
-    } catch {
+    const result = await sendSubmissionNotification(input.id, {
+      idempotencyKey: `submission-email/${input.id}/resend-${Date.now()}`,
+    });
+
+    if (!result.ok) {
       throw new ORPCError("INTERNAL_SERVER_ERROR", {
         message: "Email could not be resent.",
       });

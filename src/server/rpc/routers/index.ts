@@ -6,6 +6,7 @@ import { authRouter } from "./auth";
 import { categoriesRouter } from "./categories";
 import { inquiriesRouter } from "./inquiries";
 import { questionsRouter } from "./questions";
+import { settingsRouter } from "./settings";
 
 /** Liveness probe verifying the rpc wiring end-to-end. */
 const ping = publicProcedure.handler(() => ({ ok: true }) as const);
@@ -17,6 +18,7 @@ export const appRouter = {
   questions: questionsRouter,
   categories: categoriesRouter,
   inquiries: inquiriesRouter,
+  settings: settingsRouter,
 };
 
 export type AppRouter = typeof appRouter;

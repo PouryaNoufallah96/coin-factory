@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export const emailSchema = z.email("Enter a valid email address.");
+import { emailSchema as sharedEmailSchema } from "@/lib/schemas/email";
+
+export const emailSchema = sharedEmailSchema;
 
 export const whatsappSchema = z
   .string()

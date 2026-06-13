@@ -1,6 +1,8 @@
 import "server-only";
 
 import { env } from "@/config/env/server";
+import { listNotificationRecipients } from "@/features/settings/db/queries";
+import { resolveNotificationRecipients } from "@/features/settings/lib/notification-recipients";
 import { resend } from "@/services/resend/client";
 
 import {
@@ -12,8 +14,11 @@ import SubmissionEmail from "./templates/submission-email";
 
 interface SendSubmissionNotificationOptions {
   idempotencyKey?: string;
-  throwOnFailure?: boolean;
 }
+
+export type SendSubmissionNotificationResult =
+  | { ok: true }
+  | { error: string; ok: false };
 
 /**
  * Post-commit, best-effort: the stored inquiry is the source of truth, so a
@@ -24,13 +29,21 @@ interface SendSubmissionNotificationOptions {
 export async function sendSubmissionNotification(
   inquiryId: string,
   options: SendSubmissionNotificationOptions = {}
-): Promise<void> {
+): Promise<SendSubmissionNotificationResult> {
   try {
-    const inquiry = await getSubmissionEmailSnapshot(inquiryId);
+    const [inquiry, configuredRecipients] = await Promise.all([
+      getSubmissionEmailSnapshot(inquiryId),
+      listNotificationRecipients(),
+    ]);
+
     if (!inquiry) {
       throw new Error("Inquiry was not found.");
     }
 
+    const recipients = resolveNotificationRecipients(
+      configuredRecipients,
+      env.SUBMISSION_NOTIFICATION_EMAIL
+    );
     const emailProps = {
       appBaseUrl: env.BETTER_AUTH_URL,
       inquiry,
@@ -38,7 +51,7 @@ export async function sendSubmissionNotification(
     const { error } = await resend.emails.send(
       {
         from: env.SUBMISSION_FROM_EMAIL,
-        to: env.SUBMISSION_NOTIFICATION_EMAIL,
+        to: recipients,
         subject: "New tokenization inquiry",
         react: <SubmissionEmail {...emailProps} />,
         text: buildSubmissionEmailText(emailProps),
@@ -51,26 +64,27 @@ export async function sendSubmissionNotification(
     if (error) {
       throw new Error(error.message);
     }
-    const now = new Date();
+  } catch (cause) {
+    await recordNotificationFailure(inquiryId, cause);
+    return notificationFailureResult(cause);
+  }
+
+  const now = new Date();
+
+  try {
     await setInquiryNotificationOutcome(inquiryId, {
       notifiedAt: now,
       notificationAttemptedAt: now,
       notificationError: null,
     });
-    console.info(`inquiry ${inquiryId}: submission email sent`);
-  } catch (cause) {
-    await recordNotificationFailure(inquiryId, cause);
-    throwNotificationFailure(cause, options.throwOnFailure);
+  } catch {
+    console.error(
+      `inquiry ${inquiryId}: could not record the notification success`
+    );
   }
-}
 
-function throwNotificationFailure(
-  cause: unknown,
-  throwOnFailure: boolean | undefined
-) {
-  if (throwOnFailure) {
-    throw cause;
-  }
+  console.info(`inquiry ${inquiryId}: submission email sent`);
+  return { ok: true };
 }
 
 async function recordNotificationFailure(
@@ -91,4 +105,13 @@ async function recordNotificationFailure(
       `inquiry ${inquiryId}: could not record the notification failure`
     );
   }
+}
+
+function notificationFailureResult(
+  cause: unknown
+): SendSubmissionNotificationResult {
+  return {
+    error: cause instanceof Error ? cause.message : "Unknown send failure",
+    ok: false,
+  };
 }

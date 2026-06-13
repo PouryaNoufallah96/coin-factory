@@ -1,7 +1,9 @@
 import { createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod";
-
-import { createAdminListInputSchema } from "@/features/admin/schemas/ordered-entity-list";
+import {
+  createAdminListInputSchema,
+  createAdminPaginatedListOutputSchema,
+} from "@/features/admin/schemas/ordered-entity-list";
 import {
   inquiries,
   inquiryAnswers,
@@ -82,10 +84,8 @@ export const adminInquiryListInputSchema =
 
 export type AdminInquiryListInput = z.infer<typeof adminInquiryListInputSchema>;
 
-export const adminInquiryListOutputSchema = z.object({
-  rows: adminInquiryRowSchema.array(),
-  totalRows: z.number().int().nonnegative(),
-});
+export const adminInquiryListOutputSchema =
+  createAdminPaginatedListOutputSchema(adminInquiryRowSchema);
 
 export const inquiryEntityIdInputSchema = z.object({
   id: z.uuid(),

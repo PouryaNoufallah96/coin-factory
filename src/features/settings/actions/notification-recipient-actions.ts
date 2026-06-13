@@ -1,49 +1,36 @@
 "use server";
 
-import { refresh } from "next/cache";
 import { headers } from "next/headers";
 
+import { withAdminMutationRefresh } from "@/features/admin/actions/with-admin-mutation-refresh";
+import { updateNotificationRecipientTags } from "@/features/settings/db/cache/tags";
 import type { NotificationRecipientActionInput } from "@/features/settings/schemas/notification-recipient";
 import { createRpcContext } from "@/server/rpc/context";
 import { appRouter } from "@/server/rpc/routers";
-
-type ActionResult = readonly [unknown, unknown];
 
 const actionOptions = {
   context: async () => createRpcContext({ headers: await headers() }),
 };
 
-const addNotificationRecipient =
-  appRouter.settings.admin.addRecipient.actionable(actionOptions);
+export const addNotificationRecipient = withAdminMutationRefresh(
+  appRouter.settings.admin.addRecipient.actionable(actionOptions),
+  () => updateNotificationRecipientTags()
+);
 
-const removeNotificationRecipient =
-  appRouter.settings.admin.removeRecipient.actionable(actionOptions);
+export const removeNotificationRecipient = withAdminMutationRefresh(
+  appRouter.settings.admin.removeRecipient.actionable(actionOptions),
+  (input) => updateNotificationRecipientTags(input.id)
+);
 
 export async function runNotificationRecipientAction(
   input: NotificationRecipientActionInput
 ) {
   switch (input.type) {
     case "add":
-      return await withSettingsRefresh(
-        addNotificationRecipient({ email: input.email })
-      );
+      return await addNotificationRecipient({ email: input.email });
     case "remove":
-      return await withSettingsRefresh(
-        removeNotificationRecipient({ id: input.id })
-      );
+      return await removeNotificationRecipient({ id: input.id });
     default:
       throw new Error("Unsupported notification recipient action.");
   }
-}
-
-async function withSettingsRefresh<TResult extends ActionResult>(
-  resultPromise: Promise<TResult>
-): Promise<TResult> {
-  const result = await resultPromise;
-
-  if (!result[0]) {
-    refresh();
-  }
-
-  return result;
 }

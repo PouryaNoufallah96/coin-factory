@@ -1,10 +1,25 @@
 import "server-only";
 
-import { listNotificationRecipients } from "@/features/settings/db/queries";
-import { notificationRecipientListOutputSchema } from "@/features/settings/schemas/notification-recipient";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { idTag } from "@/lib/cache-tags";
+import { notificationRecipientTags } from "../../db/cache/tags";
+import { listNotificationRecipients } from "../../db/queries";
+import { notificationRecipientListOutputSchema } from "../../schemas/notification-recipient";
 
 export async function getNotificationRecipients() {
-  return notificationRecipientListOutputSchema.parse({
-    recipients: await listNotificationRecipients(),
+  "use cache";
+  cacheTag(notificationRecipientTags.adminList());
+  cacheLife("hours");
+
+  const recipients = await listNotificationRecipients();
+  const data = notificationRecipientListOutputSchema.parse({
+    recipients,
   });
+
+  for (const recipient of data.recipients) {
+    cacheTag(idTag("notification_recipient", recipient.id));
+  }
+
+  return data;
 }

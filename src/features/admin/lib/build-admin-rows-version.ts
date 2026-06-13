@@ -15,11 +15,8 @@ interface AdminListQueryVersion {
   showDeleted: boolean;
 }
 
-export function buildAdminRowsVersion<TRow extends AdminRowVersionFields>(
-  rows: TRow[],
-  input: AdminListQueryVersion
-) {
-  const queryVersion = [
+export function buildAdminListQueryVersion(input: AdminListQueryVersion) {
+  return [
     input.orderBy,
     input.orderDirection,
     input.page,
@@ -27,19 +24,43 @@ export function buildAdminRowsVersion<TRow extends AdminRowVersionFields>(
     input.search,
     input.showDeleted,
   ].join(":");
+}
+
+export function buildAdminRowsVersion<TRow extends AdminRowVersionFields>(
+  rows: TRow[],
+  input: AdminListQueryVersion
+): string;
+
+export function buildAdminRowsVersion<TRow>(
+  rows: TRow[],
+  input: AdminListQueryVersion,
+  serializeRow: (row: TRow) => string
+): string;
+
+export function buildAdminRowsVersion<TRow>(
+  rows: TRow[],
+  input: AdminListQueryVersion,
+  serializeRow?: (row: TRow) => string
+) {
   const rowVersion = rows
     .map((row) =>
-      [
-        row.id,
-        row.sortOrder,
-        row.active,
-        toTimestampToken(row.updatedAt),
-        toTimestampToken(row.deletedAt),
-      ].join(":")
+      serializeRow
+        ? serializeRow(row)
+        : serializeOrderedEntityRow(row as AdminRowVersionFields)
     )
     .join("|");
 
-  return `${queryVersion}|${rowVersion}`;
+  return `${buildAdminListQueryVersion(input)}|${rowVersion}`;
+}
+
+function serializeOrderedEntityRow(row: AdminRowVersionFields) {
+  return [
+    row.id,
+    row.sortOrder,
+    row.active,
+    toTimestampToken(row.updatedAt),
+    toTimestampToken(row.deletedAt),
+  ].join(":");
 }
 
 function toTimestampToken(value: Date | string | null) {

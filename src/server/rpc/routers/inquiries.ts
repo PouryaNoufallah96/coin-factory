@@ -4,6 +4,7 @@ import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
 import { okOutputSchema } from "@/features/admin/schemas/ok-output";
+import { revalidateInquiryTags } from "@/features/inquiries/db/cache/tags";
 import {
   getInquiryNotificationState,
   type InquiryAnswerInsert,
@@ -149,6 +150,7 @@ const setStatus = adminProcedure
           message: "Inquiry was not found.",
         });
       }
+      revalidateInquiryTags(input.id);
       return { ok: true as const };
     } catch (error) {
       if (error instanceof InquiryStatusTransitionError) {
@@ -185,6 +187,7 @@ const resendNotification = adminProcedure
       });
     }
 
+    revalidateInquiryTags(input.id);
     return { ok: true as const };
   });
 

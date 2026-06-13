@@ -1,38 +1,25 @@
 "use server";
 
-import { refresh } from "next/cache";
 import { headers } from "next/headers";
 
+import { withAdminMutationRefresh } from "@/features/admin/actions/with-admin-mutation-refresh";
+import { updateInquiryTags } from "@/features/inquiries/db/cache/tags";
 import type { AdminInquiryRowActionInput } from "@/features/inquiries/schemas/admin-inquiry";
 import { createRpcContext } from "@/server/rpc/context";
 import { appRouter } from "@/server/rpc/routers";
-
-type ActionResult = readonly [unknown, unknown];
 
 const actionOptions = {
   context: async () => createRpcContext({ headers: await headers() }),
 };
 
-function withAdminInquiryRefresh<TInput, TResult extends ActionResult>(
-  action: (input: TInput) => Promise<TResult>
-) {
-  return async (input: TInput): Promise<TResult> => {
-    const result = await action(input);
-
-    if (!result[0]) {
-      refresh();
-    }
-
-    return result;
-  };
-}
-
-export const setInquiryStatus = withAdminInquiryRefresh(
-  appRouter.inquiries.admin.setStatus.actionable(actionOptions)
+export const setInquiryStatus = withAdminMutationRefresh(
+  appRouter.inquiries.admin.setStatus.actionable(actionOptions),
+  (input) => updateInquiryTags(input.id)
 );
 
-export const resendInquiryNotification = withAdminInquiryRefresh(
-  appRouter.inquiries.admin.resendNotification.actionable(actionOptions)
+export const resendInquiryNotification = withAdminMutationRefresh(
+  appRouter.inquiries.admin.resendNotification.actionable(actionOptions),
+  (input) => updateInquiryTags(input.id)
 );
 
 export async function runInquiryRowAction(input: AdminInquiryRowActionInput) {

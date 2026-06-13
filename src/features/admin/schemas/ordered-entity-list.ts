@@ -23,6 +23,15 @@ export function createAdminListOutputSchema<TRow extends z.ZodTypeAny>(
   });
 }
 
+export function createAdminPaginatedListOutputSchema<TRow extends z.ZodTypeAny>(
+  rowSchema: TRow
+) {
+  return z.object({
+    rows: rowSchema.array(),
+    totalRows: z.number().int().nonnegative(),
+  });
+}
+
 export const setEntityActiveInputSchema = z.object({
   active: z.boolean(),
   id: z.uuid(),

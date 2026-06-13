@@ -4,6 +4,7 @@ import { ORPCError } from "@orpc/server";
 
 import { findDbError } from "@/features/admin/lib/find-db-error";
 import { okOutputSchema } from "@/features/admin/schemas/ok-output";
+import { revalidateNotificationRecipientTags } from "@/features/settings/db/cache/tags";
 import {
   countNotificationRecipients,
   deleteNotificationRecipient,
@@ -76,6 +77,7 @@ const addRecipient = adminProcedure
       recipientId: recipient.id,
     });
 
+    revalidateNotificationRecipientTags(recipient.id);
     return { ok: true as const };
   });
 
@@ -99,6 +101,7 @@ const removeRecipient = adminProcedure
       recipientId: deleted.id,
     });
 
+    revalidateNotificationRecipientTags(deleted.id);
     return { ok: true as const };
   });
 

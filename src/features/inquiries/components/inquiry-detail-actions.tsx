@@ -4,6 +4,7 @@ import { ArrowRight, Send } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
+import { AdminActionErrorBanner } from "@/features/admin/components/admin-action-error-banner";
 import { runInquiryRowAction } from "@/features/inquiries/actions/admin-inquiry-actions";
 import { InquiryStatusBadge } from "@/features/inquiries/components/inquiry-status-badge";
 import {
@@ -86,11 +87,7 @@ export function InquiryDetailActions({ inquiry }: InquiryDetailActionsProps) {
           </Button>
         )}
       </div>
-      {actionError ? (
-        <p className="text-cf-text-muted text-sm" role="alert">
-          {actionError}
-        </p>
-      ) : null}
+      {actionError ? <AdminActionErrorBanner message={actionError} /> : null}
     </div>
   );
 }

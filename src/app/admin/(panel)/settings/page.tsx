@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   title: "Settings",
 };
 
-export default function AdminSettingsPage() {
+export default function AdminSettingsPage(
+  _props: PageProps<"/admin/settings">
+) {
   return (
     <Suspense fallback={<NotificationRecipientsSettingsSkeleton />}>
       <NotificationRecipientsSettingsContent />

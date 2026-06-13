@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { buildAdminRowsVersion } from "@/features/admin/lib/build-admin-rows-version";
 import { getAdminInquiries } from "@/features/inquiries/api/server/get-admin-inquiries";
 import { InquiriesAdminManager } from "@/features/inquiries/components/inquiries-admin-manager";
 import { adminInquiryOrderBy } from "@/features/inquiries/schemas/admin-inquiry";
@@ -42,31 +43,17 @@ async function AdminInquiriesContent({
 
   return (
     <InquiriesAdminManager
-      key={buildInquiryRowsVersion(data.rows, input)}
+      key={buildAdminRowsVersion(data.rows, input, (row) =>
+        [
+          row.id,
+          row.status,
+          row.notifiedAt?.toISOString() ?? "",
+          row.notificationError ?? "",
+          row.updatedAt.toISOString(),
+        ].join(":")
+      )}
       rows={data.rows}
       totalRows={data.totalRows}
     />
   );
-}
-
-function buildInquiryRowsVersion(
-  rows: Awaited<ReturnType<typeof getAdminInquiries>>["rows"],
-  input: {
-    orderBy: string;
-    orderDirection: string;
-    page: number;
-    pageSize: number;
-    search: string;
-  }
-) {
-  return JSON.stringify({
-    input,
-    rows: rows.map((row) => [
-      row.id,
-      row.status,
-      row.notifiedAt?.toISOString() ?? "",
-      row.notificationError ?? "",
-      row.updatedAt.toISOString(),
-    ]),
-  });
 }

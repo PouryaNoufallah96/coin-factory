@@ -142,12 +142,12 @@ function useAction<TInput, TOutput, TError extends ActionableError<unknown>>(
 
   const execute = (...input: ActionableClientRest<TInput>) =>
     new Promise<ActionState<TOutput, TError>>((resolve) => {
-      startTransition(async () => {
+      startTransition(() => {
         setState({ status: "pending" });
+      });
 
-        try {
-          const [error, data] = await action(...input);
-
+      action(...input)
+        .then(([error, data]) => {
           if (error) {
             const nextState: ActionState<TOutput, TError> = {
               error,
@@ -164,17 +164,32 @@ function useAction<TInput, TOutput, TError extends ActionableError<unknown>>(
             return;
           }
 
-          const output = data as TOutput;
+          if (data === undefined) {
+            const actionError = new Error("Action returned no data.");
+            const nextState: ActionState<TOutput, TError> = {
+              error: actionError,
+              errorMessage: getActionErrorMessage(actionError),
+              status: "error",
+            };
+
+            startTransition(() => setState(nextState));
+            options.onError?.(actionError);
+            options.onSettled?.(nextState);
+            resolve(nextState);
+            return;
+          }
+
           const nextState: ActionState<TOutput, TError> = {
-            data: output,
+            data,
             status: "success",
           };
 
           startTransition(() => setState(nextState));
-          options.onSuccess?.(output);
+          options.onSuccess?.(data);
           options.onSettled?.(nextState);
           resolve(nextState);
-        } catch (cause) {
+        })
+        .catch((cause: unknown) => {
           const error =
             cause instanceof Error ? cause : new Error("Action failed.");
           const nextState: ActionState<TOutput, TError> = {
@@ -188,8 +203,7 @@ function useAction<TInput, TOutput, TError extends ActionableError<unknown>>(
           options.onError?.(error);
           options.onSettled?.(nextState);
           resolve(nextState);
-        }
-      });
+        });
     });
 
   return {

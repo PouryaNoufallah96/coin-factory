@@ -9,7 +9,8 @@ is deliberately thin — grow it as decisions crystallise.
 **Tokenization inquiry**:
 The lead — one funnel run: an `inquiries` row (contact fields: email + WhatsApp, status,
 timestamps) plus one `inquiry_answers` row per answered **radio/url** question (inquiry_id,
-question_id, value) and zero-or-more `inquiry_files` rows for attached supporting documents.
+question_id, value), zero-or-more `inquiry_files` rows for attached supporting documents,
+and zero-or-more business-category references picked on the landing.
 The `contact` question writes **no** answer row — its values are the `inquiries.email` /
 `inquiries.whatsapp` columns; the optional `url` question writes a row only when non-empty.
 Persisted by the `inquiries` oRPC router on final Submit. The answer set follows whatever
@@ -36,21 +37,37 @@ past inquiry's answers keep their original question text — rows are never phys
 _Avoid_: survey item, field config
 
 **Supporting document**:
-A file a founder optionally attaches on the landing — PDF, Word, TXT, Markdown, or image — to
-describe their asset. Carried through the funnel and stored with the inquiry on Submit; the
-review team opens it from the admin panel. Max five per inquiry.
+A file a founder optionally attaches on the landing — **PDF or Word (`.doc`/`.docx`) only** —
+to describe their asset. Carried through the funnel and stored with the inquiry on Submit;
+the review team opens it from the admin panel. **Max two per inquiry, max 5 MB each**; no
+other formats (images, TXT, Markdown are not accepted).
 _Avoid_: upload, asset (the asset is the real-world thing being tokenized, not the file)
 
 **Submission email**:
-The notification the company receives when an inquiry is submitted — a readable summary of the
-answers and contact details plus secure, admin-authenticated links to any supporting documents
-(never the documents as raw attachments or public links). Sent best-effort: the inquiry is
-captured and reviewable in `/admin` even if the email fails.
+The notification sent when an inquiry is submitted — a readable summary of the answers and
+contact details plus secure, admin-authenticated links to any supporting documents (never
+the documents as raw attachments or public links). Goes out as **one email addressed to
+every notification recipient** (a configured company address serves as the fallback while
+none are defined). Sent best-effort: the inquiry is captured and reviewable in `/admin`
+even if the email fails.
 _Avoid_: alert, receipt, confirmation
 
-**Suggestion chip**:
-A pill badge under the landing search (Luxury Hotel, Gold Mine, AI Startup, …). Clicking one
-fills the search input; it does not navigate.
+**Notification recipient**:
+An admin-managed email address the submission email goes to — maintained in the admin
+panel's settings, multi-entry, each submission email addressed to all of them at once.
+Plain add/remove entries: no ordering, no soft-delete, no per-inquiry history (nothing
+references a recipient — removing one simply stops future emails).
+_Avoid_: subscriber, mailing list, watcher
+
+**Business category**:
+An admin-managed label a founder can pick on the landing (Luxury Hotel, Gold Mine,
+AI Startup, …) — rendered as the pill badges under the search input, **multi-select**.
+Lifecycle mirrors questions: ordered, enable/disable, soft-delete with restore; the funnel
+shows only active, non-deleted rows. Selections are stored on the inquiry as multiple
+references with a **label snapshot** taken at submit (a later rename never rewrites what a
+founder picked). Categories carry **no relationship to questions** — they are lead metadata
+for the review team, and never change which questions load.
+_Avoid_: suggestion chip (the old hardcoded fill-the-input behavior), tag, industry
 
 **Project stage**:
 Q1 answer — Idea Stage / MVP / Active Business / Established Business.
@@ -66,7 +83,7 @@ instead of paying full cash fees (Yes / No / Open to discussion).
 **Admin panel**:
 The `/admin` route group in the same app (v1 phase 2, slices 0007/0008) — CF design system
 (dark cream-on-charcoal, data-table kit), behind better-auth, **admin-only**: end users
-never log in. Question CRUD + inquiry list/review.
+never log in. Question CRUD + inquiry list/review + app settings (notification recipients).
 
 **CoinFactory AG**:
 The Swiss company behind the platform — the brand in the footer legal line. **CoinFactory**

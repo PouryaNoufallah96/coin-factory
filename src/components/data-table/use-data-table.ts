@@ -14,7 +14,11 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { useFilterParamsTransition } from "@/hooks/use-filter-params-transition";
-import { toListPaginationState, toListSortingState } from "@/lib/filter-params";
+import {
+  getPageCount,
+  toListPaginationState,
+  toListSortingState,
+} from "@/lib/filter-params";
 
 type ManagedTableOptions<TData extends RowData> = Omit<
   TableOptions<TData>,
@@ -28,13 +32,13 @@ type ManagedTableOptions<TData extends RowData> = Omit<
   | "onSortingChange"
   | "pageCount"
   | "state"
-> &
-  Required<Pick<TableOptions<TData>, "pageCount">>;
+>;
 
 interface UseDataTableOptions<TData extends RowData>
   extends ManagedTableOptions<TData> {
   initialColumnVisibility?: VisibilityState;
   initialRowSelection?: RowSelectionState;
+  totalRows: number;
 }
 
 // TanStack Table v8 returns a mutable instance the React Compiler must not
@@ -43,7 +47,7 @@ interface UseDataTableOptions<TData extends RowData>
 export function useDataTable<TData extends RowData>({
   initialColumnVisibility,
   initialRowSelection,
-  pageCount,
+  totalRows,
   ...tableOptions
 }: UseDataTableOptions<TData>) {
   "use no memo";
@@ -67,6 +71,7 @@ export function useDataTable<TData extends RowData>({
 
   const pagination = toListPaginationState(filters);
   const sorting = toListSortingState(filters);
+  const pageCount = getPageCount(totalRows, pagination.pageSize);
 
   const onPaginationChange: OnChangeFn<PaginationState> = (updater) => {
     const nextPagination = functionalUpdate(updater, pagination);

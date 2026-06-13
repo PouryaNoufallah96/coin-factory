@@ -1,7 +1,8 @@
 "use client";
 
 import type { RowData, Table } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { useOptimistic, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { PAGE_SIZE_OPTIONS } from "@/lib/filter-params";
@@ -19,7 +20,23 @@ export function DataTablePagination<TData extends RowData>({
   table,
 }: DataTablePaginationProps<TData>) {
   const { pageIndex, pageSize } = table.getState().pagination;
+  const [optimisticPageSize, setOptimisticPageSize] = useOptimistic(
+    pageSize,
+    (_state, value: number) => value
+  );
+  const [, startPageSizeTransition] = useTransition();
   const pageCount = Math.max(table.getPageCount(), 1);
+  const selectedPageSize = selectedPageSizeOption({
+    pageSize,
+    pageSizeOptions,
+    optimisticPageSize,
+  });
+
+  function setPageSize(value: string) {
+    const nextPageSize = Number(value);
+    startPageSizeTransition(() => setOptimisticPageSize(nextPageSize));
+    table.setPagination({ pageIndex: 0, pageSize: nextPageSize });
+  }
 
   return (
     <div
@@ -29,20 +46,26 @@ export function DataTablePagination<TData extends RowData>({
       )}
     >
       <div className="flex items-center gap-2">
-        <span className="whitespace-nowrap">Rows per page</span>
-        <div className="flex items-center gap-1">
-          {pageSizeOptions.map((option) => (
-            <Button
-              aria-pressed={pageSize === option}
-              key={option}
-              onClick={() => table.setPageSize(option)}
-              size="sm"
-              type="button"
-              variant={pageSize === option ? "secondary" : "ghost"}
-            >
-              {option}
-            </Button>
-          ))}
+        <label className="whitespace-nowrap" htmlFor="data-table-page-size">
+          Rows per page
+        </label>
+        <div className="relative">
+          <select
+            className="h-8 appearance-none rounded-(--cf-radius-pill) border border-border bg-background pr-8 pl-3 font-medium text-foreground text-sm outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            id="data-table-page-size"
+            onChange={(event) => setPageSize(event.target.value)}
+            value={selectedPageSize}
+          >
+            {pageSizeOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-muted-foreground"
+          />
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -72,4 +95,24 @@ export function DataTablePagination<TData extends RowData>({
       </div>
     </div>
   );
+}
+
+function selectedPageSizeOption({
+  optimisticPageSize,
+  pageSize,
+  pageSizeOptions,
+}: {
+  optimisticPageSize: number;
+  pageSize: number;
+  pageSizeOptions: readonly number[];
+}) {
+  if (pageSizeOptions.includes(optimisticPageSize)) {
+    return optimisticPageSize;
+  }
+
+  if (pageSizeOptions.includes(pageSize)) {
+    return pageSize;
+  }
+
+  return pageSizeOptions[0] ?? pageSize;
 }

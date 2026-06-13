@@ -1,0 +1,51 @@
+<svg
+  fill="none"
+  height="100%"
+  overflow="visible"
+  preserveAspectRatio="none"
+  style="display: block;"
+  viewBox="0 0 1995 1535"
+  width="100%"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title>Landing funnel light</title>
+  <g filter="url(#filter0_f_0_40)" id="Vector 2">
+    <path
+      d="M1795 1335V200L1060.71 522.919L200 780.5L1060.71 1018.91L1795 1335Z"
+      fill="url(#paint0_linear_0_40)"
+    />
+  </g>
+  <defs>
+    <filter
+      color-interpolation-filters="sRGB"
+      filterUnits="userSpaceOnUse"
+      height="1535"
+      id="filter0_f_0_40"
+      width="1995"
+      x="0"
+      y="0"
+    >
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feBlend
+        in="SourceGraphic"
+        in2="BackgroundImageFix"
+        mode="normal"
+        result="shape"
+      />
+      <feGaussianBlur result="effect1_foregroundBlur_0_40" stdDeviation="100" />
+    </filter>
+    <linearGradient
+      gradientUnits="userSpaceOnUse"
+      id="paint0_linear_0_40"
+      x1="1795"
+      x2="-245.413"
+      y1="767.5"
+      y2="767.5"
+    >
+      <stop stop-color="#FFFCFB" />
+      <stop offset="0.3" stop-color="#FFFAED" />
+      <stop offset="0.7" stop-color="#FFF2D1" stop-opacity="0.2" />
+      <stop offset="1" stop-color="#FFF2D1" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+</svg>

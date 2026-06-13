@@ -11,7 +11,7 @@ Order of work: **schema → db → procedures → server api → client api → 
 
 - Read the feature brief and the neighboring files on the paths you'll touch.
 - Reuse before write: check `src/components/common`, `src/components/ui`, `src/lib`,
-  `src/hooks`, and `src/features/shared` for existing pieces.
+  `src/services`, `src/hooks`, and `src/features/shared` for existing pieces.
 
 ## 1. Zod schema — the single source of truth
 
@@ -93,21 +93,31 @@ cacheLife("hours");
   slice 0008 extends it) with the 4-file pattern (table / columns / toolbar / action-bar).
 - Visuals: cf tokens + Base UI `render` prop per DESIGN.md. No new colors, no
   animation libs — React `<ViewTransition>` only.
+- React 19: no hand memoization with the Compiler on, no `forwardRef` in new/touched
+  components, `Activity` only for state-preserving hidden UI, `useEffectEvent` only for
+  non-reactive effect logic, and `cacheSignal()` only in server-only React `cache()` fetches.
+- Actions: use oRPC `.actionable()` + `useAction`; do not port template `{ error, message }`
+  envelopes. Add a shared `ActionButton` only after the same pending/error button composition
+  repeats.
 
 ## 8. Pages — thin RSC composition
 
 `src/app/<route>/page.tsx`
 
 - Page = parse nuqs search params → prefetch/fetch via `api/server` →
-  compose feature components inside `<Suspense>` with a skeleton, wrapped in
-  the fetcher/error-boundary helpers (`src/components/fetcher/`). Pages are sync
-  shells — the default export only returns `<Suspense>` around an async sibling
-  that awaits params/searchParams/data inside the boundary.
+  compose feature components. Long-lived `"use cache"` public reads render directly when they
+  belong to the initial shell; otherwise put only the smallest owning section under
+  `<Suspense>` with a matching skeleton. Uncached request-time/admin reads use the same
+  smallest-boundary rule, wrapped in the fetcher/error-boundary helpers
+  (`src/components/fetcher/`).
+- Add route `error.tsx` only when the segment has a real failure surface; for repeated server
+  async sections prefer `ServerFetchResult` + `ComponentErrorBoundary` before introducing a
+  broader `AsyncSection` wrapper.
 - `generateMetadata` per page; run `pnpm typegen` after adding routes.
 
 ## 9. Audit
 
-- `pnpm validate` green (format + typecheck + lint + build) — the gate.
+- `pnpm validate` green (format + typecheck + lint + react-doctor + build) — the gate.
 - Anything touching env/cache/submission needs focused review against [SECURITY.md](../SECURITY.md).
 
 ## Layer map (UB webapp → CoinFactory)
@@ -118,5 +128,6 @@ cacheLife("hours");
 | `app/api/*` BFF route handlers | `app/rpc/[[...rest]]/route.ts` (single oRPC mount) |
 | `api/client` fetch + React Query hooks | `api/client` oRPC `queryOptions` hooks |
 | `lib/safe-action.ts` + 3-file action folders | oRPC `.actionable()` procedures + thin `'use server'` action files |
-| `features/<f>/db/cache` tag helpers | identical — per-feature `db/cache/` helpers (incl. the `update<Entity>Tags` fan-out) composing `src/lib/cache-tags.ts` builders |
-| everything else (fetcher, data-table, forms, nuqs, t3-env, feature slicing) | identical |
+| `features/<f>/db/cache` tag helpers | Same shape — per-feature `db/cache/` helpers (incl. the `update<Entity>Tags` fan-out) composing `src/lib/cache-tags.ts` builders |
+| shared external provider clients | `src/services/<provider>` (`server-only` for server providers); feature orchestration remains in `src/features/<feature>` |
+| fetcher, data-table, forms, nuqs, t3-env, feature slicing | Pattern-compatible, adapted to CoinFactory's single app, Base UI, dark cf tokens, and no i18n |

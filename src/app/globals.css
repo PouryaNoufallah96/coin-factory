@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 /* Kept so `dark:` utilities inside vendored shadcn components can never
@@ -43,6 +42,14 @@
   --color-cf-gray-400: var(--cf-gray-400);
   --color-cf-error: var(--cf-error);
   --color-cf-text-on-error: var(--cf-text-on-error);
+  --color-cf-surface-muted: var(--cf-surface-muted);
+  --color-cf-text-primary: var(--cf-text-primary);
+  --color-cf-text-muted: var(--cf-text-muted);
+  --color-cf-text-on-accent: var(--cf-text-on-accent);
+  --color-cf-border-muted: var(--cf-border-muted);
+  --color-cf-border-active: var(--cf-border-active);
+  --color-cf-chip-bg: var(--cf-chip-bg);
+  --color-cf-chip-bg-active: var(--cf-chip-bg-active);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -55,7 +62,7 @@
 /* ── CoinFactory tokens ─────────────────────────────────────────────────
    CoinFactory token system. Keep this aligned with DESIGN.md.
    Single-accent dark system: charcoal canvas, champagne cream as the ONLY
-   highlight, with --cf-error reserved for the top alert. Never blue/green/
+   highlight, with --cf-error reserved for the final-submit alert. Never blue/green/
    purple. Never pure black. Dark-only. */
 :root {
   /* Base palette */
@@ -68,14 +75,14 @@
   --cf-white: #ffffff;
   --cf-gray-500: #8f8f8f; /* inactive pill borders */
   --cf-gray-400: #b0b0b0; /* placeholder text */
-  --cf-error: #ef4444; /* top unanswered-step alert only */
+  --cf-error: #ef4444; /* final-submit alert only */
   --cf-text-on-error: var(--cf-white);
 
   /* Semantic aliases */
   --cf-canvas-start: var(--cf-charcoal-900);
   --cf-canvas-end: var(--cf-charcoal-700);
   --cf-surface-dark: var(--cf-charcoal-900); /* active inputs, selected rows */
-  --cf-surface-muted: rgb(35 40 50 / 40%); /* inactive option cards */
+  --cf-surface-muted: rgb(35 40 50 / 0.4); /* inactive option cards */
   --cf-accent: var(--cf-cream);
   --cf-accent-strong: var(--cf-cream-bright);
   --cf-text-primary: var(--cf-white); /* body/questions on dark */
@@ -84,76 +91,136 @@
   --cf-text-on-accent: var(--cf-charcoal-900); /* text inside cream surfaces */
   --cf-border-muted: var(--cf-gray-500); /* inactive pill border */
   --cf-border-active: var(--cf-cream); /* active/focused border */
-  --cf-chip-bg: rgb(255 255 255 / 8%);
-  --cf-chip-bg-active: rgb(255 242 209 / 40%);
+  --cf-chip-bg: rgb(255 255 255 / 0.08);
+  --cf-chip-bg-active: rgb(255 242 209 / 0.4);
   --cf-progress-on: var(--cf-cream);
-  --cf-progress-off: rgb(255 242 209 / 20%);
-  --cf-glow: rgb(255 250 237 / 24%);
+  --cf-progress-off: rgb(255 242 209 / 0.2);
+  --cf-glow: rgb(255 250 237 / 0.24);
 
-  /* Spacing — 8px grid */
-  --cf-space-1: 8px;
-  --cf-space-2: 16px;
-  --cf-space-3: 20px;
-  --cf-space-4: 24px;
-  --cf-space-5: 32px;
-  --cf-space-6: 48px;
-  --cf-space-7: 56px;
+  /* Spacing follows Tailwind's default rem scale. */
+  --cf-space-1: 0.5rem;
+  --cf-space-2: 1rem;
+  --cf-space-3: 1.25rem;
+  --cf-space-4: 1.5rem;
+  --cf-space-5: 2rem;
+  --cf-space-6: 3rem;
+  --cf-space-7: 3.5rem;
 
   /* Layout */
-  --cf-page-x: 100px;
-  --cf-header-h: 96px;
-  --cf-footer-h: 80px;
-  --cf-content-w: 720px;
-  --cf-field-w: 520px;
+  --cf-page-x: var(--cf-space-4);
+  --cf-header-h: 3.5rem;
+  --cf-footer-h: 3.25rem;
+  --cf-content-w: 45rem;
+  --cf-field-w: 32.5rem;
+  --cf-search-w: 43.75rem;
+  --cf-chip-row-w: 60rem;
+  --cf-thank-you-w: 53rem;
+  --cf-thank-you-body-w: 44rem;
 
   /* Radius — pills everywhere */
-  --cf-radius-pill: 9999px;
-  --cf-radius-row: 60px; /* radio rows, search, CTA */
-  --cf-radius-panel: 40px; /* expanded search panel */
-  --cf-radius-card: 16px; /* attached file cards */
-  --cf-radius-segment: 8px; /* progress segments */
-  --cf-radius-alert: 8px; /* top error alert */
-  --cf-radius-icon: 12px; /* icon-button hit area */
+  --cf-radius-pill: 9999rem;
+  --cf-radius-row: 3.75rem; /* radio rows, search, CTA */
+  --cf-radius-panel: 2.5rem; /* expanded search panel */
+  --cf-radius-card: 1rem; /* attached file cards */
+  --cf-radius-segment: 0.5rem; /* progress segments */
+  --cf-radius-alert: 0.5rem; /* top error alert */
+  --cf-radius-icon: 0.75rem; /* icon-button hit area */
 
   /* Control sizes */
-  --cf-row-h: 72px;
-  --cf-search-h: 80px;
-  --cf-cta-h: 48px;
-  --cf-cta-w: 160px;
-  --cf-touch: 48px;
+  --cf-row-h: 2.75rem;
+  --cf-search-h: 3.25rem;
+  --cf-search-button-size: 3rem;
+  --cf-search-affordance-size: 2.5rem;
+  --cf-search-panel-min-h: calc(
+    var(--cf-file-card-h) +
+    var(--cf-search-h) +
+    var(--cf-space-6)
+  );
+  --cf-cta-h: 2.25rem;
+  --cf-cta-w: 10rem;
+  --cf-touch: 2.25rem;
+  --cf-radio-size: 1.25rem;
+  --cf-radio-control-size: calc(var(--cf-radio-size) * 0.8);
+  --cf-radio-dot-size: calc(var(--cf-radio-size) * 0.32);
+  --cf-chip-h: 2.25rem;
+  --cf-file-card-h: 4.25rem;
+  --cf-file-card-w: 15rem;
+  --cf-file-card-name-w: 8rem;
+  --cf-file-card-tile: 3rem;
+  --cf-logo-mark-w: 1.375rem;
+  --cf-logo-mark-h: 1.5625rem;
+  --cf-social-size: 2rem;
+  --cf-social-gap: 1.125rem;
+  --cf-social-mark-size: 1.125rem;
+  --cf-social-x-mark-w: 1rem;
+  --cf-social-x-mark-h: 0.875rem;
+  --cf-stepper-gap: 0.75rem;
+  --cf-stepper-segment-w: 2.5rem;
+  --cf-stepper-segment-h: 0.5rem;
+  --cf-modal-max-h: calc(100dvh - var(--cf-space-7));
+  --cf-dialog-max-w: calc(100% - var(--cf-space-5));
+  --cf-drawer-handle-w: 6.25rem;
+  --cf-drawer-handle-h: 0.25rem;
 
-  /* Elevation & effects — no Material shadows; depth = spotlight + glow */
-  --cf-canvas-gradient: linear-gradient(
-    136.17deg,
-    #232832 71.17%,
-    #434954 91.22%
+  --cf-glow-active: 0 0 12.5rem 0 rgb(255 250 237 / 0.24);
+  --cf-glow-soft: 0 0 6.25rem 0 rgb(255 250 237 / 0.24);
+  --cf-cta-shadow: 0 0 0.5rem 0 rgb(0 0 0 / 0.24);
+  --cf-hero-shadow:
+    0 0 0.25rem var(--cf-cream), 0 0.25rem 1rem rgb(255 250 237 / 0.6),
+    0 0 2rem rgb(255 250 237 / 0.35);
+  --cf-border-w: 0.0625rem;
+  --cf-canvas-gradient-landing: linear-gradient(
+    135deg,
+    var(--cf-canvas-start) 0%,
+    var(--cf-canvas-start) 74%,
+    color-mix(in srgb, var(--cf-canvas-start) 90%, var(--cf-canvas-end)) 100%
   );
-  --cf-spotlight: radial-gradient(
-    52% 58% at 50% 88%,
-    rgb(255 250 237 / 50%) 0%,
-    rgb(255 250 237 / 28%) 34%,
-    rgb(255 242 209 / 10%) 58%,
-    rgb(255 242 209 / 0%) 80%
+  --cf-canvas-gradient-funnel: linear-gradient(
+    180deg,
+    var(--cf-canvas-start) 0%,
+    var(--cf-canvas-start) 68%,
+    color-mix(in srgb, var(--cf-canvas-start) 88%, var(--cf-canvas-end)) 100%
   );
-  --cf-glow-active: 0 0 200px 0 rgb(255 250 237 / 24%);
-  --cf-glow-soft: 0 0 100px 0 rgb(255 250 237 / 24%);
-  --cf-cta-shadow: 0 0 8px 0 rgb(0 0 0 / 24%);
-  --cf-hero-shadow: 0 4px 16px rgb(255 250 237 / 60%), 0 0 4px #fff2d1;
-  --cf-border-w: 1px;
+  --cf-canvas-gradient: var(--cf-canvas-gradient-landing);
+
+  --cf-landing-content-top: 4.75rem;
+  --cf-hero-stack-gap: 1.25rem;
+  --cf-wizard-step-question-gap: 2rem;
+  --cf-wizard-question-options-gap: 3rem;
+  --cf-wizard-actions-bottom: 3.5rem;
+  --cf-thank-you-content-top: 11.5rem;
+  --cf-thank-you-stack-gap: 1.25rem;
 
   /* Motion — calm, institutional; nothing bounces */
   --cf-ease: cubic-bezier(0.2, 0, 0, 1);
   --cf-dur-feedback: 140ms;
   --cf-dur-content: 260ms;
+  --cf-dur-vt-enter: 210ms;
+  --cf-dur-vt-exit: 150ms;
+  --cf-dur-vt-move: 400ms;
+  --cf-dur-vt-progress-exit: 120ms;
+  --cf-dur-vt-progress-enter: 220ms;
+  --cf-dur-vt-question-exit: 140ms;
+  --cf-dur-vt-question-enter: 220ms;
+  --cf-dur-vt-question-move: 260ms;
+  --cf-dur-vt-actions-exit: 120ms;
+  --cf-dur-vt-actions-enter: 220ms;
+  --cf-vt-delay-short: 70ms;
+  --cf-vt-delay-actions: 80ms;
+  --cf-vt-slide-x: 3.75rem;
+  --cf-vt-slide-y: 0.625rem;
+  --cf-vt-slide-y-strong: 0.75rem;
+  --cf-vt-blur: 0.1875rem;
 
   /* Type scale (sizes; families come from next/font vars in layout.tsx) */
-  --cf-text-hero: 96px;
-  --cf-text-hero-sub: 36px;
-  --cf-text-question: 32px;
-  --cf-text-field-label: 26px;
-  --cf-text-lg: 20px;
-  --cf-text-base: 16px;
-  --cf-text-logo: 27px;
+  --cf-text-hero: 3.5rem;
+  --cf-text-hero-sub: 1.375rem;
+  --cf-text-question: 1.25rem;
+  --cf-text-field-label: 1.125rem;
+  --cf-text-lg: 0.875rem;
+  --cf-text-base: 0.75rem;
+  --cf-text-logo: 1.0625rem;
+  --cf-text-thank-you-sub: 1.5rem;
   --cf-leading-tight: 1;
   --cf-leading-snug: 1.1;
   --cf-leading-body: 1.5;
@@ -178,7 +245,283 @@
   --border: var(--cf-gray-500);
   --input: var(--cf-charcoal-900);
   --ring: var(--cf-cream);
-  --radius: 9999px; /* everything is a pill */
+  --radius: var(--cf-radius-pill); /* everything is a pill */
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --cf-header-h: 6rem;
+    --cf-footer-h: 5rem;
+    --cf-row-h: 4.5rem;
+    --cf-search-h: 5rem;
+    --cf-cta-h: 3rem;
+    --cf-cta-w: 13.75rem;
+    --cf-touch: 3rem;
+    --cf-radio-size: 2rem;
+    --cf-logo-mark-w: 2.25rem;
+    --cf-logo-mark-h: 2.5rem;
+    --cf-social-size: 2.5rem;
+    --cf-social-mark-size: 1.375rem;
+    --cf-social-x-mark-w: 1.25rem;
+    --cf-social-x-mark-h: 1.125rem;
+    --cf-landing-content-top: 7.5rem;
+    --cf-hero-stack-gap: 1.875rem;
+    --cf-wizard-step-question-gap: 3rem;
+    --cf-wizard-question-options-gap: 4.75rem;
+    --cf-wizard-actions-bottom: 6rem;
+    --cf-thank-you-content-top: 18rem;
+    --cf-thank-you-stack-gap: 2rem;
+    --cf-text-hero: 6rem;
+    --cf-text-hero-sub: 2.25rem;
+    --cf-text-question: 2rem;
+    --cf-text-field-label: 1.625rem;
+    --cf-text-lg: 1.25rem;
+    --cf-text-base: 1rem;
+    --cf-text-logo: 1.6875rem;
+    --cf-text-thank-you-sub: 2.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --cf-page-x: 6.25rem;
+  }
+}
+
+@keyframes fade {
+  from {
+    filter: blur(var(--cf-vt-blur));
+    opacity: 0;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide {
+  from {
+    translate: var(--slide-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+@keyframes slide-y {
+  from {
+    transform: translateY(var(--slide-y-offset, var(--cf-vt-slide-y)));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes via-blur {
+  from {
+    filter: blur(var(--cf-vt-blur));
+  }
+  to {
+    filter: blur(0);
+  }
+}
+
+@keyframes scale-down {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+::view-transition-old(.fade-out) {
+  animation: var(--cf-dur-vt-exit) ease-in fade reverse;
+}
+
+::view-transition-new(.fade-in) {
+  animation: var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade;
+}
+
+::view-transition-old(.slide-down) {
+  animation:
+    var(--cf-dur-vt-exit) ease-out both fade reverse,
+    var(--cf-dur-vt-exit) ease-out both slide-y reverse;
+}
+
+::view-transition-new(.slide-up) {
+  animation:
+    var(--cf-dur-vt-enter) ease-in var(--cf-dur-vt-exit) both fade,
+    var(--cf-dur-vt-move) ease-in both slide-y;
+}
+
+::view-transition-new(.slide-from-right) {
+  --slide-offset: var(--cf-vt-slide-x);
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+    var(--cf-dur-vt-move) ease-in-out both slide;
+}
+
+::view-transition-old(.slide-to-left) {
+  --slide-offset: calc(var(--cf-vt-slide-x) * -1);
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
+    var(--cf-dur-vt-move) ease-in-out both slide reverse;
+}
+
+::view-transition-new(.slide-from-left) {
+  --slide-offset: calc(var(--cf-vt-slide-x) * -1);
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+    var(--cf-dur-vt-move) ease-in-out both slide;
+}
+
+::view-transition-old(.slide-to-right) {
+  --slide-offset: var(--cf-vt-slide-x);
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
+    var(--cf-dur-vt-move) ease-in-out both slide reverse;
+}
+
+::view-transition-old(.nav-forward) {
+  --slide-offset: calc(var(--cf-vt-slide-x) * -1);
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
+    var(--cf-dur-vt-move) ease-in-out both slide reverse;
+}
+
+::view-transition-new(.nav-forward) {
+  --slide-offset: var(--cf-vt-slide-x);
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+    var(--cf-dur-vt-move) ease-in-out both slide;
+}
+
+::view-transition-old(.nav-back) {
+  --slide-offset: var(--cf-vt-slide-x);
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
+    var(--cf-dur-vt-move) ease-in-out both slide reverse;
+}
+
+::view-transition-new(.nav-back) {
+  --slide-offset: calc(var(--cf-vt-slide-x) * -1);
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+    var(--cf-dur-vt-move) ease-in-out both slide;
+}
+
+::view-transition-old(.wizard-progress) {
+  animation: var(--cf-dur-vt-progress-exit) var(--cf-ease) both fade reverse;
+}
+
+::view-transition-new(.wizard-progress) {
+  animation: var(--cf-dur-vt-progress-enter) var(--cf-ease)
+    var(--cf-vt-delay-short) both fade;
+}
+
+::view-transition-old(.wizard-question-forward) {
+  --slide-y-offset: calc(var(--cf-vt-slide-y) * -1);
+  animation:
+    var(--cf-dur-vt-question-exit) var(--cf-ease) both fade reverse,
+    var(--cf-dur-vt-question-enter) var(--cf-ease) both slide-y reverse;
+}
+
+::view-transition-new(.wizard-question-forward) {
+  --slide-y-offset: var(--cf-vt-slide-y-strong);
+  animation:
+    var(--cf-dur-vt-question-enter) var(--cf-ease) var(--cf-vt-delay-short) both
+    fade,
+    var(--cf-dur-vt-question-move) var(--cf-ease) both slide-y;
+}
+
+::view-transition-old(.wizard-question-back) {
+  --slide-y-offset: var(--cf-vt-slide-y);
+  animation:
+    var(--cf-dur-vt-question-exit) var(--cf-ease) both fade reverse,
+    var(--cf-dur-vt-question-enter) var(--cf-ease) both slide-y reverse;
+}
+
+::view-transition-new(.wizard-question-back) {
+  --slide-y-offset: calc(var(--cf-vt-slide-y-strong) * -1);
+  animation:
+    var(--cf-dur-vt-question-enter) var(--cf-ease) var(--cf-vt-delay-short) both
+    fade,
+    var(--cf-dur-vt-question-move) var(--cf-ease) both slide-y;
+}
+
+::view-transition-old(.wizard-actions) {
+  animation: var(--cf-dur-vt-actions-exit) var(--cf-ease) both fade reverse;
+}
+
+::view-transition-new(.wizard-actions) {
+  animation: var(--cf-dur-vt-actions-enter) var(--cf-ease)
+    var(--cf-vt-delay-actions) both fade;
+}
+
+::view-transition-group(.morph) {
+  animation-duration: var(--cf-dur-vt-move);
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+
+::view-transition-group(.text-morph) {
+  animation-duration: var(--cf-dur-vt-move);
+}
+
+::view-transition-old(.text-morph) {
+  display: none;
+}
+
+::view-transition-new(.text-morph) {
+  object-fit: none;
+  object-position: left top;
+  animation: none;
+}
+
+::view-transition-old(.scale-out) {
+  animation: var(--cf-dur-vt-exit) ease-in scale-down;
+}
+
+::view-transition-new(.scale-in) {
+  animation: var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both scale-up;
+}
+
+::view-transition-group(persistent-nav) {
+  z-index: 100;
+  animation: none;
+}
+
+::view-transition-old(persistent-nav) {
+  display: none;
+}
+
+::view-transition-new(persistent-nav) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }
 
 @layer base {
@@ -187,7 +530,7 @@
   }
   body {
     min-height: 100dvh;
-    background: var(--cf-canvas-gradient) fixed var(--cf-charcoal-900);
+    background-color: var(--cf-charcoal-900);
     @apply text-foreground;
   }
   button:not(:disabled),
@@ -196,5 +539,85 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  .cf-content-container {
+    width: 100%;
+    max-width: var(--cf-content-w);
+    margin-inline: auto;
+  }
+
+  .cf-search-container {
+    width: 100%;
+    max-width: var(--cf-search-w);
+    margin-inline: auto;
+  }
+
+  .cf-chip-container {
+    width: 100%;
+    max-width: var(--cf-chip-row-w);
+    margin-inline: auto;
+  }
+
+  .cf-field-container {
+    width: 100%;
+    max-width: var(--cf-field-w);
+    margin-inline: auto;
+  }
+
+  .cf-funnel-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background-color: var(--cf-charcoal-900);
+    background-image: var(--cf-canvas-gradient-landing);
+    background-attachment: fixed;
+  }
+
+  .cf-funnel-backdrop--wizard,
+  .cf-funnel-backdrop--thank-you {
+    background-image: var(--cf-canvas-gradient-funnel);
+  }
+
+  .cf-spotlight {
+    position: absolute;
+    inset-inline: -8rem;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .cf-spotlight--landing {
+    inset-block: -5rem -8rem;
+    background-image: url("/brand/funnel-light-landing.svg");
+  }
+
+  .cf-spotlight--wizard {
+    inset-block: -24rem;
+    background-image: url("/brand/funnel-light-wizard.svg");
+    transform: rotate(90deg);
+  }
+
+  .cf-spotlight--thank-you-top,
+  .cf-spotlight--thank-you-bottom {
+    block-size: 55rem;
+    background-image: url("/brand/funnel-light-final.svg");
+  }
+
+  .cf-spotlight--thank-you-top {
+    inset-block-start: -24rem;
+    transform: rotate(-90deg);
+  }
+
+  .cf-spotlight--thank-you-bottom {
+    inset-block-end: -24rem;
+    transform: rotate(90deg);
   }
 }

@@ -17,10 +17,10 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 interface ControlProps {
@@ -28,6 +28,10 @@ interface ControlProps {
   "aria-invalid"?: boolean;
   disabled?: boolean;
   id: string;
+}
+
+function defaultTextareaSerialize(value: string) {
+  return value;
 }
 
 interface FormFieldRenderProps<
@@ -84,7 +88,6 @@ function FormField<
   const { field, fieldState } = useController({
     control,
     defaultValue,
-    disabled,
     name,
     rules,
     shouldUnregister,
@@ -135,6 +138,8 @@ type FormInputFieldProps<
   | "name"
   | "onBlur"
   | "onChange"
+  | "onInput"
+  | "onValueChange"
   | "ref"
   | "value"
 > &
@@ -175,9 +180,87 @@ function FormInputField<
       {({ controlProps, field }) => (
         <Input
           {...inputProps}
-          {...field}
           {...controlProps}
+          name={field.name}
+          onBlur={field.onBlur}
+          onChange={(event) => field.onChange(event.currentTarget.value)}
+          ref={field.ref}
           value={field.value ?? ""}
+        />
+      )}
+    </FormField>
+  );
+}
+
+type FormTextareaFieldProps<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>,
+> = Omit<
+  React.ComponentProps<typeof Textarea>,
+  | "aria-describedby"
+  | "aria-invalid"
+  | "defaultValue"
+  | "disabled"
+  | "id"
+  | "name"
+  | "onBlur"
+  | "onChange"
+  | "ref"
+  | "value"
+> &
+  Omit<BaseFormFieldProps<TFieldValues, TName>, "children"> & {
+    deserialize?: (value: unknown) => string;
+    serialize?: (value: string) => unknown;
+  };
+
+function FormTextareaField<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>,
+>({
+  className,
+  deserialize = defaultTextareaDeserialize,
+  serialize = defaultTextareaSerialize,
+  ...props
+}: FormTextareaFieldProps<TFieldValues, TName>) {
+  const {
+    control,
+    defaultValue,
+    description,
+    disabled,
+    id,
+    label,
+    name,
+    orientation,
+    rules,
+    shouldUnregister,
+    ...textareaProps
+  } = props;
+
+  return (
+    <FormField
+      className={className}
+      control={control}
+      defaultValue={defaultValue}
+      description={description}
+      disabled={disabled}
+      id={id}
+      label={label}
+      name={name}
+      orientation={orientation}
+      rules={rules}
+      shouldUnregister={shouldUnregister}
+    >
+      {({ controlProps, field }) => (
+        <Textarea
+          {...textareaProps}
+          {...controlProps}
+          name={field.name}
+          onBlur={field.onBlur}
+          onChange={(event) =>
+            field.onChange(serialize(event.currentTarget.value))
+          }
+          ref={field.ref}
+          value={deserialize(field.value)}
         />
       )}
     </FormField>
@@ -258,31 +341,24 @@ function FormRadioGroupField<
             return (
               <FieldLabel
                 className={cn(
-                  "w-full cursor-pointer font-normal",
+                  "flex w-full cursor-pointer items-center gap-3 rounded-(--cf-radius-alert) border border-border/70 p-3 font-normal has-data-checked:border-primary/30 has-data-checked:bg-primary/5",
                   optionDisabled && "cursor-not-allowed opacity-50"
                 )}
                 htmlFor={optionId}
                 key={option.value}
               >
-                <Field
-                  className="rounded-lg border border-border/70 p-3"
-                  data-disabled={optionDisabled || undefined}
-                  data-invalid={fieldState.invalid || undefined}
-                  orientation="horizontal"
-                >
-                  <RadioGroupItem
-                    aria-invalid={fieldState.invalid || undefined}
-                    disabled={optionDisabled}
-                    id={optionId}
-                    value={option.value}
-                  />
-                  <FieldContent>
-                    <FieldTitle>{option.label}</FieldTitle>
-                    {option.description && (
-                      <FieldDescription>{option.description}</FieldDescription>
-                    )}
-                  </FieldContent>
-                </Field>
+                <RadioGroupItem
+                  aria-invalid={fieldState.invalid || undefined}
+                  disabled={optionDisabled}
+                  id={optionId}
+                  value={option.value}
+                />
+                <span className="flex min-w-0 flex-col gap-0.5 text-left">
+                  <span className="font-medium text-sm">{option.label}</span>
+                  {option.description ? (
+                    <FieldDescription>{option.description}</FieldDescription>
+                  ) : null}
+                </span>
               </FieldLabel>
             );
           })}
@@ -319,4 +395,9 @@ export {
   FormInputField,
   FormRadioGroupField,
   FormRootError,
+  FormTextareaField,
 };
+
+function defaultTextareaDeserialize(value: unknown) {
+  return typeof value === "string" ? value : "";
+}

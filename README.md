@@ -19,6 +19,7 @@ whole product — no exchange, no wallet, no end-user dashboard, no self-serve m
 | Framework | Next.js 16 (App Router, typedRoutes, cacheComponents/PPR, React Compiler) + React 19 |
 | API | oRPC mounted directly at `src/app/rpc/[[...rest]]/route.ts` — no Hono, no separate backend |
 | ORM / DB | Drizzle v1 RC on Postgres 17 (Docker) |
+| Storage | MinIO/S3 locally and self-hosted, Vercel Blob for preview |
 | UI | Tailwind v4 (CSS-first) + shadcn/ui on **Base UI** primitives, dark-only |
 | Design tokens | `--cf-*` custom props from the CoinFactory Design System — see [DESIGN.md](DESIGN.md) |
 | Validation | Zod v4 (shared by oRPC contracts and React Hook Form) |
@@ -28,7 +29,7 @@ whole product — no exchange, no wallet, no end-user dashboard, no self-serve m
 ## Getting started
 
 ```bash
-docker compose up -d     # Postgres 17 (healthcheck + volume)
+docker compose up -d     # Postgres 17 + MinIO (healthchecks + volumes)
 pnpm install             # pnpm only — bun/npm/yarn are blocked by hook
 pnpm dev                 # http://localhost:3000
 ```

@@ -86,7 +86,7 @@ Reference Linear issues in the description or footer (`Closes RZ-12`), not as th
 ### Examples (this repo)
 
 ```
-feat(funnel): add landing suggestion chips
+feat(funnel): add landing category badges
 feat(rpc): add inquiries.create procedure with rate limit
 fix(funnel): gate Next on URL validity in step 5
 refactor(server): extract inquiry status enum
@@ -141,6 +141,30 @@ Load-bearing detail lives in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and
 
 When adding a feature, keep the same vertical order: schema → oRPC procedure → feature
 module → page.
+
+### Structure guardrails
+
+- Keep domain code feature-owned under `src/features/<feature>/`.
+- Keep pure shared infrastructure in `src/lib/` (oRPC clients, cache-tag builders, query
+  client).
+- Keep shared third-party provider clients/adapters in `src/services/<provider>` (storage,
+  email delivery, future payment/analytics/webhook providers). Domain orchestration stays in
+  `src/features/<feature>/`.
+- Server-internal app modules import `server-only`. Exception: Drizzle schema files are loaded by
+  `drizzle-kit` outside Next, so they stay marker-free and are reached through server-only callers.
+- Server Actions stay in `'use server'` modules; do not add `server-only` to action files that
+  client components must import as action references.
+- Error handling is route-first: add `error.tsx` when a route/segment needs a failure surface;
+  use `ComponentErrorBoundary` only for recoverable client islands/widgets. Do not create
+  placeholder boundaries.
+- React 19 APIs are allowed later in their narrow cases: `useOptimistic` for
+  server-confirmed optimistic mutations, `Activity` for hidden UI that must preserve state/DOM,
+  and `useEffectEvent` for non-reactive effect logic called from an effect. Do not add them
+  speculatively.
+- Reusable async/action helpers: use the local oRPC tuple + `useAction` shape, not template
+  `{ error, message }` envelopes. Use `ServerFetchResult` + `ComponentErrorBoundary` for
+  repeated RSC async sections; introduce an `ActionButton` or `AsyncSection` wrapper only after
+  the repeated local pattern exists.
 
 ---
 

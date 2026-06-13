@@ -4,7 +4,9 @@ import { defineConfig } from "drizzle-kit";
 // exception to the src/config/env rule. Fallback matches docker-compose.yml.
 export default defineConfig({
   dialect: "postgresql",
-  schema: "./src/server/db/schema",
+  // The barrel only: globbing the dir would load each table file AND its
+  // re-export, registering every table twice.
+  schema: "./src/server/db/schema/index.ts",
   out: "./drizzle",
   casing: "snake_case",
   dbCredentials: {

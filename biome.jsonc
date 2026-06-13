@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   // Ultracite presets carry the house style: space/2, lineWidth 80, lf,
   // double quotes, semicolons always, trailing commas.
   "extends": [

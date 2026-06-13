@@ -28,18 +28,25 @@ flowchart LR
     Handler --> RPC
 ```
 
-Shared leaves: `src/components/{ui,common,layout}`, `src/hooks`, `src/lib`, `src/config/env`
-(t3-env).
+Shared leaves: `src/components/{ui,common,layout}`, `src/hooks`, `src/lib`, `src/services`,
+`src/config/env` (t3-env).
+
+`src/services/<provider>` is a first-class provider layer for shared third-party clients and
+adapters: storage, email delivery, and future payment/analytics/webhook providers. Feature-owned
+domain orchestration still lives inside its feature (`src/features/inquiries/email/`); pure
+framework helpers stay in `src/lib/`.
 
 ## Boundary rules (load-bearing)
 
 | Rule | Why |
 |---|---|
-| `src/server/**` never imports from `src/features/**` or `src/components/**` | server is the bottom of the chain; UI churn must not ripple into it |
+| `src/server/rpc/**` may import `src/features/**/{db,schemas,email,lib}` but never `src/components/**` | routers orchestrate; DAL and Zod contracts live in feature slices; UI must not leak into server |
+| `src/server/db/**` and other non-rpc server modules must not import `src/features/**` or `src/components/**` | keep the db layer free of feature/UI coupling except through rpc routers |
 | Features reach the server **only** via the oRPC client (browser) or the `'server-only'` router client (RSC/actions) | one contract, end-to-end types |
 | Never self-fetch `/rpc` over HTTP from RSC or server actions — use `createRouterClient` | HTTP self-calls break PPR prerendering and double latency |
 | Zod schemas in `features/*/schemas` are the contract shared by oRPC procedures and RHF forms | single source of validation truth |
 | DB access only through `src/server/db` (globalThis-cached singleton) | Next HMR exhausts the pool otherwise |
+| Server-internal app modules import `server-only`; Drizzle table files do not | `server-only` protects RSC boundaries, but `drizzle-kit` loads schema files outside Next |
 
 ## oRPC request lifecycle
 
@@ -78,7 +85,7 @@ sequenceDiagram
     A->>RC: client.inquiries.x(input) — direct function call, no fetch
     RC->>P: same middleware chain as HTTP path
     P->>D: query
-    D-->>R: typed result, rendered inside <Suspense>
+    D-->>R: typed result, cached reads render in the PPR shell; dynamic reads stream through Suspense
 ```
 
 Mutations are oRPC procedures exposed as server actions via `.actionable()` in files with
@@ -88,21 +95,24 @@ Mutations are oRPC procedures exposed as server actions via `.actionable()` in f
 
 `/admin` is a route group in the **same app** — no second app, no separate deployment. Same
 CF design system (dark cream-on-charcoal, data-table kit) and the **same RPC mount**: admin
-procedures (question CRUD, inquiry list/review) live alongside the public ones in
+procedures (question + category CRUD, inquiry list/review) live alongside the public ones in
 `src/server/rpc/routers/`, behind a better-auth session middleware in
 `src/server/rpc/middleware.ts`. The public surface stays exactly `inquiries.create` +
-`questions.listActive`; everything else requires an admin session. End users never
-authenticate.
+`questions.listActive` + `categories.listActive`; everything else requires an admin session.
+End users never authenticate.
 
 ## Cache-tag flow (Cache Components end-to-end)
 
-1. **Read:** `features/<feature>/api/server/*` wraps router-client calls with `"use cache"` +
-   `cacheTag(...)`. Tag strings come from helpers in `features/<feature>/db/cache/` — never
-   inline literals.
+1. **Read:** `features/<feature>/api/server/*` wraps reads with `"use cache"` +
+   `cacheTag(...)`. Public funnel reads call `orpcServer`; admin list reads call the
+   feature DAL directly (auth in the admin layout, outside cache). Tag strings come from
+   helpers in `features/<feature>/db/cache/` — never inline literals.
 2. **Mutate:** the `.actionable()` procedure (or the action wrapper) calls `updateTag(...)`
-   with the same helpers after a successful write.
-3. **Never** `router.refresh()` for invalidation; on the browser side invalidate TanStack Query
-   via `queryClient.invalidateQueries({ queryKey: orpc.x.key() })`.
+   with the same fan-out helpers after a successful write (`activeList`, `adminList`, optional
+   `idTag`). Admin action wrappers may also call server-side `refresh()` after tag updates so
+   the current RSC route re-fetches immediately.
+3. **Never** client `router.refresh()` for invalidation; on the browser side invalidate TanStack
+   Query via `queryClient.invalidateQueries({ queryKey: orpc.x.key() })`.
 
 ## PPR / cacheComponents behavior
 
@@ -110,34 +120,44 @@ authenticate.
 
 - Every awaited db/oRPC call in an RSC sits inside `<Suspense>` or a `"use cache"` scope —
   otherwise the build fails or the route silently loses its static shell.
+- Long-lived shared public reads (`questions.listActive`, `categories.listActive`) and
+  admin list reads (`getAdminQuestions`, `getAdminCategories` — DAL-direct, layout auth)
+  use `cacheLife("hours")`; render them directly when they belong to the initial shell, or
+  isolate the smallest non-critical section under `<Suspense>` so the rest of the page does
+  not wait.
 - Never put per-user data (headers/cookies-derived) inside `"use cache"` — pass IDs as
   arguments so they become part of the cache key.
 - `cacheLife` under ~5 minutes silently ejects a component from the PPR static shell.
-- React Compiler is on: no hand-rolled `useMemo`/`useCallback`/`memo` unless profiled.
+- React 19 + Compiler are on: no hand-rolled `useMemo`/`useCallback`/`memo` unless
+  profiled; new/touched components use `ref` as a normal prop instead of `forwardRef`;
+  `Activity`, `useEffectEvent`, and `cacheSignal()` stay limited to the rule-gated cases.
 - `typedRoutes` is on: after adding a route, run `pnpm typegen` before trusting typecheck.
 
 ## Architecture assessment (honest, current state)
 
-Greenfield with the foundation delivered (2026-06-10): the `src/` layout, the oRPC mount
-with a working `health.ping` router, the globalThis-cached db client (empty schema barrel),
-t3-env modules, and 14 cf-themed shadcn primitives all exist. What does NOT exist today:
+Current state (2026-06-12):
 
-- **No funnel/wizard UI and no domain schema** — the `questions`/`inquiries`/`inquiry_answers`/
-  `inquiry_files` tables, `relations.ts`, feature routers, and every screen ship in later
-  vertical slices.
-- **No auth yet** — the funnel is public forever (end users never log in); better-auth admin
-  sessions arrive with the admin phase (slices 0007–0008). The `authedProcedure` middleware slot
-  in `src/server/rpc/middleware.ts` is for that phase.
-- **No admin surface yet** — `/admin` (question CRUD, inquiry list/review) ships as v1
-  phase 2, slices 0007–0008.
-- **No tests in v1** — every slice gates on `pnpm validate` only; no Vitest/Playwright/
-  Storybook.
-- **No i18n** — single-locale English.
-- **No abuse controls yet** on the public inquiry endpoint — the layered v1 controls
-  (pre-parse body cap + per-IP rate limit at the proxy/route handler,
-  `serverActions.bodySizeLimit`, oRPC post-parse quotas, honeypot) ship with the funnel
-  slices per ADR-0005; see [SECURITY.md](SECURITY.md).
-- **No git remote / CI** — local repo only; commands that mention `gh` note this.
-
-What is already solid: the source layout, the direct oRPC integration, the validated env/db
-foundation, the cf design tokens, and the `pnpm validate` gate.
+- **Foundation and public persistence exist**: `src/` layout, direct oRPC mount, `health.ping`,
+  globalThis-cached Drizzle client, t3-env modules, cf-themed shadcn primitives, `questions`,
+  `categories`, `inquiries`, `inquiry_answers`, `inquiry_categories`, `inquiry_files`,
+  `relations.ts`, migrations, and seed data are in place.
+- **Public API exists**: `questions.listActive`, `categories.listActive`, and
+  `inquiries.create` are wired. The submit path stores inquiry rows, answer snapshots,
+  category label snapshots, supporting-file metadata, MinIO/S3 objects, and best-effort
+  notification status.
+- **Layered public controls are partially implemented in-app**: `/rpc` rejects oversized
+  `Content-Length`, `BodyLimitPlugin` enforces the shared byte budget, oRPC middleware applies
+  post-parse quotas and a per-IP throttle, and the `.actionable()` submit path carries request
+  headers into the same context. Reverse-proxy/edge rate limits remain deployment work.
+- **Public funnel UI exists**: `/` landing (search, categories, intake gate), `/onboarding/[step]`
+  wizard (DB-driven questions, free step navigation, final-submit validation), and
+  `/thank-you` confirmation — all under `(funnel)/` with ViewTransition navigation and draft
+  state in layout context.
+- **Admin surface in progress**: better-auth admin sessions, `/admin` shell, categories/questions
+  CRUD with cached admin list reads and tag invalidation.
+- **Cache invalidation wired**: `updateTag` / `revalidateTag` fan-out for public active lists
+  and admin lists (`activeList`, `adminList`, optional `idTag`).
+- **No tests in v1**: every slice gates on `pnpm validate` plus focused browser walkthroughs; no
+  Vitest/Playwright/Storybook suite exists yet.
+- **No i18n**: single-locale English.
+- **GitLab remote + CI**: `origin` on GitLab; self-host deploy per ADR-0006 (manual CI deploy on runner).

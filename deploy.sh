@@ -43,22 +43,30 @@ compose() {
   docker compose --env-file "$DEPLOY_ENV_FILE" --profile app "$@"
 }
 
-echo "Stopping existing stack..."
-compose down --remove-orphans || true
+# Data lives in named volumes (coinfactory-pgdata, coinfactory-minio-data). This
+# script NEVER passes `-v`/`--volumes` to compose, so the database and object
+# storage are preserved across every redeploy. We also no longer tear the whole
+# stack down: data services keep running and only the app is rebuilt/recreated.
+pgdata_volume="${COMPOSE_PROJECT_NAME}_coinfactory-pgdata"
+if docker volume inspect "$pgdata_volume" >/dev/null 2>&1; then
+  echo "Existing deployment detected — preserving database and object storage."
+else
+  echo "First deployment — initialising database and object storage."
+fi
 
-echo "Starting data services..."
-compose up -d postgres minio minio-init
+echo "Ensuring data services are up..."
+compose up -d --remove-orphans postgres minio minio-init
 
 echo "Building migration image..."
 compose build migrate
 
-echo "Running database migrations..."
+echo "Applying pending database migrations (additive; existing data untouched)..."
 compose run --rm migrate
 
 echo "Building application image..."
 compose build app
 
-echo "Starting application..."
+echo "Redeploying application..."
 compose up -d app
 
 echo "Stack status:"

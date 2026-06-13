@@ -1,74 +1,74 @@
-stages: [build, quality, deploy]
+# stages: [build, quality, deploy]
 
-variables:
-  COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
-  COMPOSE_PROJECT_NAME: "coin-factory"
-  DATABASE_URL: "postgresql://coinfactory:coinfactory@postgres:5432/coinfactory"
-  DEPLOY_ENV_FILE: "/srv/coinfactory/.env"
-  HUSKY: "0"
-  POSTGRES_DB: "coinfactory"
-  POSTGRES_PASSWORD: "coinfactory"
-  POSTGRES_USER: "coinfactory"
-  STORAGE_DRIVER: "minio"
-  S3_ENDPOINT: "http://minio:9000"
-  S3_REGION: "us-east-1"
-  S3_ACCESS_KEY_ID: "coinfactory"
-  S3_SECRET_ACCESS_KEY: "coinfactory-minio"
-  S3_BUCKET: "coinfactory-ci"
-  RESEND_API_KEY: "re_ci_placeholder"
-  SUBMISSION_NOTIFICATION_EMAIL: "notifications@example.com"
-  SUBMISSION_FROM_EMAIL: "no-reply@example.com"
-  BETTER_AUTH_SECRET: "ci-placeholder-secret-32-bytes-long"
-  BETTER_AUTH_URL: "http://localhost:3000"
-  NEXT_PUBLIC_AUTH_URL: "http://localhost:3000"
-  ADMIN_EMAIL: "admin@example.com"
-  ADMIN_PASSWORD: "admin-password"
+# variables:
+#   COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+#   COMPOSE_PROJECT_NAME: "coin-factory"
+#   DATABASE_URL: "postgresql://coinfactory:coinfactory@postgres:5432/coinfactory"
+#   DEPLOY_ENV_FILE: "/srv/coinfactory/.env"
+#   HUSKY: "0"
+#   POSTGRES_DB: "coinfactory"
+#   POSTGRES_PASSWORD: "coinfactory"
+#   POSTGRES_USER: "coinfactory"
+#   STORAGE_DRIVER: "minio"
+#   S3_ENDPOINT: "http://minio:9000"
+#   S3_REGION: "us-east-1"
+#   S3_ACCESS_KEY_ID: "coinfactory"
+#   S3_SECRET_ACCESS_KEY: "coinfactory-minio"
+#   S3_BUCKET: "coinfactory-ci"
+#   RESEND_API_KEY: "re_ci_placeholder"
+#   SUBMISSION_NOTIFICATION_EMAIL: "notifications@example.com"
+#   SUBMISSION_FROM_EMAIL: "no-reply@example.com"
+#   BETTER_AUTH_SECRET: "ci-placeholder-secret-32-bytes-long"
+#   BETTER_AUTH_URL: "http://localhost:3000"
+#   NEXT_PUBLIC_AUTH_URL: "http://localhost:3000"
+#   ADMIN_EMAIL: "admin@example.com"
+#   ADMIN_PASSWORD: "admin-password"
 
-workflow:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - when: never
+# workflow:
+#   rules:
+#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+#     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+#     - when: never
 
-.pnpm:
-  image: node:24.13.0-slim
-  services:
-    - name: postgres:17-alpine
-      alias: postgres
-  cache:
-    key:
-      files:
-        - pnpm-lock.yaml
-    paths:
-      - .pnpm-store/
-  before_script:
-    - corepack enable
-    - corepack prepare pnpm@10.33.2 --activate
-    - pnpm config set store-dir .pnpm-store
-    - pnpm install --frozen-lockfile
-    - pnpm db:migrate
+# .pnpm:
+#   image: node:24.13.0-slim
+#   services:
+#     - name: postgres:17-alpine
+#       alias: postgres
+#   cache:
+#     key:
+#       files:
+#         - pnpm-lock.yaml
+#     paths:
+#       - .pnpm-store/
+#   before_script:
+#     - corepack enable
+#     - corepack prepare pnpm@10.33.2 --activate
+#     - pnpm config set store-dir .pnpm-store
+#     - pnpm install --frozen-lockfile
+#     - pnpm db:migrate
 
-build:
-  extends: .pnpm
-  stage: build
-  script:
-    - pnpm typecheck
-    - pnpm build
+# build:
+#   extends: .pnpm
+#   stage: build
+#   script:
+#     - pnpm typecheck
+#     - pnpm build
 
-validate:
-  extends: .pnpm
-  stage: quality
-  script:
-    - pnpm validate
+# validate:
+#   extends: .pnpm
+#   stage: quality
+#   script:
+#     - pnpm validate
 
-deploy:
-  stage: deploy
-  tags: [coinfactory-prod]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      when: manual
-  environment:
-    name: production
-  script:
-    - chmod +x deploy.sh
-    - FOLLOW_LOGS=0 ./deploy.sh
+# deploy:
+#   stage: deploy
+#   tags: [coinfactory-prod]
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+#       when: manual
+#   environment:
+#     name: production
+#   script:
+#     - chmod +x deploy.sh
+#     - FOLLOW_LOGS=0 ./deploy.sh

@@ -8,6 +8,7 @@ import {
   type SetStateAction,
   startTransition,
   use,
+  useEffect,
   useReducer,
 } from "react";
 
@@ -51,6 +52,10 @@ type FunnelDraftAction =
   | { type: "setWhatsapp"; value: SetStateAction<string> }
   | { type: "navigate"; view: FunnelView; step: number };
 
+const STORAGE_KEY = "cf-funnel-draft";
+
+type PersistedState = Omit<FunnelDraftState, "files">;
+
 const initialFunnelDraftState: FunnelDraftState = {
   answers: {},
   assetDescription: "",
@@ -62,13 +67,44 @@ const initialFunnelDraftState: FunnelDraftState = {
   step: 1,
 };
 
+function loadPersistedState(): FunnelDraftState {
+  if (typeof window === "undefined") return initialFunnelDraftState;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return initialFunnelDraftState;
+    const parsed: Partial<PersistedState> = JSON.parse(raw);
+    return {
+      ...initialFunnelDraftState,
+      ...parsed,
+      files: [],
+    };
+  } catch {
+    return initialFunnelDraftState;
+  }
+}
+
+function persistState(state: FunnelDraftState) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { files: _files, ...persistable } = state;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(persistable));
+  } catch {
+    // storage unavailable — silently skip
+  }
+}
+
 const FunnelDraftContext = createContext<FunnelDraft | null>(null);
 
 export function FunnelDraftProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(
     funnelDraftReducer,
-    initialFunnelDraftState
+    undefined,
+    loadPersistedState
   );
+
+  useEffect(() => {
+    persistState(state);
+  }, [state]);
 
   function setAnswer(questionId: string, value: string) {
     dispatch({ questionId, type: "setAnswer", value });

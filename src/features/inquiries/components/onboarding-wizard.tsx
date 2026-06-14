@@ -4,10 +4,7 @@
 
 import { X } from "lucide-react";
 import type React from "react";
-import {
-  useId,
-  ViewTransition,
-} from "react";
+import { useId, ViewTransition } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Button } from "@/components/ui/button";
@@ -348,7 +345,7 @@ function RadioQuestion({
           return (
             <FieldLabel
               className={cn(
-                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015] active:scale-[0.985] rounded-(--cf-radius-row) border",
+                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015]  rounded-(--cf-radius-row) border",
                 selected
                   ? cn(
                       "text-cf-cream-bright has-data-checked:border-cf-border-active has-data-checked:bg-cf-charcoal-900"

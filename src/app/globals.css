@@ -180,7 +180,7 @@
     var(--cf-file-card-h) + var(--cf-search-h) + var(--cf-space-6)
   );
   --cf-cta-h: 2.25rem;
-  --cf-cta-w: 10rem;
+  --cf-cta-w: 8rem;
   --cf-touch: 2.25rem;
   --cf-radio-size: 1.25rem;
   --cf-radio-control-size: calc(var(--cf-radio-size) * 0.8);
@@ -288,7 +288,7 @@
     --cf-row-h: 4.5rem;
     --cf-search-h: 5rem;
     --cf-cta-h: 3rem;
-    --cf-cta-w: 13.75rem;
+    --cf-cta-w: 10rem;
     --cf-touch: 3rem;
     --cf-radio-size: 2rem;
     --cf-logo-mark-w: 2.25rem;

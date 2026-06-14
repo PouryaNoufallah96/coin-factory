@@ -268,7 +268,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
           name="wizard-actions"
           share={WIZARD_ACTIONS_TRANSITION}
         >
-          <div className="cf-field-container mb-(--cf-wizard-actions-bottom) flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="cf-field-container  flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Button
               className="text-(length:--cf-text-base) h-(--cf-cta-h) w-full rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97] sm:w-(--cf-cta-w)"
               onClick={onBack}

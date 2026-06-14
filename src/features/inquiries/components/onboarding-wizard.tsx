@@ -10,10 +10,9 @@ import {
   addTransitionType,
   startTransition,
   useId,
-  useState,
   ViewTransition,
 } from "react";
-import { FunnelAlert } from "@/components/common/funnel-alert";
+import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Button } from "@/components/ui/button";
 import {
@@ -81,7 +80,6 @@ interface OnboardingWizardProps {
 
 export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   const router = useRouter();
-  const [alert, setAlert] = useState<string | null>(null);
   const submit = useAction(createInquiry);
   const question = questions[step - 1];
   const total = questions.length;
@@ -152,7 +150,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   function onBack() {
-    setAlert(null);
     if (step === 1) {
       goTo("/" as Route, "nav-back");
       return;
@@ -161,7 +158,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   function onNext() {
-    setAlert(null);
     goTo(`/onboarding/${step + 1}` as Route, "nav-forward");
   }
 
@@ -178,7 +174,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
 
     const validationError = validateSubmission();
     if (validationError) {
-      setAlert(validationError);
+      funnelAlert(validationError);
       return;
     }
 
@@ -193,19 +189,15 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     });
 
     if (result.status === "error") {
-      setAlert(result.errorMessage ?? "We could not submit your inquiry.");
+      funnelAlert(result.errorMessage ?? "We could not submit your inquiry.");
       return;
     }
 
-    setAlert(null);
     goTo("/thank-you" as Route, "nav-forward");
   }
 
   return (
     <section className="relative flex flex-1 justify-center px-(--cf-page-x) py-6">
-      {alert ? (
-        <FunnelAlert message={alert} onDismiss={() => setAlert(null)} />
-      ) : null}
       <form
         className="cf-content-container flex w-full flex-col items-center text-center"
         onSubmit={onSubmit}
@@ -235,7 +227,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                 <RadioQuestion
                   onChange={(value) => {
                     setAnswer(question.id, value);
-                    setAlert(null);
+
                   }}
                   options={question.options ?? []}
                   questionId={question.id}
@@ -250,7 +242,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="Link"
                   onChange={(value) => {
                     setAnswer(question.id, value);
-                    setAlert(null);
+
                   }}
                   placeholder="Link"
                   type="url"
@@ -265,7 +257,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="Email"
                   onChange={(value) => {
                     setEmail(value);
-                    setAlert(null);
+
                   }}
                   placeholder="Email"
                   type="email"
@@ -275,7 +267,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="WhatsApp phone number"
                   onChange={(value) => {
                     setWhatsapp(value);
-                    setAlert(null);
+
                   }}
                   placeholder="WhatsApp Phone number"
                   type="tel"

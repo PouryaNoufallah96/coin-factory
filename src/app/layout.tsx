@@ -4,7 +4,6 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
-import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 // Font roles per DESIGN.md: Inter carries the UI; Parkinsans is the logo
@@ -63,7 +62,6 @@ export default function RootLayout({
         <NuqsAdapter>
           <QueryProvider>{children}</QueryProvider>
         </NuqsAdapter>
-        <Toaster />
       </body>
     </html>
   );

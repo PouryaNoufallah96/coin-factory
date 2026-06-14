@@ -8,14 +8,11 @@ import type React from "react";
 import {
   addTransitionType,
   type ChangeEvent,
-  createContext,
   type ReactNode,
   startTransition,
-  use,
   useRef,
-  useState,
 } from "react";
-import { FunnelAlert } from "@/components/common/funnel-alert";
+import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -46,14 +43,10 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".pdf": "PDF",
 };
 
-const LandingAlertContext = createContext<
-  ((message: string | null) => void) | null
->(null);
 
 export function LandingPage({ children }: { children: ReactNode }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [error, setError] = useState<string | null>(null);
   const {
     assetDescription,
     files,
@@ -74,22 +67,21 @@ export function LandingPage({ children }: { children: ReactNode }) {
     const nextFiles = [...files];
     for (const file of pickedFiles) {
       if (nextFiles.length >= MAX_FILES) {
-        setError(`Attach up to ${MAX_FILES} documents.`);
+        funnelAlert(`Attach up to ${MAX_FILES} documents.`);
         return;
       }
       if (!isAllowedDocument(file)) {
-        setError(`${file.name} is not a PDF or Word document.`);
+        funnelAlert(`${file.name} is not a PDF or Word document.`);
         return;
       }
       if (file.size > MAX_FILE_SIZE_BYTES) {
-        setError(`${file.name} is larger than 5 MB.`);
+        funnelAlert(`${file.name} is larger than 5 MB.`);
         return;
       }
       nextFiles.push(file);
     }
 
     setFiles(nextFiles);
-    setError(null);
   }
 
   function removeFile(index: number) {
@@ -107,10 +99,9 @@ export function LandingPage({ children }: { children: ReactNode }) {
         files,
       })
     ) {
-      setError(INTAKE_SIGNAL_MESSAGE);
+      funnelAlert(INTAKE_SIGNAL_MESSAGE);
       return;
     }
-    setError(null);
     startTransition(() => {
       addTransitionType("nav-forward");
       router.push("/onboarding/1" as Route);
@@ -118,10 +109,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
   }
 
   return (
-    <LandingAlertContext.Provider value={setError}>
       <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
         <div className="flex w-full flex-col items-center gap-20 sm:14">
-          {error ? <FunnelAlert message={error} /> : null}
           <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
             <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
               {HERO_SUBLINE}
@@ -164,9 +153,6 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     style={{ fontSize: "16px" }}
                     onValueChange={(value) => {
                       setAssetDescription(value);
-                      if (error) {
-                        setError(null);
-                      }
                     }}
                     placeholder={SEARCH_PLACEHOLDER}
                     value={assetDescription}
@@ -175,12 +161,16 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     aria-label="Continue"
                     className="shrink-0"
                     type="submit"
-                    disabled={!searchActive}
+                    // disabled={!searchActive}
                   >
                     <Image
                       alt=""
                       aria-hidden="true"
-                      className={cn("size-(--cf-search-button-size) transition-[transform,filter,opacity] duration-(--cf-dur-content) ease-(--cf-ease)", searchActive && "[button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]")}
+                      className={cn(
+                        "size-(--cf-search-button-size) transition-[transform,filter,opacity] duration-(--cf-dur-content) ease-(--cf-ease)",
+                        searchActive &&
+                          "[button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
+                      )}
                       style={
                         searchActive
                           ? {
@@ -201,7 +191,6 @@ export function LandingPage({ children }: { children: ReactNode }) {
           </div>
         </div>
       </section>
-    </LandingAlertContext.Provider>
   );
 }
 
@@ -253,7 +242,6 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const setLandingAlert = useLandingAlert();
   const { selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
     useFunnelDraft();
 
@@ -264,14 +252,13 @@ export function LandingCategoryChips({
       !isSelected &&
       selectedCategoryIds.length >= MAX_CATEGORIES_PER_INQUIRY
     ) {
-      setLandingAlert(`Pick up to ${MAX_CATEGORIES_PER_INQUIRY} categories.`);
+      funnelAlert(`Pick up to ${MAX_CATEGORIES_PER_INQUIRY} categories.`);
       return;
     }
 
     setSelectedCategoryIds((currentIds) =>
       nextSelectedCategoryIds(currentIds, category.id)
     );
-    setLandingAlert(null);
 
     setAssetDescription((current) => {
       if (isSelected) {
@@ -317,14 +304,6 @@ export function LandingCategoryChips({
       </div>
     </div>
   );
-}
-
-function useLandingAlert() {
-  const setLandingAlert = use(LandingAlertContext);
-  if (!setLandingAlert) {
-    throw new Error("useLandingAlert must be used inside LandingPage");
-  }
-  return setLandingAlert;
 }
 
 function removeLabelFromText(text: string, label: string): string {

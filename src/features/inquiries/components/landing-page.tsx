@@ -160,15 +160,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   />
                   <Input
                     aria-label="Asset description"
-                    className="h-10 border-0 bg-transparent px-0 shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
-                    style={{
-                      fontSize: "16px",
-                      background:
-                        "linear-gradient(90deg, #FFFFFF 0%, #282D36 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
+                    className="cf-search-input h-10 border-0 bg-transparent px-0 shadow-none outline-none text-cf-cream focus-visible:border-0 focus-visible:ring-0"
+                    style={{ fontSize: "16px" }}
                     onValueChange={(value) => {
                       setAssetDescription(value);
                       if (error) {
@@ -182,11 +175,20 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     aria-label="Continue"
                     className="shrink-0"
                     type="submit"
+                    disabled={!searchActive}
                   >
                     <Image
                       alt=""
                       aria-hidden="true"
-                      className="size-(--cf-search-button-size) transition-transform [button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
+                      className={cn("size-(--cf-search-button-size) transition-[transform,filter,opacity] duration-(--cf-dur-content) ease-(--cf-ease)", searchActive && "[button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]")}
+                      style={
+                        searchActive
+                          ? {
+                              filter:
+                                "brightness(0) saturate(100%) invert(98%) sepia(12%) saturate(400%) hue-rotate(340deg) brightness(102%)",
+                            }
+                          : {}
+                      }
                       src="/icons/Subtract.svg"
                       width={24}
                       height={24}

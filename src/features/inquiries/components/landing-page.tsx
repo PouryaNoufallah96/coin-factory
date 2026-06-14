@@ -43,7 +43,6 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".pdf": "PDF",
 };
 
-
 export function LandingPage({ children }: { children: ReactNode }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -109,88 +108,88 @@ export function LandingPage({ children }: { children: ReactNode }) {
   }
 
   return (
-      <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
-        <div className="flex w-full flex-col items-center gap-20 sm:14">
-          <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
-            <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
-              {HERO_SUBLINE}
-            </p>
-            <h1 className="text-(length:--cf-text-hero) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
-              {HERO_WORD}
-            </h1>
-          </div>
-          <div className="flex w-full flex-col items-center gap-8 animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both]">
-            <form className="cf-search-container" onSubmit={continueToWizard}>
-              <InputSurface
-                className={cn(
-                  files.length > 0
-                    ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
-                    : "min-h-[calc(var(--cf-search-h))] py-3 px-6"
-                )}
-              >
-                <FileCardPanel files={files} onRemove={removeFile} />
-                <div className="flex min-h-10 w-full items-center gap-4">
-                  <button
-                    aria-label="Attach PDF or Word document"
-                    className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 hover:scale-110 active:scale-95"
-                    onClick={() => fileInputRef.current?.click()}
-                    type="button"
-                  >
-                    <Plus aria-hidden="true" className="size-5" />
-                  </button>
-                  <input
-                    accept={DOCUMENT_PICKER_ACCEPT}
-                    aria-label="Attach PDF or Word document"
-                    className="hidden"
-                    multiple
-                    onChange={addFiles}
-                    ref={fileInputRef}
-                    type="file"
-                  />
-                  <Input
-                    aria-label="Asset description"
-                    className="cf-search-input h-10 border-0 bg-transparent px-0 shadow-none outline-none text-cf-cream focus-visible:border-0 focus-visible:ring-0"
-                    style={{ fontSize: "16px" }}
-                    onValueChange={(value) => {
-                      setAssetDescription(value);
-                    }}
-                    placeholder={SEARCH_PLACEHOLDER}
-                    value={assetDescription}
-                  />
-                  <button
-                    aria-label="Continue"
-                    className="shrink-0"
-                    type="submit"
-                    // disabled={!searchActive}
-                  >
-                    <Image
-                      alt=""
-                      aria-hidden="true"
-                      className={cn(
-                        "size-(--cf-search-button-size) transition-[transform,filter,opacity] duration-(--cf-dur-content) ease-(--cf-ease)",
-                        searchActive &&
-                          "[button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
-                      )}
-                      style={
-                        searchActive
-                          ? {
-                              filter:
-                                "brightness(0) saturate(100%) invert(98%) sepia(12%) saturate(400%) hue-rotate(340deg) brightness(102%)",
-                            }
-                          : {}
-                      }
-                      src="/icons/Subtract.svg"
-                      width={24}
-                      height={24}
-                    />
-                  </button>
-                </div>
-              </InputSurface>
-            </form>
-            {children}
-          </div>
+    <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
+      <div className="flex w-full flex-col items-center gap-20 sm:14">
+        <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
+          <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
+            {HERO_SUBLINE}
+          </p>
+          <h1 className="text-(length:--cf-text-hero) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
+            {HERO_WORD}
+          </h1>
         </div>
-      </section>
+        <div className="flex w-full flex-col items-center gap-8 animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both]">
+          <form className="cf-search-container" onSubmit={continueToWizard}>
+            <InputSurface
+              className={cn(
+                files.length > 0
+                  ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
+                  : "min-h-[calc(var(--cf-search-h))] py-3 px-6"
+              )}
+            >
+              <FileCardPanel files={files} onRemove={removeFile} />
+              <div className="flex min-h-10 w-full items-center gap-4">
+                <button
+                  aria-label="Attach PDF or Word document"
+                  className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 hover:scale-110 active:scale-95"
+                  onClick={() => fileInputRef.current?.click()}
+                  type="button"
+                >
+                  <Plus aria-hidden="true" className="size-5" />
+                </button>
+                <input
+                  accept={DOCUMENT_PICKER_ACCEPT}
+                  aria-label="Attach PDF or Word document"
+                  className="hidden"
+                  multiple
+                  onChange={addFiles}
+                  ref={fileInputRef}
+                  type="file"
+                />
+                <Input
+                  aria-label="Asset description"
+                  className="cf-search-input h-10 border-0 bg-transparent px-0 shadow-none outline-none text-cf-cream focus-visible:border-0 focus-visible:ring-0"
+                  style={{ fontSize: "16px" }}
+                  onValueChange={(value) => {
+                    setAssetDescription(value);
+                  }}
+                  placeholder={SEARCH_PLACEHOLDER}
+                  value={assetDescription}
+                />
+                <button
+                  aria-label="Continue"
+                  className="shrink-0"
+                  type="submit"
+                  disabled={!searchActive}
+                >
+                  <Image
+                    alt=""
+                    aria-hidden="true"
+                    className={cn(
+                      "size-(--cf-search-button-size) transition-[transform,filter,opacity] duration-(--cf-dur-content) ease-(--cf-ease)",
+                      searchActive &&
+                        "[button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
+                    )}
+                    style={
+                      searchActive
+                        ? {
+                            filter:
+                              "brightness(0) saturate(100%) invert(98%) sepia(12%) saturate(400%) hue-rotate(340deg) brightness(102%)",
+                          }
+                        : {}
+                    }
+                    src="/icons/Subtract.svg"
+                    width={24}
+                    height={24}
+                  />
+                </button>
+              </div>
+            </InputSurface>
+          </form>
+          {children}
+        </div>
+      </div>
+    </section>
   );
 }
 

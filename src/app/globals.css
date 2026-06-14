@@ -175,20 +175,12 @@
   --cf-cta-shadow: 0 0 0.5rem 0 rgb(0 0 0 / 0.24);
   --cf-hero-shadow: 0 0 4px #fff2d1, 0 4px 16px #fffaed99;
   --cf-border-w: 0.0625rem;
-  --cf-canvas-gradient-landing: linear-gradient(
-    135deg,
-    var(--cf-canvas-start) 0%,
-    var(--cf-canvas-start) 74%,
-    color-mix(in srgb, var(--cf-canvas-start) 90%, var(--cf-canvas-end)) 100%
-  );
   --cf-canvas-gradient-funnel: linear-gradient(
     180deg,
     var(--cf-canvas-start) 0%,
     var(--cf-canvas-start) 68%,
     color-mix(in srgb, var(--cf-canvas-start) 88%, var(--cf-canvas-end)) 100%
   );
-  --cf-canvas-gradient: var(--cf-canvas-gradient-landing);
-
   --cf-landing-content-top: 4rem;
   --cf-hero-stack-gap: 1.25rem;
   --cf-wizard-step-question-gap: 2rem;
@@ -566,13 +558,8 @@
     overflow: hidden;
     pointer-events: none;
     background-color: var(--cf-charcoal-900);
-    background-image: var(--cf-canvas-gradient-landing);
-    background-attachment: fixed;
-  }
-
-  .cf-funnel-backdrop--wizard,
-  .cf-funnel-backdrop--thank-you {
     background-image: var(--cf-canvas-gradient-funnel);
+    background-attachment: fixed;
   }
 
   .cf-spotlight {
@@ -584,11 +571,6 @@
     background-size: contain;
     transform-origin: center;
     will-change: transform;
-  }
-
-  .cf-spotlight--landing {
-    inset-block: -5rem -8rem;
-    background-image: url("/brand/funnel-light-landing.svg");
   }
 
   .cf-spotlight--wizard {

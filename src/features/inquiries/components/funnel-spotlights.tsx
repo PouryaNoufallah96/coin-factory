@@ -38,6 +38,21 @@ export function FunnelSpotlights() {
   const pathname = usePathname();
   const variant = resolveSpotlightVariant(pathname);
 
+  if (variant === "landing") {
+    return (
+      <div
+        aria-hidden="true"
+        className="cf-funnel-backdrop"
+        style={{
+          backgroundImage: "url('/brand/landing-back.svg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+    );
+  }
+
   return (
     <div
       aria-hidden="true"

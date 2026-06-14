@@ -1,0 +1,28 @@
+<svg width="1680" height="1024" viewBox="0 0 1680 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_32_439)">
+<rect width="1680" height="1024" fill="url(#paint0_linear_32_439)"/>
+<g filter="url(#filter0_f_32_439)">
+<path d="M1840 1135V0L1105.712 322.919L245 580.5L1105.712 818.913L1840 1135Z" fill="url(#paint1_linear_32_439)"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_32_439" x="45" y="-200" width="1995" height="1535" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="100" result="effect1_foregroundBlur_32_439"/>
+</filter>
+<linearGradient id="paint0_linear_32_439" x1="477" y1="-2.22894e-05" x2="1460" y2="1024" gradientUnits="userSpaceOnUse">
+<stop offset="0.754808" stop-color="#232832"/>
+<stop offset="1" stop-color="#434954"/>
+</linearGradient>
+<linearGradient id="paint1_linear_32_439" x1="1840" y1="567.5" x2="-200.413" y2="567.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFFCFB"/>
+<stop offset="0.3" stop-color="#FFFAED"/>
+<stop offset="0.7" stop-color="#FFF2D1" stop-opacity="0.2"/>
+<stop offset="1" stop-color="#FFF2D1" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="clip0_32_439">
+<rect width="1680" height="1024" fill="white"/>
+</clipPath>
+</defs>
+</svg>

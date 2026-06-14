@@ -50,7 +50,7 @@ export function FunnelFooter() {
           </a>
         ))}
       </nav>
-      <span className="text-(length:--cf-text-base) whitespace-nowrap font-legal text-cf-text-primary opacity-90">
+      <span className="text-(length:--cf-text-base) whitespace-nowrap font-legal text-[#232832] opacity-90">
         @ 2026 CoinFactory AG
       </span>
     </footer>

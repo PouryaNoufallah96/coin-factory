@@ -10,6 +10,7 @@ import {
   use,
   useEffect,
   useReducer,
+  useSyncExternalStore,
 } from "react";
 
 export type FunnelView = "landing" | "onboarding" | "thank-you";
@@ -29,7 +30,12 @@ interface FunnelDraft {
   whatsapp: string;
   view: FunnelView;
   step: number;
-  goTo: (view: FunnelView, step?: number, direction?: "nav-back" | "nav-forward") => void;
+  isHydrated: boolean;
+  goTo: (
+    view: FunnelView,
+    step?: number,
+    direction?: "nav-back" | "nav-forward"
+  ) => void;
 }
 
 interface FunnelDraftState {
@@ -50,7 +56,8 @@ type FunnelDraftAction =
   | { type: "setFiles"; value: SetStateAction<File[]> }
   | { type: "setSelectedCategoryIds"; value: SetStateAction<string[]> }
   | { type: "setWhatsapp"; value: SetStateAction<string> }
-  | { type: "navigate"; view: FunnelView; step: number };
+  | { type: "navigate"; view: FunnelView; step: number }
+  | { type: "hydrate"; state: FunnelDraftState };
 
 const STORAGE_KEY = "cf-funnel-draft";
 
@@ -68,7 +75,6 @@ const initialFunnelDraftState: FunnelDraftState = {
 };
 
 function loadPersistedState(): FunnelDraftState {
-  if (typeof window === "undefined") return initialFunnelDraftState;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return initialFunnelDraftState;
@@ -95,12 +101,21 @@ function persistState(state: FunnelDraftState) {
 
 const FunnelDraftContext = createContext<FunnelDraft | null>(null);
 
+const isClient = () => true;
+const isServer = () => false;
+const noopSubscribe = () => () => {};
+
 export function FunnelDraftProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(
     funnelDraftReducer,
-    undefined,
-    loadPersistedState
+    initialFunnelDraftState
   );
+
+  const isHydrated = useSyncExternalStore(noopSubscribe, isClient, isServer);
+
+  useEffect(() => {
+    dispatch({ type: "hydrate", state: loadPersistedState() });
+  }, []);
 
   useEffect(() => {
     persistState(state);
@@ -132,6 +147,7 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
         whatsapp: state.whatsapp,
         view: state.view,
         step: state.step,
+        isHydrated,
         goTo,
         setAnswer,
         setAssetDescription: (value) =>
@@ -185,6 +201,8 @@ function funnelDraftReducer(
       };
     case "navigate":
       return { ...state, view: action.view, step: action.step };
+    case "hydrate":
+      return action.state;
     default:
       return state;
   }

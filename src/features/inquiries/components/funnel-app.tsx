@@ -18,7 +18,9 @@ interface FunnelAppProps {
 }
 
 export function FunnelApp({ categories, questions }: FunnelAppProps) {
-  const { view, step } = useFunnelDraft();
+  const { view, step, isHydrated } = useFunnelDraft();
+
+  if (!isHydrated) return null;
 
   if (view === "thank-you") {
     return (

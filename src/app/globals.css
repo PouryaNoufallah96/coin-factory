@@ -11,6 +11,41 @@
   }
 }
 
+@keyframes enter-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+    filter: blur(0.125rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes enter-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes enter-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 /* Kept so `dark:` utilities inside vendored shadcn components can never
    activate (no `.dark` class is ever rendered — this theme is dark-only
    by design). Without this line they would fall
@@ -138,8 +173,8 @@
 
   /* Control sizes */
   --cf-row-h: 2.75rem;
-  --cf-search-h: 3.25rem;
-  --cf-search-button-size: 3rem;
+  --cf-search-h: 2rem;
+  --cf-search-button-size: 2rem;
   --cf-search-affordance-size: 2.5rem;
   --cf-search-panel-min-h: calc(
     var(--cf-file-card-h) + var(--cf-search-h) + var(--cf-space-6)

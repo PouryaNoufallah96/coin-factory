@@ -55,8 +55,8 @@ async function LandingCategorySection() {
 
 function CategoryChipsFallback() {
   return (
-    <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-      <div className="flex w-max min-w-full flex-nowrap justify-center gap-4 px-1">
+    <div className="cf-chip-container min-h-10 min-w-0 pb-1">
+      <div className="flex w-max min-w-full justify-center gap-4 px-1">
         {CATEGORY_SKELETON_KEYS.map((key) => (
           <Skeleton
             className="h-(--cf-chip-h) w-28 shrink-0 rounded-full bg-cf-chip-bg"

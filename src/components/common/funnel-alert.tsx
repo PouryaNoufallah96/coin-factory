@@ -11,7 +11,7 @@ export function FunnelAlert({ message, onDismiss }: FunnelAlertProps) {
   const alert = (
     <div
       className={cn(
-        "flex min-h-14 items-center gap-3 rounded-(--cf-radius-alert) bg-cf-error px-4 text-cf-text-on-error",
+        "flex min-h-14 items-center gap-3 rounded-(--cf-radius-alert) bg-cf-error px-4 text-cf-text-on-error animate-[enter-fade-up_200ms_cubic-bezier(0.2,0,0,1)_both]",
         onDismiss ? "mx-auto max-w-(--cf-field-w)" : "cf-field-container w-full"
       )}
       role="alert"

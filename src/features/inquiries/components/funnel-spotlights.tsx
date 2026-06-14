@@ -2,25 +2,9 @@
 
 import { usePathname } from "next/navigation";
 
-import { cn } from "@/lib/utils";
 import { FunnelSpotlight } from "./funnel-spotlight";
 
 type FunnelSpotlightVariant = "landing" | "thank-you" | "wizard";
-
-const BACKDROP_CLASS_BY_VARIANT = {
-  landing: "cf-funnel-backdrop--landing",
-  wizard: "cf-funnel-backdrop--wizard",
-  "thank-you": "cf-funnel-backdrop--thank-you",
-} as const satisfies Record<FunnelSpotlightVariant, string>;
-
-const SPOTLIGHT_CLASS_BY_VARIANT = {
-  landing: ["cf-spotlight--landing"],
-  wizard: ["cf-spotlight--wizard"],
-  "thank-you": [
-    "cf-spotlight--thank-you-top",
-    "cf-spotlight--thank-you-bottom",
-  ],
-} as const satisfies Record<FunnelSpotlightVariant, readonly string[]>;
 
 function resolveSpotlightVariant(pathname: string): FunnelSpotlightVariant {
   if (pathname.startsWith("/onboarding")) {
@@ -34,33 +18,43 @@ function resolveSpotlightVariant(pathname: string): FunnelSpotlightVariant {
   return "landing";
 }
 
+const LAYER_TRANSITION =
+  "absolute inset-0 transition-opacity duration-500 ease-[cubic-bezier(0.2,0,0,1)] pointer-events-none";
+
 export function FunnelSpotlights() {
   const pathname = usePathname();
   const variant = resolveSpotlightVariant(pathname);
 
-  if (variant === "landing") {
-    return (
+  return (
+    <div aria-hidden="true" className="cf-funnel-backdrop">
+      {/* Landing background — crossfades out when leaving */}
       <div
-        aria-hidden="true"
-        className="cf-funnel-backdrop"
+        className={LAYER_TRANSITION}
         style={{
+          opacity: variant === "landing" ? 1 : 0,
           backgroundImage: "url('/brand/landing-back.svg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       />
-    );
-  }
 
-  return (
-    <div
-      aria-hidden="true"
-      className={cn("cf-funnel-backdrop", BACKDROP_CLASS_BY_VARIANT[variant])}
-    >
-      {SPOTLIGHT_CLASS_BY_VARIANT[variant].map((spotlightClass) => (
-        <FunnelSpotlight className={spotlightClass} key={spotlightClass} />
-      ))}
+      {/* Wizard spotlight — crossfades in on /onboarding/* */}
+      <div
+        className={LAYER_TRANSITION}
+        style={{ opacity: variant === "wizard" ? 1 : 0 }}
+      >
+        <FunnelSpotlight className="cf-spotlight--wizard" />
+      </div>
+
+      {/* Thank-you spotlights — crossfades in on /thank-you */}
+      <div
+        className={LAYER_TRANSITION}
+        style={{ opacity: variant === "thank-you" ? 1 : 0 }}
+      >
+        <FunnelSpotlight className="cf-spotlight--thank-you-top" />
+        <FunnelSpotlight className="cf-spotlight--thank-you-bottom" />
+      </div>
     </div>
   );
 }

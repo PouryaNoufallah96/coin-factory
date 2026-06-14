@@ -2,6 +2,7 @@
 
 import { CircleX, FileText, Plus } from "lucide-react";
 import type { Route } from "next";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import {
@@ -119,9 +120,9 @@ export function LandingPage({ children }: { children: ReactNode }) {
   return (
     <LandingAlertContext.Provider value={setError}>
       <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
-        <div className="flex w-full flex-col items-center gap-18 sm:14">
+        <div className="flex w-full flex-col items-center gap-20 sm:14">
           {error ? <FunnelAlert message={error} /> : null}
-          <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
+          <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
             <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
               {HERO_SUBLINE}
             </p>
@@ -129,26 +130,26 @@ export function LandingPage({ children }: { children: ReactNode }) {
               {HERO_WORD}
             </h1>
           </div>
-          <div className="flex w-full flex-col items-center gap-8">
+          <div className="flex w-full flex-col items-center gap-8 animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both]">
             <form className="cf-search-container" onSubmit={continueToWizard}>
               <InputSurface
                 active={searchActive}
                 className={cn(
                   "flex w-full flex-col justify-center text-cf-cream transition-[border-radius,padding] duration-(--cf-dur-content) ease-(--cf-ease)",
                   files.length > 0
-                    ? "min-h-(--cf-search-panel-min-h) gap-6 rounded-(--cf-radius-panel) p-6"
-                    : "min-h-(--cf-search-h) py-3 pr-5 pl-6"
+                    ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
+                    : "min-h-[calc(var(--cf-search-h))] py-3 px-6"
                 )}
               >
                 <FileCardPanel files={files} onRemove={removeFile} />
                 <div className="flex min-h-10 w-full items-center gap-4">
                   <button
                     aria-label="Attach PDF or Word document"
-                    className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10"
+                    className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 hover:scale-110 active:scale-95"
                     onClick={() => fileInputRef.current?.click()}
                     type="button"
                   >
-                    <Plus aria-hidden="true" className="size-4" />
+                    <Plus aria-hidden="true" className="size-5" />
                   </button>
                   <input
                     accept={DOCUMENT_PICKER_ACCEPT}
@@ -161,7 +162,14 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   />
                   <Input
                     aria-label="Asset description"
-                    className="text-(length:--cf-text-base) h-10 border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
+                    className="text-[16px] h-10 border-0 bg-transparent px-0 shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #FFFFFF 0%, #282D36 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
                     onValueChange={(value) => {
                       setAssetDescription(value);
                       if (error) {
@@ -176,11 +184,13 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     className="shrink-0"
                     type="submit"
                   >
-                    <img
+                    <Image
                       alt=""
                       aria-hidden="true"
                       className="size-(--cf-search-button-size) transition-transform [button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
                       src="/icons/Subtract.svg"
+                      width={24}
+                      height={24}
                     />
                   </button>
                 </div>
@@ -209,7 +219,7 @@ function FileCardPanel({
     <div className="flex w-full flex-wrap gap-5">
       {files.map((file, index) => (
         <div
-          className="relative flex h-(--cf-file-card-h) w-full min-w-0 items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
+          className="relative flex h-(--cf-file-card-h) w-full min-w-0 items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w) animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both]"
           key={`${file.name}-${file.lastModified}-${file.size}`}
         >
           <div className="flex size-(--cf-file-card-tile) shrink-0 items-center justify-center rounded-(--cf-radius-segment) bg-cf-cream text-cf-text-on-accent">
@@ -261,14 +271,14 @@ export function LandingCategoryChips({
   }
 
   return (
-    <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+    <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overscroll-x-contain pb-1 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
       <div className="flex w-max min-w-full flex-nowrap justify-center gap-4 px-1">
         {categories.map((category) => {
           const selected = selectedCategoryIds.includes(category.id);
           return (
             <Badge
               className={cn(
-                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color] duration-(--cf-dur-content) ease-(--cf-ease)",
+                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04] active:scale-[0.96]",
                 selected
                   ? "border-transparent bg-cf-chip-bg-active text-cf-text-on-accent"
                   : "border-cf-border-muted bg-cf-chip-bg text-cf-text-on-accent hover:border-cf-border-active"

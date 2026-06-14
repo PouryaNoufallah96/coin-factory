@@ -15,7 +15,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <header className="relative z-20 flex h-(--cf-header-h) shrink-0 items-center justify-between px-(--cf-page-x)">
         <Link
           aria-label="CoinFactory home"
-          className="flex items-center gap-1 text-cf-cream"
+          className="flex items-center gap-1 text-cf-cream transition-opacity duration-(--cf-dur-feedback) ease-(--cf-ease) hover:opacity-70 active:opacity-50"
           href="/"
           transitionTypes={["nav-back"]}
         >
@@ -31,7 +31,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           aria-hidden="true"
           className="flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream"
         >
-          <Menu className="size-5" />
+          <Menu className="size-7" />
         </div>
       </header>
       <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto">

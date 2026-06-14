@@ -197,9 +197,9 @@
   --cf-social-mark-size: 1.125rem;
   --cf-social-x-mark-w: 1rem;
   --cf-social-x-mark-h: 0.875rem;
-  --cf-stepper-gap: 0.75rem;
-  --cf-stepper-segment-w: 2.5rem;
-  --cf-stepper-segment-h: 0.5rem;
+  --cf-stepper-gap: 0.5rem;
+  --cf-stepper-segment-w: 2.4rem;
+  --cf-stepper-segment-h: 0.45rem;
   --cf-modal-max-h: calc(100dvh - var(--cf-space-7));
   --cf-dialog-max-w: calc(100% - var(--cf-space-5));
   --cf-drawer-handle-w: 6.25rem;

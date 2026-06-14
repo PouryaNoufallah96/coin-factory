@@ -197,7 +197,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   return (
-    <section className="relative flex flex-1 justify-center px-(--cf-page-x) py-6">
+    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-6">
       <form
         className="cf-content-container flex w-full flex-col items-center text-center"
         onSubmit={onSubmit}
@@ -227,7 +227,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                 <RadioQuestion
                   onChange={(value) => {
                     setAnswer(question.id, value);
-
                   }}
                   options={question.options ?? []}
                   questionId={question.id}
@@ -242,7 +241,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="Link"
                   onChange={(value) => {
                     setAnswer(question.id, value);
-
                   }}
                   placeholder="Link"
                   type="url"
@@ -257,7 +255,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="Email"
                   onChange={(value) => {
                     setEmail(value);
-
                   }}
                   placeholder="Email"
                   type="email"
@@ -267,7 +264,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="WhatsApp phone number"
                   onChange={(value) => {
                     setWhatsapp(value);
-
                   }}
                   placeholder="WhatsApp Phone number"
                   type="tel"

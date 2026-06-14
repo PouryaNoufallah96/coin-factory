@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleX, FileText, Plus, Target } from "lucide-react";
+import { CircleX, FileText, Plus } from "lucide-react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import type React from "react";
@@ -17,7 +17,6 @@ import {
 import { FunnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { PublicCategory } from "@/features/categories/schemas/category";
 import {
@@ -120,7 +119,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
   return (
     <LandingAlertContext.Provider value={setError}>
       <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
-        <div className="flex w-full flex-col items-center gap-10 sm:gap-14">
+        <div className="flex w-full flex-col items-center gap-18 sm:14">
           {error ? <FunnelAlert message={error} /> : null}
           <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
             <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
@@ -138,7 +137,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   "flex w-full flex-col justify-center text-cf-cream transition-[border-radius,padding] duration-(--cf-dur-content) ease-(--cf-ease)",
                   files.length > 0
                     ? "min-h-(--cf-search-panel-min-h) gap-6 rounded-(--cf-radius-panel) p-6"
-                    : "min-h-(--cf-search-h) py-5 pr-5 pl-6"
+                    : "min-h-(--cf-search-h) py-3 pr-5 pl-6"
                 )}
               >
                 <FileCardPanel files={files} onRemove={removeFile} />
@@ -172,14 +171,18 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     placeholder={SEARCH_PLACEHOLDER}
                     value={assetDescription}
                   />
-                  <Button
+                  <button
                     aria-label="Continue"
-                    className="size-(--cf-search-button-size) shrink-0 rounded-full bg-cf-cream text-cf-charcoal-900 shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream-bright active:translate-y-0 active:scale-[0.97]"
-                    size="icon"
+                    className="shrink-0"
                     type="submit"
                   >
-                    <Target aria-hidden="true" className="size-5" />
-                  </Button>
+                    <img
+                      alt=""
+                      aria-hidden="true"
+                      className="size-(--cf-search-button-size) transition-transform [button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
+                      src="/icons/Subtract.svg"
+                    />
+                  </button>
                 </div>
               </InputSurface>
             </form>
@@ -273,7 +276,9 @@ export function LandingCategoryChips({
               key={category.id}
               render={
                 <button
-                  aria-label={`${selected ? "Remove" : "Select"} ${category.label}`}
+                  aria-label={`${selected ? "Remove" : "Select"} ${
+                    category.label
+                  }`}
                   aria-pressed={selected}
                   onClick={() => toggleCategory(category)}
                   type="button"

@@ -1,13 +1,17 @@
 "use client";
 
 import {
+  addTransitionType,
   createContext,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
+  startTransition,
   use,
   useReducer,
 } from "react";
+
+export type FunnelView = "landing" | "onboarding" | "thank-you";
 
 interface FunnelDraft {
   answers: Record<string, string>;
@@ -22,6 +26,9 @@ interface FunnelDraft {
   setSelectedCategoryIds: Dispatch<SetStateAction<string[]>>;
   setWhatsapp: Dispatch<SetStateAction<string>>;
   whatsapp: string;
+  view: FunnelView;
+  step: number;
+  goTo: (view: FunnelView, step?: number, direction?: "nav-back" | "nav-forward") => void;
 }
 
 interface FunnelDraftState {
@@ -31,6 +38,8 @@ interface FunnelDraftState {
   files: File[];
   selectedCategoryIds: string[];
   whatsapp: string;
+  view: FunnelView;
+  step: number;
 }
 
 type FunnelDraftAction =
@@ -39,7 +48,8 @@ type FunnelDraftAction =
   | { type: "setEmail"; value: SetStateAction<string> }
   | { type: "setFiles"; value: SetStateAction<File[]> }
   | { type: "setSelectedCategoryIds"; value: SetStateAction<string[]> }
-  | { type: "setWhatsapp"; value: SetStateAction<string> };
+  | { type: "setWhatsapp"; value: SetStateAction<string> }
+  | { type: "navigate"; view: FunnelView; step: number };
 
 const initialFunnelDraftState: FunnelDraftState = {
   answers: {},
@@ -48,6 +58,8 @@ const initialFunnelDraftState: FunnelDraftState = {
   files: [],
   selectedCategoryIds: [],
   whatsapp: "",
+  view: "landing",
+  step: 1,
 };
 
 const FunnelDraftContext = createContext<FunnelDraft | null>(null);
@@ -62,6 +74,17 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
     dispatch({ questionId, type: "setAnswer", value });
   }
 
+  function goTo(
+    view: FunnelView,
+    step = 1,
+    direction: "nav-back" | "nav-forward" = "nav-forward"
+  ) {
+    startTransition(() => {
+      addTransitionType(direction);
+      dispatch({ type: "navigate", view, step });
+    });
+  }
+
   return (
     <FunnelDraftContext.Provider
       value={{
@@ -71,6 +94,9 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
         files: state.files,
         selectedCategoryIds: state.selectedCategoryIds,
         whatsapp: state.whatsapp,
+        view: state.view,
+        step: state.step,
+        goTo,
         setAnswer,
         setAssetDescription: (value) =>
           dispatch({ type: "setAssetDescription", value }),
@@ -121,6 +147,8 @@ function funnelDraftReducer(
         ...state,
         whatsapp: resolveStateAction(state.whatsapp, action.value),
       };
+    case "navigate":
+      return { ...state, view: action.view, step: action.step };
     default:
       return state;
   }

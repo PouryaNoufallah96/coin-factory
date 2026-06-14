@@ -1,10 +1,9 @@
 import { Menu } from "lucide-react";
-import Link from "next/link";
 import { type ReactNode, Suspense } from "react";
 
-import { MaskIcon } from "@/components/common/mask-icon";
 import { Toaster } from "@/components/ui/sonner";
 import { FunnelFooter } from "@/features/inquiries/components/funnel-footer";
+import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
 import { FunnelSpotlights } from "@/features/inquiries/components/funnel-spotlights";
 
 export function FunnelShell({ children }: { children: ReactNode }) {
@@ -14,20 +13,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         <FunnelSpotlights />
       </Suspense>
       <header className="relative z-20 flex h-(--cf-header-h) shrink-0 items-center justify-between px-(--cf-page-x)">
-        <Link
-          aria-label="CoinFactory home"
-          className="flex items-center gap-1 text-cf-cream transition-opacity duration-(--cf-dur-feedback) ease-(--cf-ease) hover:opacity-70 active:opacity-50"
-          href="/"
-          transitionTypes={["nav-back"]}
-        >
-          <MaskIcon
-            className="h-(--cf-logo-mark-h) w-(--cf-logo-mark-w)"
-            src="/brand/logo-c.svg"
-          />
-          <span className="text-(length:--cf-text-logo) font-logo leading-none">
-            coinfactory
-          </span>
-        </Link>
+        <FunnelLogo />
         <div
           aria-hidden="true"
           className="flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream"

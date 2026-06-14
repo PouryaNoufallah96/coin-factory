@@ -3,12 +3,8 @@
 "use client";
 
 import { X } from "lucide-react";
-import type { Route } from "next";
-import { useRouter } from "next/navigation";
 import type React from "react";
 import {
-  addTransitionType,
-  startTransition,
   useId,
   ViewTransition,
 } from "react";
@@ -79,7 +75,6 @@ interface OnboardingWizardProps {
 }
 
 export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
-  const router = useRouter();
   const submit = useAction(createInquiry);
   const question = questions[step - 1];
   const total = questions.length;
@@ -89,19 +84,13 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     assetDescription,
     email,
     files,
+    goTo,
     selectedCategoryIds,
     setAnswer,
     setEmail,
     setWhatsapp,
     whatsapp,
   } = useFunnelDraft();
-
-  function goTo(href: Route, direction: "nav-back" | "nav-forward") {
-    startTransition(() => {
-      addTransitionType(direction);
-      router.push(href);
-    });
-  }
 
   function validateQuestion(currentQuestion: PublicQuestion) {
     const value = answers[currentQuestion.id] ?? "";
@@ -151,14 +140,14 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
 
   function onBack() {
     if (step === 1) {
-      goTo("/" as Route, "nav-back");
+      goTo("landing", 1, "nav-back");
       return;
     }
-    goTo(`/onboarding/${step - 1}` as Route, "nav-back");
+    goTo("onboarding", step - 1, "nav-back");
   }
 
   function onNext() {
-    goTo(`/onboarding/${step + 1}` as Route, "nav-forward");
+    goTo("onboarding", step + 1, "nav-forward");
   }
 
   async function onSubmit(event: React.SubmitEvent<HTMLFormElement>) {
@@ -193,7 +182,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
       return;
     }
 
-    goTo("/thank-you" as Route, "nav-forward");
+    goTo("thank-you", 1, "nav-forward");
   }
 
   return (
@@ -359,12 +348,12 @@ function RadioQuestion({
           return (
             <FieldLabel
               className={cn(
-                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015] active:scale-[0.985]",
+                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015] active:scale-[0.985] rounded-(--cf-radius-row) border",
                 selected
                   ? cn(
                       "text-cf-cream-bright has-data-checked:border-cf-border-active has-data-checked:bg-cf-charcoal-900"
                     )
-                  : "rounded-(--cf-radius-row) border border-cf-border-muted bg-cf-surface-muted text-cf-text-primary hover:border-cf-border-active"
+                  : " border-cf-border-muted bg-cf-surface-muted text-cf-text-primary hover:border-cf-border-active"
               )}
               key={`${questionId}-${option}`}
             >

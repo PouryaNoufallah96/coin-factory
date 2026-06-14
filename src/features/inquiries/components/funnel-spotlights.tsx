@@ -1,17 +1,16 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
+import { useFunnelDraft, type FunnelView } from "@/features/inquiries/hooks/use-funnel-draft";
 import { FunnelSpotlight } from "./funnel-spotlight";
 
 type FunnelSpotlightVariant = "landing" | "thank-you" | "wizard";
 
-function resolveSpotlightVariant(pathname: string): FunnelSpotlightVariant {
-  if (pathname.startsWith("/onboarding")) {
+function resolveSpotlightVariant(view: FunnelView): FunnelSpotlightVariant {
+  if (view === "onboarding") {
     return "wizard";
   }
 
-  if (pathname === "/thank-you") {
+  if (view === "thank-you") {
     return "thank-you";
   }
 
@@ -22,8 +21,8 @@ const LAYER_TRANSITION =
   "absolute inset-0 transition-opacity duration-500 ease-[cubic-bezier(0.2,0,0,1)] pointer-events-none";
 
 export function FunnelSpotlights() {
-  const pathname = usePathname();
-  const variant = resolveSpotlightVariant(pathname);
+  const { view } = useFunnelDraft();
+  const variant = resolveSpotlightVariant(view);
 
   return (
     <div aria-hidden="true" className="cf-funnel-backdrop">
@@ -39,7 +38,7 @@ export function FunnelSpotlights() {
         }}
       />
 
-      {/* Wizard spotlight — crossfades in on /onboarding/* */}
+      {/* Wizard spotlight — crossfades in on onboarding view */}
       <div
         className={LAYER_TRANSITION}
         style={{ opacity: variant === "wizard" ? 1 : 0 }}
@@ -47,7 +46,7 @@ export function FunnelSpotlights() {
         <FunnelSpotlight className="cf-spotlight--wizard" />
       </div>
 
-      {/* Thank-you spotlights — crossfades in on /thank-you */}
+      {/* Thank-you spotlights — crossfades in on thank-you view */}
       <div
         className={LAYER_TRANSITION}
         style={{ opacity: variant === "thank-you" ? 1 : 0 }}

@@ -1,15 +1,11 @@
 "use client";
 
 import { CircleX, FileText, Plus } from "lucide-react";
-import type { Route } from "next";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import type React from "react";
 import {
-  addTransitionType,
   type ChangeEvent,
   type ReactNode,
-  startTransition,
   useEffect,
   useRef,
 } from "react";
@@ -45,11 +41,11 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
 };
 
 export function LandingPage({ children }: { children: ReactNode }) {
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     assetDescription,
     files,
+    goTo,
     selectedCategoryIds,
     setAssetDescription,
     setFiles,
@@ -102,10 +98,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
       funnelAlert(INTAKE_SIGNAL_MESSAGE);
       return;
     }
-    startTransition(() => {
-      addTransitionType("nav-forward");
-      router.push("/onboarding/1" as Route);
-    });
+    goTo("onboarding", 1, "nav-forward");
   }
 
   return (

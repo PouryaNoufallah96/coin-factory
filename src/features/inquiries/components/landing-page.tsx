@@ -278,7 +278,7 @@ export function LandingCategoryChips({
           return (
             <Badge
               className={cn(
-                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04] active:scale-[0.96]",
+                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04] ",
                 selected
                   ? "border-transparent bg-cf-chip-bg-active text-cf-text-on-accent"
                   : "border-cf-border-muted bg-cf-chip-bg text-cf-text-on-accent hover:border-cf-border-active"

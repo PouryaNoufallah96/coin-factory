@@ -133,9 +133,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
           <div className="flex w-full flex-col items-center gap-8 animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both]">
             <form className="cf-search-container" onSubmit={continueToWizard}>
               <InputSurface
-                active={searchActive}
                 className={cn(
-                  "flex w-full flex-col justify-center text-cf-cream transition-[border-radius,padding] duration-(--cf-dur-content) ease-(--cf-ease)",
                   files.length > 0
                     ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
                     : "min-h-[calc(var(--cf-search-h))] py-3 px-6"
@@ -162,8 +160,9 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   />
                   <Input
                     aria-label="Asset description"
-                    className="text-[16px] h-10 border-0 bg-transparent px-0 shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
+                    className="h-10 border-0 bg-transparent px-0 shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
                     style={{
+                      fontSize: "16px",
                       background:
                         "linear-gradient(90deg, #FFFFFF 0%, #282D36 100%)",
                       WebkitBackgroundClip: "text",
@@ -253,12 +252,15 @@ export function LandingCategoryChips({
   categories: PublicCategory[];
 }) {
   const setLandingAlert = useLandingAlert();
-  const { selectedCategoryIds, setSelectedCategoryIds } = useFunnelDraft();
+  const { selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
+    useFunnelDraft();
 
   function toggleCategory(category: PublicCategory) {
+    const isSelected = selectedCategoryIds.includes(category.id);
+
     if (
-      selectedCategoryIds.length >= MAX_CATEGORIES_PER_INQUIRY &&
-      !selectedCategoryIds.includes(category.id)
+      !isSelected &&
+      selectedCategoryIds.length >= MAX_CATEGORIES_PER_INQUIRY
     ) {
       setLandingAlert(`Pick up to ${MAX_CATEGORIES_PER_INQUIRY} categories.`);
       return;
@@ -268,6 +270,16 @@ export function LandingCategoryChips({
       nextSelectedCategoryIds(currentIds, category.id)
     );
     setLandingAlert(null);
+
+    setAssetDescription((current) => {
+      if (isSelected) {
+        return removeLabelFromText(current, category.label);
+      }
+      const trimmed = current.trim();
+      return trimmed.length > 0
+        ? `${trimmed}, ${category.label}`
+        : category.label;
+    });
   }
 
   return (
@@ -311,6 +323,14 @@ function useLandingAlert() {
     throw new Error("useLandingAlert must be used inside LandingPage");
   }
   return setLandingAlert;
+}
+
+function removeLabelFromText(text: string, label: string): string {
+  const parts = text
+    .split(",")
+    .map((p) => p.trim())
+    .filter((p) => p !== label);
+  return parts.join(", ");
 }
 
 function nextSelectedCategoryIds(

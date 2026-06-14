@@ -14,7 +14,7 @@ export function InputSurface({
   return (
     <div
       className={cn(
-        "rounded-(--cf-radius-row) bg-cf-charcoal-900 duration-(--cf-dur-content) ease-(--cf-ease)",
+        "flex w-full flex-col justify-center text-cf-cream transition-[border-radius,padding]  rounded-(--cf-radius-row) bg-cf-charcoal-900 duration-(--cf-dur-content) ease-(--cf-ease)",
         className
       )}
       style={{

@@ -15,7 +15,6 @@ import {
 } from "react";
 import { FunnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
-import { inputSurfaceVariants } from "@/components/common/input-surface-variants";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -375,7 +374,6 @@ function RadioQuestion({
                 "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015] active:scale-[0.985]",
                 selected
                   ? cn(
-                      inputSurfaceVariants({ active: true }),
                       "text-cf-cream-bright has-data-checked:border-cf-border-active has-data-checked:bg-cf-charcoal-900"
                     )
                   : "rounded-(--cf-radius-row) border border-cf-border-muted bg-cf-surface-muted text-cf-text-primary hover:border-cf-border-active"

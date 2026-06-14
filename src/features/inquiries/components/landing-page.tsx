@@ -10,6 +10,7 @@ import {
   type ChangeEvent,
   type ReactNode,
   startTransition,
+  useEffect,
   useRef,
 } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
@@ -241,8 +242,18 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const { selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
+  const { assetDescription, selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
     useFunnelDraft();
+
+  useEffect(() => {
+    const textParts = assetDescription.split(",").map((p) => p.trim());
+    setSelectedCategoryIds((currentIds) =>
+      currentIds.filter((id) => {
+        const category = categories.find((c) => c.id === id);
+        return category ? textParts.includes(category.label) : true;
+      })
+    );
+  }, [assetDescription, categories, setSelectedCategoryIds]);
 
   function toggleCategory(category: PublicCategory) {
     const isSelected = selectedCategoryIds.includes(category.id);

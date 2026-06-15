@@ -62,6 +62,7 @@ services:
   app:
     image: ${APP_IMAGE:-coinfactory-app}
     container_name: coinfactory-app
+    profiles: [app]
     build:
       <<: *app-build
       target: runner
@@ -94,6 +95,7 @@ services:
   migrate:
     image: ${MIGRATE_IMAGE:-coinfactory-migrate}
     container_name: coinfactory-migrate
+    profiles: [app]
     build:
       <<: *app-build
       target: migrator

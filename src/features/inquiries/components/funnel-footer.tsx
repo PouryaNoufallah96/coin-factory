@@ -21,7 +21,7 @@ export function FunnelFooter() {
   }
 
   return (
-    <footer className="relative z-20 flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)">
+    <footer className="relative z-20 mt-auto flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)">
       <nav
         aria-label="CoinFactory social links"
         className="flex items-center gap-(--cf-social-gap)"

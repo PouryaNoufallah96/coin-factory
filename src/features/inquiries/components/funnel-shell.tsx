@@ -56,7 +56,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className="relative isolate flex flex-col overflow-hidden text-cf-text-primary"
+      className="relative isolate flex min-h-dvh flex-col overflow-x-hidden text-cf-text-primary"
       onPointerDownCapture={closeMenuFromOutside}
     >
       <Suspense fallback={null}>
@@ -113,7 +113,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           </Link>
         ))}
       </nav>
-      <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <main className="relative z-10 flex min-h-0 flex-1 flex-col">
         {children}
       </main>
       <Suspense fallback={null}>

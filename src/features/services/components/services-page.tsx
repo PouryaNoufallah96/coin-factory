@@ -22,7 +22,9 @@ export function ServicesPage() {
           {SERVICES.map(({ title, description, icon, iconAlt }, index) => (
             <div className="flex gap-8" key={title}>
               <div className="flex flex-col items-center">
-                <Image alt={iconAlt} height={80} src={icon} width={80} />
+                <div className="flex size-18 items-center justify-center rounded-full bg-[#232831] shadow-[0_0_16px_0_#FFF2D199]">
+                  <Image alt={iconAlt} height={32} src={icon} width={32} />
+                </div>
                 {index < SERVICES.length - 1 && (
                   <div
                     aria-hidden="true"

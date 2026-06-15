@@ -1,26 +1,90 @@
-import { Menu } from "lucide-react";
-import { type ReactNode, Suspense } from "react";
+"use client";
 
+import { Menu } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { type ReactNode, Suspense, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { FunnelFooter } from "@/features/inquiries/components/funnel-footer";
 import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
 import { FunnelSpotlights } from "@/features/inquiries/components/funnel-spotlights";
+import { cn } from "@/lib/utils";
+
+const FUNNEL_MENU_ITEMS = [
+  {
+    href: "/services",
+    icon: "/icons/services.svg",
+    label: "Services",
+  },
+  {
+    href: "/",
+    icon: "/icons/opportunity.svg",
+    label: "Tokenization Opportunities",
+  },
+  {
+    href: "/about",
+    icon: "/icons/about.svg",
+    label: "About Us",
+  },
+] as const;
 
 export function FunnelShell({ children }: { children: ReactNode }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <div className="relative isolate flex min-h-dvh flex-col overflow-hidden text-cf-text-primary">
+    <div className="relative isolate flex flex-col overflow-hidden text-cf-text-primary">
       <Suspense fallback={null}>
         <FunnelSpotlights />
       </Suspense>
-      <header className="relative z-20 flex h-(--cf-header-h) shrink-0 items-center justify-between px-(--cf-page-x)">
+      <header className="relative z-40 flex h-(--cf-header-h) shrink-0 items-center justify-between px-(--cf-page-x)">
         <FunnelLogo />
-        <div
-          aria-hidden="true"
-          className="flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream"
+        <button
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          className={cn(
+            "flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 active:scale-95",
+            menuOpen && "bg-[#23283266]"
+          )}
+          onClick={() => setMenuOpen((open) => !open)}
+          type="button"
         >
-          <Menu className="size-7" />
-        </div>
+          <Menu aria-hidden="true" className="size-7" />
+        </button>
       </header>
+
+      <nav
+        aria-label="Main menu"
+        className={cn(
+          "t-0 fixed top-0 -right-8 z-30 w-140 overflow-hidden rounded-[2rem] border border-cf-cream/10 bg-[#232832CC] shadow-[0_0_32px_0px_#FFF2D166,0_0_8px_0px_#FFF2D166] backdrop-blur-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          menuOpen
+            ? "pointer-events-auto translate-y-0 scale-50 opacity-100"
+            : "pointer-events-none -translate-y-2 scale-[0.98] opacity-0"
+        )}
+      >
+        {FUNNEL_MENU_ITEMS.map((item, index) => (
+          <Link
+            className="group text-(length:--cf-text-field-label) flex h-30 items-center gap-8 border-cf-cream/15 border-b px-11 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8"
+            href={item.href}
+            key={item.href}
+            onClick={() => setMenuOpen(false)}
+            style={{
+              transitionDelay: menuOpen ? `${index * 35}ms` : "0ms",
+            }}
+          >
+            <span className="flex size-10 shrink-0 items-center justify-center transition-transform duration-(--cf-dur-content) ease-(--cf-ease) group-hover:scale-105">
+              <Image
+                alt=""
+                aria-hidden="true"
+                className="size-10"
+                height={40}
+                src={item.icon}
+                width={40}
+              />
+            </span>
+            <span className="min-w-0">{item.label}</span>
+          </Link>
+        ))}
+      </nav>
       <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto">
         {children}
       </main>

@@ -183,9 +183,11 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   return (
-    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-6">
+    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-[130px]">
       <form
+        id="wizard-form"
         className="cf-content-container flex w-full flex-col items-center text-center"
+        noValidate
         onSubmit={onSubmit}
       >
         <ViewTransition
@@ -259,18 +261,18 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
             ) : null}
           </div>
         </ViewTransition>
+      </form>
 
-        <div aria-hidden="true" className="h-12 w-full shrink-0" />
-
-        <ViewTransition
-          default="none"
-          key={`wizard-actions-${step}`}
-          name="wizard-actions"
-          share={WIZARD_ACTIONS_TRANSITION}
-        >
-          <div className="cf-field-container  flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <ViewTransition
+        default="none"
+        key={`wizard-actions-${step}`}
+        name="wizard-actions"
+        share={WIZARD_ACTIONS_TRANSITION}
+      >
+        <div className="fixed bottom-12.5 left-0 right-0 z-20 px-(--cf-page-x)">
+          <div className="cf-field-container flex w-full flex-row items-center justify-between">
             <Button
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-full rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97] sm:w-(--cf-cta-w)"
+              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
               onClick={onBack}
               type="button"
               variant="outline"
@@ -279,14 +281,15 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
             </Button>
             <Button
               aria-busy={submit.isPending}
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-full rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] sm:w-(--cf-cta-w)"
+              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97]"
+              form="wizard-form"
               type="submit"
             >
               {isLastStep ? "Submit" : "Next"}
             </Button>
           </div>
-        </ViewTransition>
-      </form>
+        </div>
+      </ViewTransition>
     </section>
   );
 }
@@ -397,10 +400,11 @@ function FunnelTextField({
       </FieldLabel>
       <InputSurface
         active={active}
-        className="flex h-(--cf-search-h) items-center px-7"
+        className="flex flex-row h-(--cf-search-h) items-center px-7"
       >
         <Input
-          className="text-(length:--cf-text-lg) h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
+          className="h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
+          style={{ fontSize: "16px" }}
           id={id}
           onValueChange={onChange}
           placeholder={placeholder}
@@ -410,12 +414,12 @@ function FunnelTextField({
         {active ? (
           <button
             aria-label={`Clear ${label}`}
-            className="-mr-2 ml-3 flex size-9 shrink-0 items-center justify-center rounded-full text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-text-primary"
+            className="-mr-2 ml-3 flex size-11 shrink-0 items-center justify-center rounded-full text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-text-primary"
             onClick={() => onChange("")}
             onMouseDown={(event) => event.preventDefault()}
             type="button"
           >
-            <X aria-hidden="true" className="size-3" />
+            <X aria-hidden="true" className="size-4" />
           </button>
         ) : null}
       </InputSurface>

@@ -1,3 +1,5 @@
+/// <reference types="react/canary" />
+
 "use client";
 
 import {

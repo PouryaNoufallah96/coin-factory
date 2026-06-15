@@ -269,7 +269,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
         name="wizard-actions"
         share={WIZARD_ACTIONS_TRANSITION}
       >
-        <div className="fixed right-0 bottom-12.5 left-0 z-20 px-(--cf-page-x)">
+        <div className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5 [backdrop-filter:blur(50px)]">
           <div className="cf-field-container flex w-full flex-row items-center justify-between">
             <Button
               className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"

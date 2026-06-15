@@ -28,10 +28,19 @@ whole product — no exchange, no wallet, no end-user dashboard, no self-serve m
 
 ## Getting started
 
+Local development — app on the host, data services in Docker:
+
 ```bash
-docker compose up -d     # Postgres 17 + MinIO (healthchecks + volumes)
+docker compose up -d postgres minio   # Postgres + MinIO only
 pnpm install             # pnpm only — bun/npm/yarn are blocked by hook
 pnpm dev                 # http://localhost:3000
+```
+
+Or run the entire stack in Docker — Postgres, MinIO, and the Next.js app together:
+
+```bash
+cp .env.example .env     # the app image build reads .env (it is gitignored)
+docker compose up        # builds the app, applies migrations, serves http://localhost:3000
 ```
 
 Validate before any commit:
@@ -43,7 +52,7 @@ pnpm validate            # format (Biome) + typecheck + lint + react-doctor + bu
 ## Structure
 
 ```
-src/app/         routes: / → /onboarding/1..6 → /thank-you · /admin; rpc/[[...rest]]/route.ts
+src/app/         routes: / (funnel: landing → wizard → thank-you) · /admin; rpc/[[...rest]]/route.ts
 src/server/      Drizzle schema + oRPC routers (never imports from features/components)
 src/features/    feature-sliced modules: schemas, actions, api, components, db/cache
 src/components/  ui (shadcn) + common + layout

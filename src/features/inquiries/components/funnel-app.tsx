@@ -8,7 +8,10 @@ import {
   LandingCategoryChips,
   LandingPage,
 } from "@/features/inquiries/components/landing-page";
-import { OnboardingWizard } from "@/features/inquiries/components/onboarding-wizard";
+import {
+  OnboardingWizard,
+  OnboardingWizardControls,
+} from "@/features/inquiries/components/onboarding-wizard";
 import { useFunnelDraft } from "@/features/inquiries/hooks/use-funnel-draft";
 import type { PublicQuestion } from "@/features/questions/schemas/question";
 
@@ -43,6 +46,7 @@ export function FunnelApp({ categories, questions }: FunnelAppProps) {
     return (
       <FunnelPageTransition>
         <OnboardingWizard questions={questions} step={safeStep} />
+        <OnboardingWizardControls total={questions.length} />
       </FunnelPageTransition>
     );
   }

@@ -2,9 +2,9 @@
 
 "use client";
 
-import { X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import type React from "react";
-import { useId, ViewTransition } from "react";
+import { useEffect, useId, useSyncExternalStore } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Button } from "@/components/ui/button";
@@ -33,24 +33,6 @@ import {
 } from "../schemas/intake-signal";
 import { REQUIRED_ANSWER_MESSAGE } from "../schemas/validation-messages";
 
-const WIZARD_PROGRESS_TRANSITION = {
-  "nav-back": "wizard-progress",
-  "nav-forward": "wizard-progress",
-  default: "none",
-} as const;
-
-const WIZARD_QUESTION_TRANSITION = {
-  "nav-back": "wizard-question-back",
-  "nav-forward": "wizard-question-forward",
-  default: "none",
-} as const;
-
-const WIZARD_ACTIONS_TRANSITION = {
-  "nav-back": "wizard-actions",
-  "nav-forward": "wizard-actions",
-  default: "none",
-} as const;
-
 const STEPPER_SEGMENT_KEYS = [
   "stepper-segment-1",
   "stepper-segment-2",
@@ -65,6 +47,39 @@ const STEPPER_SEGMENT_KEYS = [
   "stepper-segment-11",
   "stepper-segment-12",
 ];
+
+let wizardSubmitPending = false;
+const wizardSubmitListeners = new Set<() => void>();
+
+function setWizardSubmitPending(value: boolean) {
+  if (wizardSubmitPending === value) {
+    return;
+  }
+
+  wizardSubmitPending = value;
+  for (const listener of wizardSubmitListeners) {
+    listener();
+  }
+}
+
+function subscribeToWizardSubmitPending(listener: () => void) {
+  wizardSubmitListeners.add(listener);
+  return () => {
+    wizardSubmitListeners.delete(listener);
+  };
+}
+
+function getWizardSubmitPendingSnapshot() {
+  return wizardSubmitPending;
+}
+
+function useWizardSubmitPending() {
+  return useSyncExternalStore(
+    subscribeToWizardSubmitPending,
+    getWizardSubmitPendingSnapshot,
+    getWizardSubmitPendingSnapshot
+  );
+}
 
 interface OnboardingWizardProps {
   questions: PublicQuestion[];
@@ -88,6 +103,13 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     setWhatsapp,
     whatsapp,
   } = useFunnelDraft();
+
+  useEffect(() => {
+    setWizardSubmitPending(submit.isPending);
+    return () => {
+      setWizardSubmitPending(false);
+    };
+  }, [submit.isPending]);
 
   function validateQuestion(currentQuestion: PublicQuestion) {
     const value = answers[currentQuestion.id] ?? "";
@@ -135,14 +157,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     return null;
   }
 
-  function onBack() {
-    if (step === 1) {
-      goTo("landing", 1, "nav-back");
-      return;
-    }
-    goTo("onboarding", step - 1, "nav-back");
-  }
-
   function onNext() {
     goTo("onboarding", step + 1, "nav-forward");
   }
@@ -183,114 +197,130 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   return (
-    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-[130px]">
+    <section className="relative flex h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] min-h-0 flex-none justify-center overflow-hidden px-(--cf-page-x)">
       <form
-        className="cf-content-container flex w-full flex-col items-center text-center"
+        className="cf-content-container flex h-full min-h-0 w-full flex-col items-center text-center"
         id="wizard-form"
         noValidate
         onSubmit={onSubmit}
       >
-        <ViewTransition
-          default="none"
-          key={`wizard-progress-${step}`}
-          name="wizard-progress"
-          share={WIZARD_PROGRESS_TRANSITION}
+        <WizardStepper current={step} total={total} />
+
+        <div
+          className="flex h-0 min-h-0 w-full flex-1 animate-[enter-fade-up_600ms_cubic-bezier(0.16,1,0.3,1)_both] flex-col items-center pt-(--cf-wizard-step-question-gap)"
+          key={question.id}
         >
-          <WizardStepper current={step} total={total} />
-        </ViewTransition>
+          <h1 className="text-(length:--cf-text-question) max-w-(--cf-content-w) font-light text-cf-text-primary leading-snug">
+            {question.text}
+          </h1>
 
-        <ViewTransition
-          default="none"
-          key={`wizard-question-${question.id}`}
-          name="wizard-question"
-          share={WIZARD_QUESTION_TRANSITION}
-        >
-          <div className="flex w-full flex-col items-center pt-(--cf-wizard-step-question-gap)">
-            <h1 className="text-(length:--cf-text-question) max-w-(--cf-content-w) font-light text-cf-text-primary leading-snug">
-              {question.text}
-            </h1>
+          {question.kind === "radio" ? (
+            <div className="scrollbar-none mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overflow-y-scroll overscroll-contain px-1 pb-50 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [touch-action:pan-y] [&::-webkit-scrollbar]:hidden">
+              <RadioQuestion
+                onChange={(value) => {
+                  setAnswer(question.id, value);
+                }}
+                options={question.options ?? []}
+                questionId={question.id}
+                value={answers[question.id] ?? ""}
+              />
+            </div>
+          ) : null}
 
-            {question.kind === "radio" ? (
-              <div className="mt-(--cf-wizard-question-options-gap) w-full">
-                <RadioQuestion
-                  onChange={(value) => {
-                    setAnswer(question.id, value);
-                  }}
-                  options={question.options ?? []}
-                  questionId={question.id}
-                  value={answers[question.id] ?? ""}
-                />
-              </div>
-            ) : null}
+          {question.kind === "url" ? (
+            <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
+              <FunnelTextField
+                label="Link"
+                onChange={(value) => {
+                  setAnswer(question.id, value);
+                }}
+                placeholder="Link"
+                type="url"
+                value={answers[question.id] ?? ""}
+              />
+            </FieldGroup>
+          ) : null}
 
-            {question.kind === "url" ? (
-              <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
-                <FunnelTextField
-                  label="Link"
-                  onChange={(value) => {
-                    setAnswer(question.id, value);
-                  }}
-                  placeholder="Link"
-                  type="url"
-                  value={answers[question.id] ?? ""}
-                />
-              </FieldGroup>
-            ) : null}
-
-            {question.kind === "contact" ? (
-              <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
-                <FunnelTextField
-                  label="Email"
-                  onChange={(value) => {
-                    setEmail(value);
-                  }}
-                  placeholder="Email"
-                  type="email"
-                  value={email}
-                />
-                <FunnelTextField
-                  label="WhatsApp phone number"
-                  onChange={(value) => {
-                    setWhatsapp(value);
-                  }}
-                  placeholder="WhatsApp Phone number"
-                  type="tel"
-                  value={whatsapp}
-                />
-              </FieldGroup>
-            ) : null}
-          </div>
-        </ViewTransition>
-      </form>
-
-      <ViewTransition
-        default="none"
-        key={`wizard-actions-${step}`}
-        name="wizard-actions"
-        share={WIZARD_ACTIONS_TRANSITION}
-      >
-        <div className="fixed right-0 bottom-12.5 left-0 z-20 px-(--cf-page-x)">
-          <div className="cf-field-container flex w-full flex-row items-center justify-between">
-            <Button
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
-              onClick={onBack}
-              type="button"
-              variant="outline"
-            >
-              Back
-            </Button>
-            <Button
-              aria-busy={submit.isPending}
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97]"
-              form="wizard-form"
-              type="submit"
-            >
-              {isLastStep ? "Submit" : "Next"}
-            </Button>
-          </div>
+          {question.kind === "contact" ? (
+            <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
+              <FunnelTextField
+                label="Email"
+                onChange={(value) => {
+                  setEmail(value);
+                }}
+                placeholder="Email"
+                type="email"
+                value={email}
+              />
+              <FunnelTextField
+                label="WhatsApp phone number"
+                onChange={(value) => {
+                  setWhatsapp(value);
+                }}
+                placeholder="WhatsApp Phone number"
+                type="tel"
+                value={whatsapp}
+              />
+            </FieldGroup>
+          ) : null}
         </div>
-      </ViewTransition>
+      </form>
     </section>
+  );
+}
+
+export function OnboardingWizardControls({ total }: { total: number }) {
+  const { goTo, step } = useFunnelDraft();
+  const isSubmitting = useWizardSubmitPending();
+  const isLastStep = step === total;
+
+  function onBack() {
+    if (step === 1) {
+      goTo("landing", 1, "nav-back");
+      return;
+    }
+    goTo("onboarding", step - 1, "nav-back");
+  }
+
+  let submitLabel: string;
+  if (isSubmitting) {
+    submitLabel = "Submitting";
+  } else if (isLastStep) {
+    submitLabel = "Submit";
+  } else {
+    submitLabel = "Next";
+  }
+
+  return (
+    <div className="fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5">
+      <div
+        aria-hidden="true"
+        className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] pointer-events-none absolute inset-0 z-0 [backdrop-filter:blur(50px)]"
+      />
+      <div className="cf-field-container relative z-10 flex w-full flex-row items-center justify-between">
+        <Button
+          className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
+          disabled={isSubmitting}
+          onClick={onBack}
+          type="button"
+          variant="outline"
+        >
+          Back
+        </Button>
+        <Button
+          aria-busy={isSubmitting}
+          className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) gap-2 rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] disabled:pointer-events-none disabled:opacity-80"
+          disabled={isSubmitting}
+          form="wizard-form"
+          type="submit"
+        >
+          {isSubmitting ? (
+            <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+          ) : null}
+          {submitLabel}
+        </Button>
+      </div>
+    </div>
   );
 }
 

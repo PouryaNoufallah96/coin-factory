@@ -3,7 +3,7 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { type ChangeEvent, type ReactNode, useRef } from "react";
+import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +42,7 @@ export function LandingPage({
   children: ReactNode;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [inputFocused, setInputFocused] = useState(false);
   const {
     assetDescription,
     files,
@@ -52,7 +53,10 @@ export function LandingPage({
     setSelectedCategoryIds,
   } = useFunnelDraft();
 
-  const searchActive = assetDescription.trim().length > 0 || files.length > 0;
+  const searchActive =
+    assetDescription.trim().length > 0 ||
+    files.length > 0 ||
+    selectedCategoryIds.length > 0;
 
   function addFiles(event: ChangeEvent<HTMLInputElement>) {
     const pickedFiles = Array.from(event.target.files ?? []);
@@ -135,8 +139,19 @@ export function LandingPage({
               className={cn(
                 files.length > 0
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
-                  : "min-h-[calc(var(--cf-search-h))] px-6 py-3"
+                  : "px-6 py-3"
               )}
+              style={
+                files.length === 0
+                  ? {
+                      minHeight: inputFocused
+                        ? "calc(var(--cf-search-h) * 1.2)"
+                        : "var(--cf-search-h)",
+                      transition:
+                        "min-height 300ms cubic-bezier(0.2,0,0,1), border-radius 300ms cubic-bezier(0.2,0,0,1)",
+                    }
+                  : undefined
+              }
             >
               <FileCardPanel files={files} onRemove={removeFile} />
               <div className="flex min-h-10 w-full items-center gap-4">
@@ -160,7 +175,9 @@ export function LandingPage({
                 <textarea
                   aria-label="Asset description"
                   className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
+                  onBlur={() => setInputFocused(false)}
                   onChange={onDescriptionChange}
+                  onFocus={() => setInputFocused(true)}
                   placeholder={SEARCH_PLACEHOLDER}
                   rows={1}
                   style={{
@@ -255,8 +272,7 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const { selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
-    useFunnelDraft();
+  const { selectedCategoryIds, setSelectedCategoryIds } = useFunnelDraft();
 
   function toggleCategory(category: PublicCategory) {
     const isSelected = selectedCategoryIds.includes(category.id);
@@ -272,16 +288,6 @@ export function LandingCategoryChips({
     setSelectedCategoryIds((currentIds) =>
       nextSelectedCategoryIds(currentIds, category.id)
     );
-
-    setAssetDescription((current) => {
-      if (isSelected) {
-        return removeLabelFromText(current, category.label);
-      }
-      const trimmed = current.trim();
-      return trimmed.length > 0
-        ? `${trimmed}, ${category.label}`
-        : category.label;
-    });
   }
 
   return (
@@ -329,14 +335,6 @@ function pruneSelectedCategoryIds(
     const category = categories.find((c) => c.id === id);
     return category ? textParts.includes(category.label) : true;
   });
-}
-
-function removeLabelFromText(text: string, label: string): string {
-  const parts = text
-    .split(",")
-    .map((p) => p.trim())
-    .filter((p) => p !== label);
-  return parts.join(", ");
 }
 
 function nextSelectedCategoryIds(

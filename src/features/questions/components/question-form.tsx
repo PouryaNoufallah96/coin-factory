@@ -1,17 +1,19 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save } from "lucide-react";
+import { Minus, Plus, Save } from "lucide-react";
+import { useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import {
   FormInputField,
   FormRadioGroupField,
   FormRootError,
-  FormTextareaField,
 } from "@/components/common/form/form-field";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import {
   createQuestion,
@@ -35,7 +37,6 @@ const kindOptions = [
   { label: "URL", value: "url" },
   { label: "Contact", value: "contact" },
 ];
-const optionLineSeparator = /\r?\n/;
 
 export function QuestionForm({ onSuccess, question }: QuestionFormProps) {
   const createAction = useAction(createQuestion);
@@ -47,11 +48,23 @@ export function QuestionForm({ onSuccess, question }: QuestionFormProps) {
     getValues,
     handleSubmit,
     setError,
+    setValue,
   } = useForm<QuestionFormInput>({
     resolver: zodResolver(createQuestionInputSchema),
     values: toQuestionFormValues(question),
   });
   const kind = useWatch({ control, name: "kind" });
+  const options = useWatch({ control, name: "options" }) as string[] | null;
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const initialOptionsLength =
+    question?.kind === "radio" ? (question.options?.length ?? 0) : 0;
+  const keyCounterRef = useRef(initialOptionsLength);
+  const [stableKeys, setStableKeys] = useState<number[]>(() =>
+    Array.from({ length: initialOptionsLength }, (_, i) => i)
+  );
+
+  const currentOptions = options ?? [];
+
   const isPending =
     isSubmitting || createAction.isPending || updateAction.isPending;
 
@@ -97,15 +110,78 @@ export function QuestionForm({ onSuccess, question }: QuestionFormProps) {
           options={kindOptions}
         />
         {kind === "radio" ? (
-          <FormTextareaField
-            control={control}
-            deserialize={optionsToText}
-            disabled={isPending}
-            label="Options"
-            name="options"
-            placeholder={"Idea Stage\nActive Business\nOpen to discussion"}
-            serialize={textToOptions}
-          />
+          <div className="flex flex-col gap-2">
+            <Label>Options</Label>
+            {currentOptions.map((option, index) => {
+              const itemError = (
+                errors.options as
+                  | Record<number, { message?: string }>
+                  | undefined
+              )?.[index]?.message;
+              return (
+                <div className="flex flex-col gap-1" key={stableKeys[index]}>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      aria-invalid={!!itemError}
+                      disabled={isPending}
+                      onChange={(e) => {
+                        const next = [...currentOptions];
+                        next[index] = e.target.value;
+                        setValue("options", next, { shouldValidate: true });
+                      }}
+                      placeholder={`Option ${index + 1}`}
+                      ref={(el) => {
+                        inputRefs.current[index] =
+                          el as HTMLInputElement | null;
+                      }}
+                      value={option}
+                    />
+                    <button
+                      className="shrink-0 text-muted-foreground hover:text-foreground"
+                      disabled={isPending}
+                      onClick={() => {
+                        const next = currentOptions.filter(
+                          (_, i) => i !== index
+                        );
+                        setStableKeys((prev) =>
+                          prev.filter((_, i) => i !== index)
+                        );
+                        setValue("options", next.length ? next : null, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      type="button"
+                    >
+                      <Minus className="size-4" />
+                    </button>
+                  </div>
+                  {itemError && (
+                    <p className="text-destructive text-sm">{itemError}</p>
+                  )}
+                </div>
+              );
+            })}
+            {typeof errors.options?.message === "string" && (
+              <p className="text-destructive text-sm">
+                {errors.options.message}
+              </p>
+            )}
+            <button
+              className="flex items-center justify-center gap-2 rounded-md border border-border border-dashed py-2 text-muted-foreground text-sm transition-colors hover:border-foreground hover:text-foreground"
+              disabled={isPending}
+              onClick={() => {
+                const next = [...currentOptions, ""];
+                setValue("options", next);
+                setStableKeys((prev) => [...prev, keyCounterRef.current++]);
+                const newIndex = next.length - 1;
+                setTimeout(() => inputRefs.current[newIndex]?.focus(), 0);
+              }}
+              type="button"
+            >
+              <Plus className="size-4" />
+              Add option
+            </button>
+          </div>
         ) : null}
       </FieldGroup>
       <FormRootError message={errors.root?.server?.message} />
@@ -129,19 +205,4 @@ function toQuestionFormValues(
     options: question?.kind === "radio" ? (question.options ?? []) : null,
     text: question?.text ?? "",
   };
-}
-
-function optionsToText(value: unknown) {
-  return Array.isArray(value)
-    ? value
-        .filter((item): item is string => typeof item === "string")
-        .join("\n")
-    : "";
-}
-
-function textToOptions(value: string) {
-  return value.split(optionLineSeparator).flatMap((option) => {
-    const trimmed = option.trim();
-    return trimmed ? [trimmed] : [];
-  });
 }

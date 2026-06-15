@@ -149,10 +149,11 @@ Current state (2026-06-12):
   `Content-Length`, `BodyLimitPlugin` enforces the shared byte budget, oRPC middleware applies
   post-parse quotas and a per-IP throttle, and the `.actionable()` submit path carries request
   headers into the same context. Reverse-proxy/edge rate limits remain deployment work.
-- **Public funnel UI exists**: `/` landing (search, categories, intake gate), `/onboarding/[step]`
-  wizard (DB-driven questions, free step navigation, final-submit validation), and
-  `/thank-you` confirmation — all under `(funnel)/` with ViewTransition navigation and draft
-  state in layout context.
+- **Public funnel UI exists**: a single-page funnel at `/` — landing (search, categories,
+  intake gate), the wizard (DB-driven questions, free step navigation, final-submit
+  validation), and the thank-you confirmation are client view states driven by the funnel
+  draft context, with ViewTransition navigation. The landing prerenders as the static PPR
+  shell; unknown paths redirect to `/`.
 - **Admin surface in progress**: better-auth admin sessions, `/admin` shell, categories/questions
   CRUD with cached admin list reads and tag invalidation.
 - **Cache invalidation wired**: `updateTag` / `revalidateTag` fan-out for public active lists

@@ -12,7 +12,7 @@
     "prepare": "husky",
     "format": "biome check --write .",
     "lint": "biome check .",
-    "react-doctor": "pnpm --silent dlx react-doctor@latest -y --diff false --no-dead-code --verbose --blocking warning --no-score .",
+    "react-doctor": "pnpm --silent dlx react-doctor@latest -y --scope full --no-dead-code --verbose --blocking warning --no-score .",
     "react-doctor:staged": "pnpm --silent dlx react-doctor@latest -y --staged --no-dead-code --verbose --blocking warning --no-score .",
     "typecheck": "tsc --noEmit",
     "typegen": "next typegen",

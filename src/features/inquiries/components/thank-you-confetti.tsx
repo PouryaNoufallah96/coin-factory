@@ -17,31 +17,25 @@ export function ThankYouConfetti() {
       ticks: 160,
     };
 
-    let animationId: number;
-    let lastFired = 0;
-
-    const frame = (timestamp: number) => {
-      if (timestamp - lastFired >= 1800) {
-        confetti({
-          ...defaults,
-          angle: 80,
-          particleCount: 36,
-          startVelocity: 24,
-        });
-        confetti({
-          ...defaults,
-          angle: 100,
-          particleCount: 36,
-          startVelocity: 24,
-        });
-        lastFired = timestamp;
-      }
-      animationId = requestAnimationFrame(frame);
+    const fire = () => {
+      confetti({
+        ...defaults,
+        angle: 80,
+        particleCount: 36,
+        startVelocity: 24,
+      });
+      confetti({
+        ...defaults,
+        angle: 100,
+        particleCount: 36,
+        startVelocity: 24,
+      });
     };
 
-    animationId = requestAnimationFrame(frame);
+    fire();
+    const intervalId = setInterval(fire, 1800);
 
-    return () => cancelAnimationFrame(animationId);
+    return () => clearInterval(intervalId);
   }, []);
 
   return null;

@@ -1,2 +1,8 @@
-pnpm format & pnpm typecheck && pnpm lint && pnpm react-doctor
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
 
+# Format and lint-fix only the staged files, then re-stage them so the fixes
+# land in the commit (plain `pnpm format` writes to the tree but is never added).
+# The full gate (typecheck + lint + react-doctor + build) runs on pre-push.
+echo "$staged" | xargs pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true
+echo "$staged" | xargs git add

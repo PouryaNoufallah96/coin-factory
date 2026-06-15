@@ -210,7 +210,9 @@
   --cf-glow-active: 0 0 12.5rem 0 rgb(255 250 237 / 0.24);
   --cf-glow-soft: 0 0 6.25rem 0 rgb(255 250 237 / 0.24);
   --cf-cta-shadow: 0 0 0.5rem 0 rgb(0 0 0 / 0.24);
-  --cf-hero-shadow: 0 0 4px #fff2d1, 0 4px 16px #fffaed99;
+  --cf-hero-shadow:
+    0 0 4px var(--cf-cream),
+    0 4px 16px color-mix(in srgb, var(--cf-cream-soft) 60%, transparent);
   --cf-border-w: 0.0625rem;
   --cf-canvas-gradient-funnel: linear-gradient(
     180deg,
@@ -509,6 +511,15 @@
     animation-duration: 0s !important;
     animation-delay: 0s !important;
   }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer base {
@@ -600,7 +611,11 @@
 
   .cf-search-input::placeholder {
     -webkit-text-fill-color: transparent;
-    background: linear-gradient(90deg, #ffffff 0%, #282d36 100%);
+    background: linear-gradient(
+      90deg,
+      var(--cf-white) 0%,
+      var(--cf-charcoal-900) 100%
+    );
     -webkit-background-clip: text;
     background-clip: text;
   }

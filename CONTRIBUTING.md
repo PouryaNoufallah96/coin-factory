@@ -36,7 +36,7 @@ Multi-line example:
 
 ```bash
 git commit -m "feat(funnel): add fee-allocation step" \
-  -m "Adds /onboarding/4 radio step with Yes/No/Open to discussion." \
+  -m "Adds the fee-allocation radio step with Yes/No/Open to discussion." \
   -m "Closes RZ-12"
 ```
 

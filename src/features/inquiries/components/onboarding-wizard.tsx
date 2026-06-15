@@ -167,7 +167,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
         <WizardStepper current={step} total={total} />
 
         <div
-          className="flex h-0 min-h-0 w-full flex-1 flex-col items-center pt-(--cf-wizard-step-question-gap)"
+          className="flex h-0 min-h-0 w-full flex-1 animate-[enter-fade-up_600ms_cubic-bezier(0.16,1,0.3,1)_both] flex-col items-center pt-(--cf-wizard-step-question-gap)"
           key={question.id}
         >
           <h1 className="text-(length:--cf-text-question) max-w-(--cf-content-w) font-light text-cf-text-primary leading-snug">
@@ -175,7 +175,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
           </h1>
 
           {question.kind === "radio" ? (
-            <div className="mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overscroll-contain px-1 pb-50 [-ms-overflow-style:none] [scrollbar-width:none] [touch-action:pan-y] [overflow-y:scroll] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden">
+            <div className="mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overscroll-contain px-1 pb-50 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] overflow-y-scroll scrollbar-none [touch-action:pan-y] [&::-webkit-scrollbar]:hidden">
               <RadioQuestion
                 onChange={(value) => {
                   setAnswer(question.id, value);

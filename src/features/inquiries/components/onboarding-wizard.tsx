@@ -1,10 +1,9 @@
-/// <reference types="react/canary" />
-
 "use client";
 
 import { LoaderCircle, X } from "lucide-react";
 import type React from "react";
-import { useId, ViewTransition } from "react";
+import { useId, useState } from "react";
+import type { z } from "zod";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Button } from "@/components/ui/button";
@@ -26,30 +25,16 @@ import { cn } from "@/lib/utils";
 import { createInquiry } from "../actions/create-inquiry";
 import { useFunnelDraft } from "../hooks/use-funnel-draft";
 import { buildAnswerPayload } from "../lib/build-answer-payload";
-import { emailSchema, whatsappSchema } from "../schemas/contact";
+import {
+  emailSchema,
+  sanitizePhoneInput,
+  whatsappSchema,
+} from "../schemas/contact";
 import {
   hasIntakeSignal,
   INTAKE_SIGNAL_MESSAGE,
 } from "../schemas/intake-signal";
 import { REQUIRED_ANSWER_MESSAGE } from "../schemas/validation-messages";
-
-const WIZARD_PROGRESS_TRANSITION = {
-  "nav-back": "wizard-progress",
-  "nav-forward": "wizard-progress",
-  default: "none",
-} as const;
-
-const WIZARD_QUESTION_TRANSITION = {
-  "nav-back": "wizard-question-back",
-  "nav-forward": "wizard-question-forward",
-  default: "none",
-} as const;
-
-const WIZARD_ACTIONS_TRANSITION = {
-  "nav-back": "wizard-actions",
-  "nav-forward": "wizard-actions",
-  default: "none",
-} as const;
 
 const STEPPER_SEGMENT_KEYS = [
   "stepper-segment-1",
@@ -65,6 +50,25 @@ const STEPPER_SEGMENT_KEYS = [
   "stepper-segment-11",
   "stepper-segment-12",
 ];
+
+const FIELD_VALIDATION_TOAST_ID = "funnel-field-validation";
+
+function fieldError(schema: z.ZodType, value: string): string | null {
+  const result = schema.safeParse(value.trim());
+  return result.success ? null : (result.error.issues[0]?.message ?? null);
+}
+
+function urlError(value: string) {
+  return fieldError(optionalUrlSchema, value);
+}
+
+function emailError(value: string) {
+  return fieldError(emailSchema, value);
+}
+
+function whatsappError(value: string) {
+  return fieldError(whatsappSchema, value);
+}
 
 interface OnboardingWizardProps {
   questions: PublicQuestion[];
@@ -99,28 +103,15 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
   const isSubmitting = submit.isPending;
 
   function validateQuestion(currentQuestion: PublicQuestion) {
-    const value = answers[currentQuestion.id] ?? "";
-
     if (currentQuestion.kind === "radio") {
-      return value ? null : REQUIRED_ANSWER_MESSAGE;
+      return answers[currentQuestion.id] ? null : REQUIRED_ANSWER_MESSAGE;
     }
 
     if (currentQuestion.kind === "url") {
-      const result = optionalUrlSchema.safeParse(value.trim());
-      return result.success ? null : result.error.issues[0]?.message;
+      return urlError(answers[currentQuestion.id] ?? "");
     }
 
-    const emailResult = emailSchema.safeParse(email.trim());
-    if (!emailResult.success) {
-      return emailResult.error.issues[0]?.message;
-    }
-
-    const whatsappResult = whatsappSchema.safeParse(whatsapp.trim());
-    if (!whatsappResult.success) {
-      return whatsappResult.error.issues[0]?.message;
-    }
-
-    return null;
+    return emailError(email) ?? whatsappError(whatsapp);
   }
 
   function validateSubmission() {
@@ -152,7 +143,26 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
     goTo("onboarding", safeStep - 1, "nav-back");
   }
 
+  function navigationError(currentQuestion: PublicQuestion): string | null {
+    if (currentQuestion.kind === "url") {
+      return urlError(answers[currentQuestion.id] ?? "");
+    }
+    if (currentQuestion.kind === "contact") {
+      const emailMessage = email.trim() ? emailError(email) : null;
+      if (emailMessage) {
+        return emailMessage;
+      }
+      return whatsapp.trim() ? whatsappError(whatsapp) : null;
+    }
+    return null;
+  }
+
   function onNext() {
+    const error = navigationError(question);
+    if (error) {
+      funnelAlert(error, FIELD_VALIDATION_TOAST_ID);
+      return;
+    }
     goTo("onboarding", safeStep + 1, "nav-forward");
   }
 
@@ -208,118 +218,103 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
         noValidate
         onSubmit={onSubmit}
       >
-        <ViewTransition
-          default="none"
-          key={`wizard-progress-${safeStep}`}
-          name="wizard-progress"
-          share={WIZARD_PROGRESS_TRANSITION}
+        <WizardStepper current={safeStep} total={total} />
+
+        <div
+          className="flex h-0 min-h-0 w-full flex-1 animate-[enter-fade-up_var(--cf-dur-content)_var(--cf-ease)_both] flex-col items-center pt-(--cf-wizard-step-question-gap)"
+          key={question.id}
         >
-          <WizardStepper current={safeStep} total={total} />
-        </ViewTransition>
+          <h1 className="text-(length:--cf-text-question) max-w-(--cf-content-w) font-light text-cf-text-primary leading-snug">
+            {question.text}
+          </h1>
 
-        <ViewTransition
-          default="none"
-          key={`wizard-question-${question.id}`}
-          name="wizard-question"
-          share={WIZARD_QUESTION_TRANSITION}
-        >
-          <div className="flex h-0 min-h-0 w-full flex-1 flex-col items-center pt-(--cf-wizard-step-question-gap)">
-            <h1 className="text-(length:--cf-text-question) max-w-(--cf-content-w) font-light text-cf-text-primary leading-snug">
-              {question.text}
-            </h1>
+          {question.kind === "radio" ? (
+            <div className="scrollbar-none mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overflow-y-scroll overscroll-contain px-1 pt-1 pb-50 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [touch-action:pan-y] [&::-webkit-scrollbar]:hidden">
+              <RadioQuestion
+                onChange={(value) => {
+                  setAnswer(question.id, value);
+                }}
+                options={question.options ?? []}
+                questionId={question.id}
+                value={answers[question.id] ?? ""}
+              />
+            </div>
+          ) : null}
 
-            {question.kind === "radio" ? (
-              <div className="scrollbar-none mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overflow-y-scroll overscroll-contain px-1 pb-50 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [touch-action:pan-y] [&::-webkit-scrollbar]:hidden">
-                <RadioQuestion
-                  onChange={(value) => {
-                    setAnswer(question.id, value);
-                  }}
-                  options={question.options ?? []}
-                  questionId={question.id}
-                  value={answers[question.id] ?? ""}
-                />
-              </div>
-            ) : null}
+          {question.kind === "url" ? (
+            <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
+              <FunnelTextField
+                label="Link"
+                onChange={(value) => {
+                  setAnswer(question.id, value);
+                }}
+                placeholder="Link"
+                type="url"
+                validate={urlError}
+                value={answers[question.id] ?? ""}
+              />
+            </FieldGroup>
+          ) : null}
 
-            {question.kind === "url" ? (
-              <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
-                <FunnelTextField
-                  label="Link"
-                  onChange={(value) => {
-                    setAnswer(question.id, value);
-                  }}
-                  placeholder="Link"
-                  type="url"
-                  value={answers[question.id] ?? ""}
-                />
-              </FieldGroup>
-            ) : null}
-
-            {question.kind === "contact" ? (
-              <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
-                <FunnelTextField
-                  label="Email"
-                  onChange={(value) => {
-                    setEmail(value);
-                  }}
-                  placeholder="Email"
-                  type="email"
-                  value={email}
-                />
-                <FunnelTextField
-                  label="WhatsApp phone number"
-                  onChange={(value) => {
-                    setWhatsapp(value);
-                  }}
-                  placeholder="WhatsApp Phone number"
-                  type="tel"
-                  value={whatsapp}
-                />
-              </FieldGroup>
-            ) : null}
-          </div>
-        </ViewTransition>
+          {question.kind === "contact" ? (
+            <FieldGroup className="cf-field-container mt-(--cf-wizard-question-options-gap) gap-7">
+              <FunnelTextField
+                label="Email"
+                onChange={(value) => {
+                  setEmail(value);
+                }}
+                placeholder="Email"
+                type="email"
+                validate={emailError}
+                value={email}
+              />
+              <FunnelTextField
+                label="WhatsApp phone number"
+                onChange={(value) => {
+                  setWhatsapp(value);
+                }}
+                placeholder="WhatsApp Phone number"
+                type="tel"
+                validate={whatsappError}
+                value={whatsapp}
+              />
+            </FieldGroup>
+          ) : null}
+        </div>
       </form>
 
-      <ViewTransition
-        default="none"
-        key={`wizard-actions-${safeStep}`}
-        name="wizard-actions"
-        share={WIZARD_ACTIONS_TRANSITION}
-      >
-        <div className="fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5">
-          <div
-            aria-hidden="true"
-            className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] pointer-events-none absolute inset-0 z-0 [backdrop-filter:blur(50px)]"
-          />
-          <div className="cf-field-container relative z-10 flex w-full flex-row items-center justify-between">
-            <Button
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
-              disabled={isSubmitting}
-              onClick={onBack}
-              type="button"
-              variant="outline"
-            >
-              Back
-            </Button>
-            <Button
-              aria-busy={isSubmitting}
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) gap-2 rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] disabled:pointer-events-none disabled:opacity-80"
-              disabled={isSubmitting}
-              form="wizard-form"
-              type="submit"
-            >
-              {isSubmitting ? (
-                <LoaderCircle
-                  aria-hidden="true"
-                  className="size-4 animate-spin"
-                />
-              ) : null}
-              {submitLabel}
-            </Button>
-          </div>
+      <div className="fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5">
+        <div
+          aria-hidden="true"
+          className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] pointer-events-none absolute inset-0 z-0 [backdrop-filter:blur(50px)]"
+        />
+        <div className="cf-field-container relative z-10 flex w-full flex-row items-center justify-between">
+          <Button
+            className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
+            disabled={isSubmitting}
+            onClick={onBack}
+            type="button"
+            variant="outline"
+          >
+            Back
+          </Button>
+          <Button
+            aria-busy={isSubmitting}
+            className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) gap-2 rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] disabled:pointer-events-none disabled:opacity-80"
+            disabled={isSubmitting}
+            form="wizard-form"
+            type="submit"
+          >
+            {isSubmitting ? (
+              <LoaderCircle
+                aria-hidden="true"
+                className="size-4 animate-spin"
+              />
+            ) : null}
+            {submitLabel}
+          </Button>
         </div>
-      </ViewTransition>
+      </div>
     </section>
   );
 }
@@ -409,16 +404,31 @@ function FunnelTextField({
   onChange,
   placeholder,
   type,
+  validate,
   value,
 }: {
   label: string;
   onChange: (value: string) => void;
   placeholder: string;
   type: string;
+  validate?: (value: string) => string | null;
   value: string;
 }) {
   const id = useId();
-  const active = value.length > 0;
+  const [focused, setFocused] = useState(false);
+  const filled = value.length > 0;
+  const isPhone = type === "tel";
+
+  function handleBlur() {
+    setFocused(false);
+    const trimmed = value.trim();
+    if (trimmed && validate) {
+      const error = validate(trimmed);
+      if (error) {
+        funnelAlert(error, FIELD_VALIDATION_TOAST_ID);
+      }
+    }
+  }
 
   return (
     <Field>
@@ -429,19 +439,25 @@ function FunnelTextField({
         {label}
       </FieldLabel>
       <InputSurface
-        active={active}
         className="flex h-(--cf-search-h) flex-row items-center px-7"
+        filled={filled}
+        focused={focused}
       >
         <Input
           className="h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
           id={id}
-          onValueChange={onChange}
+          inputMode={isPhone ? "tel" : undefined}
+          onBlur={handleBlur}
+          onFocus={() => setFocused(true)}
+          onValueChange={(next) =>
+            onChange(isPhone ? sanitizePhoneInput(next) : next)
+          }
           placeholder={placeholder}
           style={{ fontSize: "16px" }}
           type={type}
           value={value}
         />
-        {active ? (
+        {filled ? (
           <button
             aria-label={`Clear ${label}`}
             className="-mr-2 ml-3 flex size-11 shrink-0 items-center justify-center rounded-full text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-text-primary"

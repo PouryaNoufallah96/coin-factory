@@ -110,7 +110,10 @@ export function LandingPage({ children }: { children: ReactNode }) {
   }
 
   return (
-    <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
+    <section
+      className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6"
+      data-funnel-resume-hide
+    >
       <div className="sm:14 flex w-full flex-col items-center gap-20">
         <div className="cf-content-container flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
@@ -128,6 +131,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
                   : "px-6 py-3"
               )}
+              filled={assetDescription.trim().length > 0 || files.length > 0}
+              focused={inputFocused}
               style={
                 files.length === 0
                   ? {
@@ -137,6 +142,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     }
                   : undefined
               }
+              variant="search"
             >
               <FileCardPanel files={files} onRemove={removeFile} />
               <div className="flex min-h-10 w-full items-center gap-4">
@@ -257,8 +263,7 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const { selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
-    useFunnelDraft();
+  const { selectedCategoryIds, setSelectedCategoryIds } = useFunnelDraft();
 
   function toggleCategory(category: PublicCategory) {
     const isSelected = selectedCategoryIds.includes(category.id);
@@ -271,21 +276,11 @@ export function LandingCategoryChips({
       return;
     }
 
+    // Chip selection is independent of the search text: picking a chip never
+    // writes its label into the input, and typing never changes the chips.
     setSelectedCategoryIds((currentIds) =>
       nextSelectedCategoryIds(currentIds, category.id)
     );
-
-    // Picking a chip mirrors its label into the search text; removing the chip
-    // pulls it back out. Typing in the search never touches chip selection.
-    setAssetDescription((current) => {
-      if (isSelected) {
-        return removeLabelFromText(current, category.label);
-      }
-      const trimmed = current.trim();
-      return trimmed.length > 0
-        ? `${trimmed}, ${category.label}`
-        : category.label;
-    });
   }
 
   return (
@@ -321,14 +316,6 @@ export function LandingCategoryChips({
       </div>
     </div>
   );
-}
-
-function removeLabelFromText(text: string, label: string): string {
-  const parts = text
-    .split(",")
-    .map((p) => p.trim())
-    .filter((p) => p !== label);
-  return parts.join(", ");
 }
 
 function nextSelectedCategoryIds(

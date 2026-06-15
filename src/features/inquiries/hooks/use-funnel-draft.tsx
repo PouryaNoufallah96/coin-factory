@@ -119,6 +119,12 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (state.view !== "landing") {
+      document.getElementById("cf-resume-guard")?.remove();
+    }
+  }, [state.view]);
+
+  useEffect(() => {
     const handle = setTimeout(() => persistState(state), 150);
     return () => clearTimeout(handle);
   }, [state]);

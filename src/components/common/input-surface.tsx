@@ -2,29 +2,48 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+type InputSurfaceVariant = "search" | "field";
+
 interface InputSurfaceProps extends React.ComponentProps<"div"> {
-  active?: boolean;
+  filled?: boolean;
+  focused?: boolean;
+  variant?: InputSurfaceVariant;
+}
+
+function borderClass(active: boolean, variant: InputSurfaceVariant) {
+  if (active) {
+    return "border-cf-border-active";
+  }
+  return variant === "search" ? "border-transparent" : "border-cf-border-muted";
+}
+
+function glowClass(
+  focused: boolean,
+  active: boolean,
+  variant: InputSurfaceVariant
+) {
+  if (variant === "search") {
+    return active ? "shadow-(--cf-glow-active)" : "shadow-(--cf-glow-soft)";
+  }
+  return focused ? "shadow-(--cf-glow-active)" : "shadow-none";
 }
 
 export function InputSurface({
-  active,
+  variant = "field",
+  focused = false,
+  filled = false,
   className,
-  style,
   ...props
 }: InputSurfaceProps) {
+  const active = focused || filled;
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-center rounded-(--cf-radius-row) bg-cf-charcoal-900 text-cf-cream transition-[border-radius,padding,min-height] duration-(--cf-dur-content) ease-(--cf-ease)",
+        "flex w-full flex-col justify-center rounded-(--cf-radius-row) border bg-cf-charcoal-900 text-cf-cream transition-[border-color,box-shadow,border-radius,padding,min-height] duration-(--cf-dur-content) ease-(--cf-ease)",
+        borderClass(active, variant),
+        glowClass(focused, active, variant),
         className
       )}
-      style={{
-        border: "1px solid transparent",
-        background:
-          "linear-gradient(var(--color-cf-charcoal-900), var(--color-cf-charcoal-900)) padding-box, linear-gradient(90deg, var(--color-cf-cream) 0%, var(--color-cf-charcoal-900) 100%) border-box",
-        boxShadow: "var(--cf-glow-active)",
-        ...style,
-      }}
       {...props}
     />
   );

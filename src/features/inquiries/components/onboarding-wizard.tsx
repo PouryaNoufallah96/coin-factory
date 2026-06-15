@@ -68,14 +68,10 @@ const STEPPER_SEGMENT_KEYS = [
 
 interface OnboardingWizardProps {
   questions: PublicQuestion[];
-  step: number;
 }
 
-export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
+export function OnboardingWizard({ questions }: OnboardingWizardProps) {
   const submit = useAction(createInquiry);
-  const question = questions[step - 1];
-  const total = questions.length;
-  const isLastStep = step === total;
   const {
     answers,
     assetDescription,
@@ -86,8 +82,20 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     setAnswer,
     setEmail,
     setWhatsapp,
+    step,
     whatsapp,
   } = useFunnelDraft();
+  const total = questions.length;
+
+  if (total === 0) {
+    return null;
+  }
+
+  // Clamp the persisted step: an admin can disable or remove questions after a
+  // draft was saved, which would otherwise index past the active set.
+  const safeStep = Math.min(Math.max(step, 1), total);
+  const question = questions[safeStep - 1];
+  const isLastStep = safeStep === total;
 
   function validateQuestion(currentQuestion: PublicQuestion) {
     const value = answers[currentQuestion.id] ?? "";
@@ -136,15 +144,15 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   function onBack() {
-    if (step === 1) {
+    if (safeStep === 1) {
       goTo("landing", 1, "nav-back");
       return;
     }
-    goTo("onboarding", step - 1, "nav-back");
+    goTo("onboarding", safeStep - 1, "nav-back");
   }
 
   function onNext() {
-    goTo("onboarding", step + 1, "nav-forward");
+    goTo("onboarding", safeStep + 1, "nav-forward");
   }
 
   async function onSubmit(event: React.SubmitEvent<HTMLFormElement>) {
@@ -192,11 +200,11 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
       >
         <ViewTransition
           default="none"
-          key={`wizard-progress-${step}`}
+          key={`wizard-progress-${safeStep}`}
           name="wizard-progress"
           share={WIZARD_PROGRESS_TRANSITION}
         >
-          <WizardStepper current={step} total={total} />
+          <WizardStepper current={safeStep} total={total} />
         </ViewTransition>
 
         <ViewTransition
@@ -265,7 +273,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
 
       <ViewTransition
         default="none"
-        key={`wizard-actions-${step}`}
+        key={`wizard-actions-${safeStep}`}
         name="wizard-actions"
         share={WIZARD_ACTIONS_TRANSITION}
       >

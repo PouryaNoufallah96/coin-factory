@@ -34,13 +34,7 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".pdf": "PDF",
 };
 
-export function LandingPage({
-  categories,
-  children,
-}: {
-  categories: PublicCategory[];
-  children: ReactNode;
-}) {
+export function LandingPage({ children }: { children: ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     assetDescription,
@@ -49,7 +43,6 @@ export function LandingPage({
     selectedCategoryIds,
     setAssetDescription,
     setFiles,
-    setSelectedCategoryIds,
   } = useFunnelDraft();
 
   const searchActive = assetDescription.trim().length > 0 || files.length > 0;
@@ -88,15 +81,9 @@ export function LandingPage({
   }
 
   function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    const { value } = event.target;
-    setAssetDescription(value);
-    // Editing the description by hand can drop a label a chip added: keep the
-    // selected chips in sync with the text instead of mirroring it in an effect.
-    setSelectedCategoryIds((currentIds) =>
-      pruneSelectedCategoryIds(currentIds, value, categories)
-    );
-
     const textarea = event.target;
+    setAssetDescription(textarea.value);
+
     textarea.style.height = "auto";
     const capped = Math.min(textarea.scrollHeight, 96);
     textarea.style.height = `${capped}px`;
@@ -317,18 +304,6 @@ export function LandingCategoryChips({
       </div>
     </div>
   );
-}
-
-function pruneSelectedCategoryIds(
-  currentIds: string[],
-  text: string,
-  categories: PublicCategory[]
-): string[] {
-  const textParts = text.split(",").map((part) => part.trim());
-  return currentIds.filter((id) => {
-    const category = categories.find((c) => c.id === id);
-    return category ? textParts.includes(category.label) : true;
-  });
 }
 
 function removeLabelFromText(text: string, label: string): string {

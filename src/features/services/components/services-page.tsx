@@ -28,7 +28,7 @@ export function ServicesPage() {
                 {index < SERVICES.length - 1 && (
                   <div
                     aria-hidden="true"
-                    className="my-2 w-px flex-1 border-cf-border-muted border-l-2 border-dashed"
+                    className="my-3 w-px flex-1 bg-[repeating-linear-gradient(to_bottom,var(--cf-cream-bright)_0_4px,transparent_4px_10px)]"
                   />
                 )}
               </div>

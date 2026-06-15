@@ -159,7 +159,7 @@
   --cf-field-w: 32.5rem;
   --cf-search-w: 43.75rem;
   --cf-chip-row-w: 60rem;
-  --cf-thank-you-w: 53rem;
+  --cf-thank-you-w: 60rem;
   --cf-thank-you-body-w: 44rem;
 
   /* Radius — pills everywhere */
@@ -246,8 +246,8 @@
   --cf-vt-blur: 0.1875rem;
 
   /* Type scale (sizes; families come from next/font vars in layout.tsx) */
-  --cf-text-hero: 3.5rem;
-  --cf-text-hero-sub: 1.375rem;
+  --cf-text-hero: 3rem;
+  --cf-text-hero-sub: 1rem;
   --cf-text-question: 1.25rem;
   --cf-text-field-label: 1.125rem;
   --cf-text-lg: 0.875rem;
@@ -302,8 +302,8 @@
     --cf-wizard-step-question-gap: 3rem;
     --cf-wizard-question-options-gap: 4.75rem;
     --cf-wizard-actions-bottom: 6rem;
-    --cf-thank-you-content-top: 18rem;
-    --cf-thank-you-stack-gap: 2rem;
+    --cf-thank-you-content-top: 15rem;
+    --cf-thank-you-stack-gap: 2.5rem;
     --cf-text-hero: 6rem;
     --cf-text-hero-sub: 2.25rem;
     --cf-text-question: 2rem;

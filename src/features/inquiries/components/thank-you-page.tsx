@@ -8,7 +8,7 @@ export function ThankYouPage() {
         <h1 className="text-(length:--cf-text-hero) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
           Thank You
         </h1>
-        <p className="text-(length:--cf-text-thank-you-sub) max-w-(--cf-thank-you-w) font-light text-cf-cream leading-snug">
+        <p className="text-(length:--cf-text-thank-you-sub) max-w-(--cf-thank-you-w) font-thin text-cf-cream leading-snug">
           Your submission has been received successfully
         </p>
         <p className="text-(length:--cf-text-lg) max-w-(--cf-thank-you-body-w) font-light text-cf-text-primary leading-body">

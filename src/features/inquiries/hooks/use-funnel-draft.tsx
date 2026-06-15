@@ -10,7 +10,6 @@ import {
   use,
   useEffect,
   useReducer,
-  useSyncExternalStore,
 } from "react";
 
 export type FunnelView = "landing" | "onboarding" | "thank-you";
@@ -25,7 +24,6 @@ interface FunnelDraft {
     step?: number,
     direction?: "nav-back" | "nav-forward"
   ) => void;
-  isHydrated: boolean;
   selectedCategoryIds: string[];
   setAnswer: (questionId: string, value: string) => void;
   setAssetDescription: Dispatch<SetStateAction<string>>;
@@ -93,7 +91,12 @@ function loadPersistedState(): FunnelDraftState {
 
 function persistState(state: FunnelDraftState) {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // Thank-you means the inquiry was submitted: drop the saved draft (incl.
+    // contact PII) so a returning visitor starts fresh, not on a stale flow.
+    if (state.view === "thank-you") {
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
     const { files: _files, ...persistable } = state;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(persistable));
   } catch {
@@ -103,26 +106,19 @@ function persistState(state: FunnelDraftState) {
 
 const FunnelDraftContext = createContext<FunnelDraft | null>(null);
 
-const isClient = () => true;
-const isServer = () => false;
-const noopSubscribe = () => () => {
-  // noop
-};
-
 export function FunnelDraftProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(
     funnelDraftReducer,
     initialFunnelDraftState
   );
 
-  const isHydrated = useSyncExternalStore(noopSubscribe, isClient, isServer);
-
   useEffect(() => {
     dispatch({ type: "hydrate", state: loadPersistedState() });
   }, []);
 
   useEffect(() => {
-    persistState(state);
+    const handle = setTimeout(() => persistState(state), 150);
+    return () => clearTimeout(handle);
   }, [state]);
 
   function setAnswer(questionId: string, value: string) {
@@ -151,7 +147,6 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
         whatsapp: state.whatsapp,
         view: state.view,
         step: state.step,
-        isHydrated,
         goTo,
         setAnswer,
         setAssetDescription: (value) =>

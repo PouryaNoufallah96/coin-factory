@@ -3,7 +3,7 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { type ChangeEvent, type ReactNode, useEffect, useRef } from "react";
+import { type ChangeEvent, type ReactNode, useRef } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +34,13 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".pdf": "PDF",
 };
 
-export function LandingPage({ children }: { children: ReactNode }) {
+export function LandingPage({
+  categories,
+  children,
+}: {
+  categories: PublicCategory[];
+  children: ReactNode;
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     assetDescription,
@@ -43,6 +49,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
     selectedCategoryIds,
     setAssetDescription,
     setFiles,
+    setSelectedCategoryIds,
   } = useFunnelDraft();
 
   const searchActive = assetDescription.trim().length > 0 || files.length > 0;
@@ -78,6 +85,22 @@ export function LandingPage({ children }: { children: ReactNode }) {
     setFiles((current) =>
       current.filter((_, itemIndex) => itemIndex !== index)
     );
+  }
+
+  function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    const { value } = event.target;
+    setAssetDescription(value);
+    // Editing the description by hand can drop a label a chip added: keep the
+    // selected chips in sync with the text instead of mirroring it in an effect.
+    setSelectedCategoryIds((currentIds) =>
+      pruneSelectedCategoryIds(currentIds, value, categories)
+    );
+
+    const textarea = event.target;
+    textarea.style.height = "auto";
+    const capped = Math.min(textarea.scrollHeight, 96);
+    textarea.style.height = `${capped}px`;
+    textarea.style.overflowY = textarea.scrollHeight > 96 ? "auto" : "hidden";
   }
 
   function continueToWizard(event: React.SubmitEvent<HTMLFormElement>) {
@@ -137,14 +160,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 <textarea
                   aria-label="Asset description"
                   className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
-                  onChange={(e) => {
-                    setAssetDescription(e.target.value);
-                    e.target.style.height = "auto";
-                    const capped = Math.min(e.target.scrollHeight, 96);
-                    e.target.style.height = `${capped}px`;
-                    e.target.style.overflowY =
-                      e.target.scrollHeight > 96 ? "auto" : "hidden";
-                  }}
+                  onChange={onDescriptionChange}
                   placeholder={SEARCH_PLACEHOLDER}
                   rows={1}
                   style={{
@@ -239,22 +255,8 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const {
-    assetDescription,
-    selectedCategoryIds,
-    setSelectedCategoryIds,
-    setAssetDescription,
-  } = useFunnelDraft();
-
-  useEffect(() => {
-    const textParts = assetDescription.split(",").map((p) => p.trim());
-    setSelectedCategoryIds((currentIds) =>
-      currentIds.filter((id) => {
-        const category = categories.find((c) => c.id === id);
-        return category ? textParts.includes(category.label) : true;
-      })
-    );
-  }, [assetDescription, categories, setSelectedCategoryIds]);
+  const { selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
+    useFunnelDraft();
 
   function toggleCategory(category: PublicCategory) {
     const isSelected = selectedCategoryIds.includes(category.id);
@@ -315,6 +317,18 @@ export function LandingCategoryChips({
       </div>
     </div>
   );
+}
+
+function pruneSelectedCategoryIds(
+  currentIds: string[],
+  text: string,
+  categories: PublicCategory[]
+): string[] {
+  const textParts = text.split(",").map((part) => part.trim());
+  return currentIds.filter((id) => {
+    const category = categories.find((c) => c.id === id);
+    return category ? textParts.includes(category.label) : true;
+  });
 }
 
 function removeLabelFromText(text: string, label: string): string {

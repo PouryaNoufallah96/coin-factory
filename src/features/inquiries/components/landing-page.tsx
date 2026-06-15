@@ -153,7 +153,6 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   aria-label="Asset description"
                   className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
                   onBlur={() => setInputFocused(false)}
-                  onFocus={() => setInputFocused(true)}
                   onChange={(e) => {
                     setAssetDescription(e.target.value);
                     e.target.style.height = "auto";
@@ -162,6 +161,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     e.target.style.overflowY =
                       e.target.scrollHeight > 96 ? "auto" : "hidden";
                   }}
+                  onFocus={() => setInputFocused(true)}
                   placeholder={SEARCH_PLACEHOLDER}
                   rows={1}
                   style={{

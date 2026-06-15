@@ -3,7 +3,7 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { type ChangeEvent, type ReactNode, useRef } from "react";
+import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +36,7 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
 
 export function LandingPage({ children }: { children: ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [inputFocused, setInputFocused] = useState(false);
   const {
     assetDescription,
     files,
@@ -115,8 +116,19 @@ export function LandingPage({ children }: { children: ReactNode }) {
               className={cn(
                 files.length > 0
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
-                  : "min-h-[calc(var(--cf-search-h))] px-6 py-3"
+                  : "px-6 py-3"
               )}
+              style={
+                files.length === 0
+                  ? {
+                      minHeight: inputFocused
+                        ? "calc(var(--cf-search-h) * 1.2)"
+                        : "var(--cf-search-h)",
+                      transition:
+                        "min-height 300ms cubic-bezier(0.2,0,0,1), border-radius 300ms cubic-bezier(0.2,0,0,1)",
+                    }
+                  : undefined
+              }
             >
               <FileCardPanel files={files} onRemove={removeFile} />
               <div className="flex min-h-10 w-full items-center gap-4">
@@ -140,6 +152,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 <textarea
                   aria-label="Asset description"
                   className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
+                  onBlur={() => setInputFocused(false)}
+                  onFocus={() => setInputFocused(true)}
                   onChange={(e) => {
                     setAssetDescription(e.target.value);
                     e.target.style.height = "auto";

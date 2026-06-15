@@ -3,7 +3,13 @@
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { type ReactNode, Suspense, useState } from "react";
+import {
+  type PointerEvent,
+  type ReactNode,
+  Suspense,
+  useRef,
+  useState,
+} from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { FunnelFooter } from "@/features/inquiries/components/funnel-footer";
 import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
@@ -30,9 +36,29 @@ const FUNNEL_MENU_ITEMS = [
 
 export function FunnelShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLElement>(null);
+
+  function closeMenuFromOutside(event: PointerEvent<HTMLDivElement>) {
+    if (!(menuOpen && event.target instanceof Node)) {
+      return;
+    }
+
+    if (
+      menuButtonRef.current?.contains(event.target) ||
+      menuPanelRef.current?.contains(event.target)
+    ) {
+      return;
+    }
+
+    setMenuOpen(false);
+  }
 
   return (
-    <div className="relative isolate flex flex-col overflow-hidden text-cf-text-primary">
+    <div
+      className="relative isolate flex flex-col overflow-hidden text-cf-text-primary"
+      onPointerDownCapture={closeMenuFromOutside}
+    >
       <Suspense fallback={null}>
         <FunnelSpotlights />
       </Suspense>
@@ -46,6 +72,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
             menuOpen && "bg-[#23283266]"
           )}
           onClick={() => setMenuOpen((open) => !open)}
+          ref={menuButtonRef}
           type="button"
         >
           <Menu aria-hidden="true" className="size-7" />
@@ -60,6 +87,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
             ? "pointer-events-auto translate-y-0 scale-50 opacity-100"
             : "pointer-events-none -translate-y-2 scale-[0.98] opacity-0"
         )}
+        ref={menuPanelRef}
       >
         {FUNNEL_MENU_ITEMS.map((item, index) => (
           <Link

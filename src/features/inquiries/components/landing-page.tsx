@@ -142,11 +142,16 @@ export function LandingPage({ children }: { children: ReactNode }) {
                     e.target.style.height = "auto";
                     const capped = Math.min(e.target.scrollHeight, 96);
                     e.target.style.height = `${capped}px`;
-                    e.target.style.overflowY = e.target.scrollHeight > 96 ? "auto" : "hidden";
+                    e.target.style.overflowY =
+                      e.target.scrollHeight > 96 ? "auto" : "hidden";
                   }}
                   placeholder={SEARCH_PLACEHOLDER}
                   rows={1}
-                  style={{ fontSize: "16px", overflowY: "hidden", maxHeight: "96px" }}
+                  style={{
+                    fontSize: "16px",
+                    overflowY: "hidden",
+                    maxHeight: "96px",
+                  }}
                   value={assetDescription}
                 />
                 <button

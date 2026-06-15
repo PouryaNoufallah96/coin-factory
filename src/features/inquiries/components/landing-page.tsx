@@ -1,24 +1,12 @@
 "use client";
 
-import { CircleX, FileText, Plus, Target } from "lucide-react";
-import type { Route } from "next";
-import { useRouter } from "next/navigation";
+import { CircleX, FileText, Plus } from "lucide-react";
+import Image from "next/image";
 import type React from "react";
-import {
-  addTransitionType,
-  type ChangeEvent,
-  createContext,
-  type ReactNode,
-  startTransition,
-  use,
-  useRef,
-  useState,
-} from "react";
-import { FunnelAlert } from "@/components/common/funnel-alert";
+import { type ChangeEvent, type ReactNode, useEffect, useRef } from "react";
+import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import type { PublicCategory } from "@/features/categories/schemas/category";
 import {
   ALLOWED_DOCUMENT_MIME_TYPES,
@@ -46,17 +34,12 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".pdf": "PDF",
 };
 
-const LandingAlertContext = createContext<
-  ((message: string | null) => void) | null
->(null);
-
 export function LandingPage({ children }: { children: ReactNode }) {
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [error, setError] = useState<string | null>(null);
   const {
     assetDescription,
     files,
+    goTo,
     selectedCategoryIds,
     setAssetDescription,
     setFiles,
@@ -74,22 +57,21 @@ export function LandingPage({ children }: { children: ReactNode }) {
     const nextFiles = [...files];
     for (const file of pickedFiles) {
       if (nextFiles.length >= MAX_FILES) {
-        setError(`Attach up to ${MAX_FILES} documents.`);
+        funnelAlert(`Attach up to ${MAX_FILES} documents.`);
         return;
       }
       if (!isAllowedDocument(file)) {
-        setError(`${file.name} is not a PDF or Word document.`);
+        funnelAlert(`${file.name} is not a PDF or Word document.`);
         return;
       }
       if (file.size > MAX_FILE_SIZE_BYTES) {
-        setError(`${file.name} is larger than 5 MB.`);
+        funnelAlert(`${file.name} is larger than 5 MB.`);
         return;
       }
       nextFiles.push(file);
     }
 
     setFiles(nextFiles);
-    setError(null);
   }
 
   function removeFile(index: number) {
@@ -107,87 +89,105 @@ export function LandingPage({ children }: { children: ReactNode }) {
         files,
       })
     ) {
-      setError(INTAKE_SIGNAL_MESSAGE);
+      funnelAlert(INTAKE_SIGNAL_MESSAGE);
       return;
     }
-    setError(null);
-    startTransition(() => {
-      addTransitionType("nav-forward");
-      router.push("/onboarding/1" as Route);
-    });
+    goTo("onboarding", 1, "nav-forward");
   }
 
   return (
-    <LandingAlertContext.Provider value={setError}>
-      <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
-        <div className="flex w-full flex-col items-center gap-10 sm:gap-14">
-          {error ? <FunnelAlert message={error} /> : null}
-          <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
-            <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
-              {HERO_SUBLINE}
-            </p>
-            <h1 className="text-(length:--cf-text-hero) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
-              {HERO_WORD}
-            </h1>
-          </div>
-          <div className="flex w-full flex-col items-center gap-8">
-            <form className="cf-search-container" onSubmit={continueToWizard}>
-              <InputSurface
-                active={searchActive}
-                className={cn(
-                  "flex w-full flex-col justify-center text-cf-cream transition-[border-radius,padding] duration-(--cf-dur-content) ease-(--cf-ease)",
-                  files.length > 0
-                    ? "min-h-(--cf-search-panel-min-h) gap-6 rounded-(--cf-radius-panel) p-6"
-                    : "min-h-(--cf-search-h) py-5 pr-5 pl-6"
-                )}
-              >
-                <FileCardPanel files={files} onRemove={removeFile} />
-                <div className="flex min-h-10 w-full items-center gap-4">
-                  <button
-                    aria-label="Attach PDF or Word document"
-                    className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10"
-                    onClick={() => fileInputRef.current?.click()}
-                    type="button"
-                  >
-                    <Plus aria-hidden="true" className="size-4" />
-                  </button>
-                  <input
-                    accept={DOCUMENT_PICKER_ACCEPT}
-                    aria-label="Attach PDF or Word document"
-                    className="hidden"
-                    multiple
-                    onChange={addFiles}
-                    ref={fileInputRef}
-                    type="file"
-                  />
-                  <Input
-                    aria-label="Asset description"
-                    className="text-(length:--cf-text-base) h-10 border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
-                    onValueChange={(value) => {
-                      setAssetDescription(value);
-                      if (error) {
-                        setError(null);
-                      }
-                    }}
-                    placeholder={SEARCH_PLACEHOLDER}
-                    value={assetDescription}
-                  />
-                  <Button
-                    aria-label="Continue"
-                    className="size-(--cf-search-button-size) shrink-0 rounded-full bg-cf-cream text-cf-charcoal-900 shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream-bright active:translate-y-0 active:scale-[0.97]"
-                    size="icon"
-                    type="submit"
-                  >
-                    <Target aria-hidden="true" className="size-5" />
-                  </Button>
-                </div>
-              </InputSurface>
-            </form>
-            {children}
-          </div>
+    <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
+      <div className="sm:14 flex w-full flex-col items-center gap-20">
+        <div className="cf-content-container flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col items-center gap-(--cf-hero-stack-gap) text-center">
+          <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
+            {HERO_SUBLINE}
+          </p>
+          <h1 className="text-(length:--cf-text-hero) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
+            {HERO_WORD}
+          </h1>
         </div>
-      </section>
-    </LandingAlertContext.Provider>
+        <div className="flex w-full animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] flex-col items-center gap-8">
+          <form className="cf-search-container" onSubmit={continueToWizard}>
+            <InputSurface
+              className={cn(
+                files.length > 0
+                  ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
+                  : "min-h-[calc(var(--cf-search-h))] px-6 py-3"
+              )}
+            >
+              <FileCardPanel files={files} onRemove={removeFile} />
+              <div className="flex min-h-10 w-full items-center gap-4">
+                <button
+                  aria-label="Attach PDF or Word document"
+                  className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95"
+                  onClick={() => fileInputRef.current?.click()}
+                  type="button"
+                >
+                  <Plus aria-hidden="true" className="size-5" />
+                </button>
+                <input
+                  accept={DOCUMENT_PICKER_ACCEPT}
+                  aria-label="Attach PDF or Word document"
+                  className="hidden"
+                  multiple
+                  onChange={addFiles}
+                  ref={fileInputRef}
+                  type="file"
+                />
+                <textarea
+                  aria-label="Asset description"
+                  className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
+                  onChange={(e) => {
+                    setAssetDescription(e.target.value);
+                    e.target.style.height = "auto";
+                    const capped = Math.min(e.target.scrollHeight, 96);
+                    e.target.style.height = `${capped}px`;
+                    e.target.style.overflowY =
+                      e.target.scrollHeight > 96 ? "auto" : "hidden";
+                  }}
+                  placeholder={SEARCH_PLACEHOLDER}
+                  rows={1}
+                  style={{
+                    fontSize: "16px",
+                    overflowY: "hidden",
+                    maxHeight: "96px",
+                  }}
+                  value={assetDescription}
+                />
+                <button
+                  aria-label="Continue"
+                  className="shrink-0"
+                  disabled={!searchActive}
+                  type="submit"
+                >
+                  <Image
+                    alt=""
+                    aria-hidden="true"
+                    className={cn(
+                      "size-(--cf-search-button-size) transition-[transform,filter,opacity] duration-(--cf-dur-content) ease-(--cf-ease)",
+                      searchActive &&
+                        "[button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
+                    )}
+                    height={24}
+                    src="/icons/Subtract.svg"
+                    style={
+                      searchActive
+                        ? {
+                            filter:
+                              "brightness(0) saturate(100%) invert(98%) sepia(12%) saturate(400%) hue-rotate(340deg) brightness(102%)",
+                          }
+                        : {}
+                    }
+                    width={24}
+                  />
+                </button>
+              </div>
+            </InputSurface>
+          </form>
+          {children}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -206,7 +206,7 @@ function FileCardPanel({
     <div className="flex w-full flex-wrap gap-5">
       {files.map((file, index) => (
         <div
-          className="relative flex h-(--cf-file-card-h) w-full min-w-0 items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
+          className="relative flex h-(--cf-file-card-h) w-full min-w-0 animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both] items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
           key={`${file.name}-${file.lastModified}-${file.size}`}
         >
           <div className="flex size-(--cf-file-card-tile) shrink-0 items-center justify-center rounded-(--cf-radius-segment) bg-cf-cream text-cf-text-on-accent">
@@ -239,33 +239,58 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const setLandingAlert = useLandingAlert();
-  const { selectedCategoryIds, setSelectedCategoryIds } = useFunnelDraft();
+  const {
+    assetDescription,
+    selectedCategoryIds,
+    setSelectedCategoryIds,
+    setAssetDescription,
+  } = useFunnelDraft();
+
+  useEffect(() => {
+    const textParts = assetDescription.split(",").map((p) => p.trim());
+    setSelectedCategoryIds((currentIds) =>
+      currentIds.filter((id) => {
+        const category = categories.find((c) => c.id === id);
+        return category ? textParts.includes(category.label) : true;
+      })
+    );
+  }, [assetDescription, categories, setSelectedCategoryIds]);
 
   function toggleCategory(category: PublicCategory) {
+    const isSelected = selectedCategoryIds.includes(category.id);
+
     if (
-      selectedCategoryIds.length >= MAX_CATEGORIES_PER_INQUIRY &&
-      !selectedCategoryIds.includes(category.id)
+      !isSelected &&
+      selectedCategoryIds.length >= MAX_CATEGORIES_PER_INQUIRY
     ) {
-      setLandingAlert(`Pick up to ${MAX_CATEGORIES_PER_INQUIRY} categories.`);
+      funnelAlert(`Pick up to ${MAX_CATEGORIES_PER_INQUIRY} categories.`);
       return;
     }
 
     setSelectedCategoryIds((currentIds) =>
       nextSelectedCategoryIds(currentIds, category.id)
     );
-    setLandingAlert(null);
+
+    setAssetDescription((current) => {
+      if (isSelected) {
+        return removeLabelFromText(current, category.label);
+      }
+      const trimmed = current.trim();
+      return trimmed.length > 0
+        ? `${trimmed}, ${category.label}`
+        : category.label;
+    });
   }
 
   return (
-    <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+    <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overscroll-x-contain pb-1 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
       <div className="flex w-max min-w-full flex-nowrap justify-center gap-4 px-1">
         {categories.map((category) => {
           const selected = selectedCategoryIds.includes(category.id);
           return (
             <Badge
               className={cn(
-                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color] duration-(--cf-dur-content) ease-(--cf-ease)",
+                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04]",
                 selected
                   ? "border-transparent bg-cf-chip-bg-active text-cf-text-on-accent"
                   : "border-cf-border-muted bg-cf-chip-bg text-cf-text-on-accent hover:border-cf-border-active"
@@ -273,7 +298,9 @@ export function LandingCategoryChips({
               key={category.id}
               render={
                 <button
-                  aria-label={`${selected ? "Remove" : "Select"} ${category.label}`}
+                  aria-label={`${selected ? "Remove" : "Select"} ${
+                    category.label
+                  }`}
                   aria-pressed={selected}
                   onClick={() => toggleCategory(category)}
                   type="button"
@@ -290,12 +317,12 @@ export function LandingCategoryChips({
   );
 }
 
-function useLandingAlert() {
-  const setLandingAlert = use(LandingAlertContext);
-  if (!setLandingAlert) {
-    throw new Error("useLandingAlert must be used inside LandingPage");
-  }
-  return setLandingAlert;
+function removeLabelFromText(text: string, label: string): string {
+  const parts = text
+    .split(",")
+    .map((p) => p.trim())
+    .filter((p) => p !== label);
+  return parts.join(", ");
 }
 
 function nextSelectedCategoryIds(

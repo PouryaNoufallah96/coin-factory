@@ -1,50 +1,52 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import {
+  type FunnelView,
+  useFunnelDraft,
+} from "@/features/inquiries/hooks/use-funnel-draft";
 
-import { cn } from "@/lib/utils";
-import { FunnelSpotlight } from "./funnel-spotlight";
+type FunnelSpotlightVariant = "landing" | "onboarding" | "thank-you";
 
-type FunnelSpotlightVariant = "landing" | "thank-you" | "wizard";
-
-const BACKDROP_CLASS_BY_VARIANT = {
-  landing: "cf-funnel-backdrop--landing",
-  wizard: "cf-funnel-backdrop--wizard",
-  "thank-you": "cf-funnel-backdrop--thank-you",
-} as const satisfies Record<FunnelSpotlightVariant, string>;
-
-const SPOTLIGHT_CLASS_BY_VARIANT = {
-  landing: ["cf-spotlight--landing"],
-  wizard: ["cf-spotlight--wizard"],
-  "thank-you": [
-    "cf-spotlight--thank-you-top",
-    "cf-spotlight--thank-you-bottom",
-  ],
-} as const satisfies Record<FunnelSpotlightVariant, readonly string[]>;
-
-function resolveSpotlightVariant(pathname: string): FunnelSpotlightVariant {
-  if (pathname.startsWith("/onboarding")) {
-    return "wizard";
+function resolveVariant(view: FunnelView): FunnelSpotlightVariant {
+  if (view === "onboarding") {
+    return "onboarding";
   }
-
-  if (pathname === "/thank-you") {
+  if (view === "thank-you") {
     return "thank-you";
   }
-
   return "landing";
 }
 
+const BACKGROUNDS: Record<FunnelSpotlightVariant, string> = {
+  landing: "url('/brand/landing-back.svg')",
+  onboarding: "url('/brand/q-back.svg')",
+  "thank-you": "url('/brand/thankyou-back.svg')",
+};
+
+const LAYER =
+  "absolute inset-0 transition-opacity duration-900 ease-[cubic-bezier(0.2,0,0,1)] pointer-events-none bg-cover bg-center bg-no-repeat";
+
+const VARIANTS: FunnelSpotlightVariant[] = [
+  "landing",
+  "onboarding",
+  "thank-you",
+];
+
 export function FunnelSpotlights() {
-  const pathname = usePathname();
-  const variant = resolveSpotlightVariant(pathname);
+  const { view } = useFunnelDraft();
+  const active = resolveVariant(view);
 
   return (
-    <div
-      aria-hidden="true"
-      className={cn("cf-funnel-backdrop", BACKDROP_CLASS_BY_VARIANT[variant])}
-    >
-      {SPOTLIGHT_CLASS_BY_VARIANT[variant].map((spotlightClass) => (
-        <FunnelSpotlight className={spotlightClass} key={spotlightClass} />
+    <div aria-hidden="true" className="cf-funnel-backdrop">
+      {VARIANTS.map((variant) => (
+        <div
+          className={LAYER}
+          key={variant}
+          style={{
+            opacity: active === variant ? 1 : 0,
+            backgroundImage: BACKGROUNDS[variant],
+          }}
+        />
       ))}
     </div>
   );

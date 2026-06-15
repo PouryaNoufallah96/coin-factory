@@ -1,19 +1,31 @@
 "use client";
 
 import {
+  addTransitionType,
   createContext,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
+  startTransition,
   use,
+  useEffect,
   useReducer,
+  useSyncExternalStore,
 } from "react";
+
+export type FunnelView = "landing" | "onboarding" | "thank-you";
 
 interface FunnelDraft {
   answers: Record<string, string>;
   assetDescription: string;
   email: string;
   files: File[];
+  goTo: (
+    view: FunnelView,
+    step?: number,
+    direction?: "nav-back" | "nav-forward"
+  ) => void;
+  isHydrated: boolean;
   selectedCategoryIds: string[];
   setAnswer: (questionId: string, value: string) => void;
   setAssetDescription: Dispatch<SetStateAction<string>>;
@@ -21,6 +33,8 @@ interface FunnelDraft {
   setFiles: Dispatch<SetStateAction<File[]>>;
   setSelectedCategoryIds: Dispatch<SetStateAction<string[]>>;
   setWhatsapp: Dispatch<SetStateAction<string>>;
+  step: number;
+  view: FunnelView;
   whatsapp: string;
 }
 
@@ -30,6 +44,8 @@ interface FunnelDraftState {
   email: string;
   files: File[];
   selectedCategoryIds: string[];
+  step: number;
+  view: FunnelView;
   whatsapp: string;
 }
 
@@ -39,7 +55,13 @@ type FunnelDraftAction =
   | { type: "setEmail"; value: SetStateAction<string> }
   | { type: "setFiles"; value: SetStateAction<File[]> }
   | { type: "setSelectedCategoryIds"; value: SetStateAction<string[]> }
-  | { type: "setWhatsapp"; value: SetStateAction<string> };
+  | { type: "setWhatsapp"; value: SetStateAction<string> }
+  | { type: "navigate"; view: FunnelView; step: number }
+  | { type: "hydrate"; state: FunnelDraftState };
+
+const STORAGE_KEY = "cf-funnel-draft";
+
+type PersistedState = Omit<FunnelDraftState, "files">;
 
 const initialFunnelDraftState: FunnelDraftState = {
   answers: {},
@@ -48,9 +70,44 @@ const initialFunnelDraftState: FunnelDraftState = {
   files: [],
   selectedCategoryIds: [],
   whatsapp: "",
+  view: "landing",
+  step: 1,
 };
 
+function loadPersistedState(): FunnelDraftState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return initialFunnelDraftState;
+    }
+    const parsed: Partial<PersistedState> = JSON.parse(raw);
+    return {
+      ...initialFunnelDraftState,
+      ...parsed,
+      files: [],
+    };
+  } catch {
+    return initialFunnelDraftState;
+  }
+}
+
+function persistState(state: FunnelDraftState) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { files: _files, ...persistable } = state;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(persistable));
+  } catch {
+    // storage unavailable — silently skip
+  }
+}
+
 const FunnelDraftContext = createContext<FunnelDraft | null>(null);
+
+const isClient = () => true;
+const isServer = () => false;
+const noopSubscribe = () => () => {
+  // noop
+};
 
 export function FunnelDraftProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(
@@ -58,8 +115,29 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
     initialFunnelDraftState
   );
 
+  const isHydrated = useSyncExternalStore(noopSubscribe, isClient, isServer);
+
+  useEffect(() => {
+    dispatch({ type: "hydrate", state: loadPersistedState() });
+  }, []);
+
+  useEffect(() => {
+    persistState(state);
+  }, [state]);
+
   function setAnswer(questionId: string, value: string) {
     dispatch({ questionId, type: "setAnswer", value });
+  }
+
+  function goTo(
+    view: FunnelView,
+    step = 1,
+    direction: "nav-back" | "nav-forward" = "nav-forward"
+  ) {
+    startTransition(() => {
+      addTransitionType(direction);
+      dispatch({ type: "navigate", view, step });
+    });
   }
 
   return (
@@ -71,6 +149,10 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
         files: state.files,
         selectedCategoryIds: state.selectedCategoryIds,
         whatsapp: state.whatsapp,
+        view: state.view,
+        step: state.step,
+        isHydrated,
+        goTo,
         setAnswer,
         setAssetDescription: (value) =>
           dispatch({ type: "setAssetDescription", value }),
@@ -121,6 +203,10 @@ function funnelDraftReducer(
         ...state,
         whatsapp: resolveStateAction(state.whatsapp, action.value),
       };
+    case "navigate":
+      return { ...state, view: action.view, step: action.step };
+    case "hydrate":
+      return action.state;
     default:
       return state;
   }

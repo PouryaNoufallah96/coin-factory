@@ -3,19 +3,10 @@
 "use client";
 
 import { X } from "lucide-react";
-import type { Route } from "next";
-import { useRouter } from "next/navigation";
 import type React from "react";
-import {
-  addTransitionType,
-  startTransition,
-  useId,
-  useState,
-  ViewTransition,
-} from "react";
-import { FunnelAlert } from "@/components/common/funnel-alert";
+import { useId, ViewTransition } from "react";
+import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
-import { inputSurfaceVariants } from "@/components/common/input-surface-variants";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -81,8 +72,6 @@ interface OnboardingWizardProps {
 }
 
 export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
-  const router = useRouter();
-  const [alert, setAlert] = useState<string | null>(null);
   const submit = useAction(createInquiry);
   const question = questions[step - 1];
   const total = questions.length;
@@ -92,19 +81,13 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     assetDescription,
     email,
     files,
+    goTo,
     selectedCategoryIds,
     setAnswer,
     setEmail,
     setWhatsapp,
     whatsapp,
   } = useFunnelDraft();
-
-  function goTo(href: Route, direction: "nav-back" | "nav-forward") {
-    startTransition(() => {
-      addTransitionType(direction);
-      router.push(href);
-    });
-  }
 
   function validateQuestion(currentQuestion: PublicQuestion) {
     const value = answers[currentQuestion.id] ?? "";
@@ -153,17 +136,15 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   function onBack() {
-    setAlert(null);
     if (step === 1) {
-      goTo("/" as Route, "nav-back");
+      goTo("landing", 1, "nav-back");
       return;
     }
-    goTo(`/onboarding/${step - 1}` as Route, "nav-back");
+    goTo("onboarding", step - 1, "nav-back");
   }
 
   function onNext() {
-    setAlert(null);
-    goTo(`/onboarding/${step + 1}` as Route, "nav-forward");
+    goTo("onboarding", step + 1, "nav-forward");
   }
 
   async function onSubmit(event: React.SubmitEvent<HTMLFormElement>) {
@@ -179,7 +160,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
 
     const validationError = validateSubmission();
     if (validationError) {
-      setAlert(validationError);
+      funnelAlert(validationError);
       return;
     }
 
@@ -194,21 +175,19 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     });
 
     if (result.status === "error") {
-      setAlert(result.errorMessage ?? "We could not submit your inquiry.");
+      funnelAlert(result.errorMessage ?? "We could not submit your inquiry.");
       return;
     }
 
-    setAlert(null);
-    goTo("/thank-you" as Route, "nav-forward");
+    goTo("thank-you", 1, "nav-forward");
   }
 
   return (
-    <section className="relative flex flex-1 justify-center px-(--cf-page-x) py-6">
-      {alert ? (
-        <FunnelAlert message={alert} onDismiss={() => setAlert(null)} />
-      ) : null}
+    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-[130px]">
       <form
         className="cf-content-container flex w-full flex-col items-center text-center"
+        id="wizard-form"
+        noValidate
         onSubmit={onSubmit}
       >
         <ViewTransition
@@ -236,7 +215,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                 <RadioQuestion
                   onChange={(value) => {
                     setAnswer(question.id, value);
-                    setAlert(null);
                   }}
                   options={question.options ?? []}
                   questionId={question.id}
@@ -251,7 +229,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="Link"
                   onChange={(value) => {
                     setAnswer(question.id, value);
-                    setAlert(null);
                   }}
                   placeholder="Link"
                   type="url"
@@ -266,7 +243,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="Email"
                   onChange={(value) => {
                     setEmail(value);
-                    setAlert(null);
                   }}
                   placeholder="Email"
                   type="email"
@@ -276,7 +252,6 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
                   label="WhatsApp phone number"
                   onChange={(value) => {
                     setWhatsapp(value);
-                    setAlert(null);
                   }}
                   placeholder="WhatsApp Phone number"
                   type="tel"
@@ -286,18 +261,18 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
             ) : null}
           </div>
         </ViewTransition>
+      </form>
 
-        <div aria-hidden="true" className="h-12 w-full shrink-0" />
-
-        <ViewTransition
-          default="none"
-          key={`wizard-actions-${step}`}
-          name="wizard-actions"
-          share={WIZARD_ACTIONS_TRANSITION}
-        >
-          <div className="cf-field-container mb-(--cf-wizard-actions-bottom) flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <ViewTransition
+        default="none"
+        key={`wizard-actions-${step}`}
+        name="wizard-actions"
+        share={WIZARD_ACTIONS_TRANSITION}
+      >
+        <div className="fixed right-0 bottom-12.5 left-0 z-20 px-(--cf-page-x)">
+          <div className="cf-field-container flex w-full flex-row items-center justify-between">
             <Button
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-full rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97] sm:w-(--cf-cta-w)"
+              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
               onClick={onBack}
               type="button"
               variant="outline"
@@ -306,14 +281,15 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
             </Button>
             <Button
               aria-busy={submit.isPending}
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-full rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] sm:w-(--cf-cta-w)"
+              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97]"
+              form="wizard-form"
               type="submit"
             >
               {isLastStep ? "Submit" : "Next"}
             </Button>
           </div>
-        </ViewTransition>
-      </form>
+        </div>
+      </ViewTransition>
     </section>
   );
 }
@@ -372,13 +348,12 @@ function RadioQuestion({
           return (
             <FieldLabel
               className={cn(
-                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color] duration-(--cf-dur-content) ease-(--cf-ease)",
+                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 rounded-(--cf-radius-row) border px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015]",
                 selected
                   ? cn(
-                      inputSurfaceVariants({ active: true }),
                       "text-cf-cream-bright has-data-checked:border-cf-border-active has-data-checked:bg-cf-charcoal-900"
                     )
-                  : "rounded-(--cf-radius-row) border border-cf-border-muted bg-cf-surface-muted text-cf-text-primary hover:border-cf-border-active"
+                  : "border-cf-border-muted bg-cf-surface-muted text-cf-text-primary hover:border-cf-border-active"
               )}
               key={`${questionId}-${option}`}
             >
@@ -425,25 +400,26 @@ function FunnelTextField({
       </FieldLabel>
       <InputSurface
         active={active}
-        className="flex h-(--cf-search-h) items-center px-7"
+        className="flex h-(--cf-search-h) flex-row items-center px-7"
       >
         <Input
-          className="text-(length:--cf-text-lg) h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
+          className="h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
           id={id}
           onValueChange={onChange}
           placeholder={placeholder}
+          style={{ fontSize: "16px" }}
           type={type}
           value={value}
         />
         {active ? (
           <button
             aria-label={`Clear ${label}`}
-            className="-mr-2 ml-3 flex size-9 shrink-0 items-center justify-center rounded-full text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-text-primary"
+            className="-mr-2 ml-3 flex size-11 shrink-0 items-center justify-center rounded-full text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-text-primary"
             onClick={() => onChange("")}
             onMouseDown={(event) => event.preventDefault()}
             type="button"
           >
-            <X aria-hidden="true" className="size-3" />
+            <X aria-hidden="true" className="size-4" />
           </button>
         ) : null}
       </InputSurface>

@@ -1,6 +1,51 @@
 @import "tailwindcss";
 @import "shadcn/tailwind.css";
 
+@keyframes pulse-scale {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+@keyframes enter-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+    filter: blur(0.125rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes enter-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes enter-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 /* Kept so `dark:` utilities inside vendored shadcn components can never
    activate (no `.dark` class is ever rendered — this theme is dark-only
    by design). Without this line they would fall
@@ -114,7 +159,7 @@
   --cf-field-w: 32.5rem;
   --cf-search-w: 43.75rem;
   --cf-chip-row-w: 60rem;
-  --cf-thank-you-w: 53rem;
+  --cf-thank-you-w: 60rem;
   --cf-thank-you-body-w: 44rem;
 
   /* Radius — pills everywhere */
@@ -128,8 +173,8 @@
 
   /* Control sizes */
   --cf-row-h: 2.75rem;
-  --cf-search-h: 3.25rem;
-  --cf-search-button-size: 3rem;
+  --cf-search-h: 2rem;
+  --cf-search-button-size: 2rem;
   --cf-search-affordance-size: 2.5rem;
   --cf-search-panel-min-h: calc(
     var(--cf-file-card-h) +
@@ -137,7 +182,7 @@
     var(--cf-space-6)
   );
   --cf-cta-h: 2.25rem;
-  --cf-cta-w: 10rem;
+  --cf-cta-w: 8rem;
   --cf-touch: 2.25rem;
   --cf-radio-size: 1.25rem;
   --cf-radio-control-size: calc(var(--cf-radio-size) * 0.8);
@@ -154,9 +199,9 @@
   --cf-social-mark-size: 1.125rem;
   --cf-social-x-mark-w: 1rem;
   --cf-social-x-mark-h: 0.875rem;
-  --cf-stepper-gap: 0.75rem;
-  --cf-stepper-segment-w: 2.5rem;
-  --cf-stepper-segment-h: 0.5rem;
+  --cf-stepper-gap: 0.5rem;
+  --cf-stepper-segment-w: 2.4rem;
+  --cf-stepper-segment-h: 0.45rem;
   --cf-modal-max-h: calc(100dvh - var(--cf-space-7));
   --cf-dialog-max-w: calc(100% - var(--cf-space-5));
   --cf-drawer-handle-w: 6.25rem;
@@ -165,25 +210,15 @@
   --cf-glow-active: 0 0 12.5rem 0 rgb(255 250 237 / 0.24);
   --cf-glow-soft: 0 0 6.25rem 0 rgb(255 250 237 / 0.24);
   --cf-cta-shadow: 0 0 0.5rem 0 rgb(0 0 0 / 0.24);
-  --cf-hero-shadow:
-    0 0 0.25rem var(--cf-cream), 0 0.25rem 1rem rgb(255 250 237 / 0.6),
-    0 0 2rem rgb(255 250 237 / 0.35);
+  --cf-hero-shadow: 0 0 4px #fff2d1, 0 4px 16px #fffaed99;
   --cf-border-w: 0.0625rem;
-  --cf-canvas-gradient-landing: linear-gradient(
-    135deg,
-    var(--cf-canvas-start) 0%,
-    var(--cf-canvas-start) 74%,
-    color-mix(in srgb, var(--cf-canvas-start) 90%, var(--cf-canvas-end)) 100%
-  );
   --cf-canvas-gradient-funnel: linear-gradient(
     180deg,
     var(--cf-canvas-start) 0%,
     var(--cf-canvas-start) 68%,
     color-mix(in srgb, var(--cf-canvas-start) 88%, var(--cf-canvas-end)) 100%
   );
-  --cf-canvas-gradient: var(--cf-canvas-gradient-landing);
-
-  --cf-landing-content-top: 4.75rem;
+  --cf-landing-content-top: 4rem;
   --cf-hero-stack-gap: 1.25rem;
   --cf-wizard-step-question-gap: 2rem;
   --cf-wizard-question-options-gap: 3rem;
@@ -213,8 +248,8 @@
   --cf-vt-blur: 0.1875rem;
 
   /* Type scale (sizes; families come from next/font vars in layout.tsx) */
-  --cf-text-hero: 3.5rem;
-  --cf-text-hero-sub: 1.375rem;
+  --cf-text-hero: 3rem;
+  --cf-text-hero-sub: 1rem;
   --cf-text-question: 1.25rem;
   --cf-text-field-label: 1.125rem;
   --cf-text-lg: 0.875rem;
@@ -255,7 +290,7 @@
     --cf-row-h: 4.5rem;
     --cf-search-h: 5rem;
     --cf-cta-h: 3rem;
-    --cf-cta-w: 13.75rem;
+    --cf-cta-w: 10rem;
     --cf-touch: 3rem;
     --cf-radio-size: 2rem;
     --cf-logo-mark-w: 2.25rem;
@@ -269,8 +304,8 @@
     --cf-wizard-step-question-gap: 3rem;
     --cf-wizard-question-options-gap: 4.75rem;
     --cf-wizard-actions-bottom: 6rem;
-    --cf-thank-you-content-top: 18rem;
-    --cf-thank-you-stack-gap: 2rem;
+    --cf-thank-you-content-top: 15rem;
+    --cf-thank-you-stack-gap: 2.5rem;
     --cf-text-hero: 6rem;
     --cf-text-hero-sub: 2.25rem;
     --cf-text-question: 2rem;
@@ -574,13 +609,8 @@
     overflow: hidden;
     pointer-events: none;
     background-color: var(--cf-charcoal-900);
-    background-image: var(--cf-canvas-gradient-landing);
-    background-attachment: fixed;
-  }
-
-  .cf-funnel-backdrop--wizard,
-  .cf-funnel-backdrop--thank-you {
     background-image: var(--cf-canvas-gradient-funnel);
+    background-attachment: fixed;
   }
 
   .cf-spotlight {
@@ -592,11 +622,6 @@
     background-size: contain;
     transform-origin: center;
     will-change: transform;
-  }
-
-  .cf-spotlight--landing {
-    inset-block: -5rem -8rem;
-    background-image: url("/brand/funnel-light-landing.svg");
   }
 
   .cf-spotlight--wizard {
@@ -619,5 +644,12 @@
   .cf-spotlight--thank-you-bottom {
     inset-block-end: -24rem;
     transform: rotate(90deg);
+  }
+
+  .cf-search-input::placeholder {
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(90deg, #ffffff 0%, #282d36 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
   }
 }

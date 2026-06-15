@@ -1,8 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import { MaskIcon } from "@/components/common/mask-icon";
+import { useFunnelDraft } from "@/features/inquiries/hooks/use-funnel-draft";
 import { cn } from "@/lib/utils";
 
 const SOCIAL_LINKS = [
@@ -15,9 +14,9 @@ const SOCIAL_LINKS = [
 ];
 
 export function FunnelFooter() {
-  const pathname = usePathname();
+  const { view } = useFunnelDraft();
 
-  if (pathname !== "/") {
+  if (view !== "landing") {
     return null;
   }
 
@@ -50,7 +49,7 @@ export function FunnelFooter() {
           </a>
         ))}
       </nav>
-      <span className="text-(length:--cf-text-base) whitespace-nowrap font-legal text-cf-text-primary opacity-90">
+      <span className="text-(length:--cf-text-base) whitespace-nowrap font-legal text-[#232832] opacity-90">
         @ 2026 CoinFactory AG
       </span>
     </footer>

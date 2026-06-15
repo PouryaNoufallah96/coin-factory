@@ -35,7 +35,7 @@ email — ADR-0005) — the only public write path — plus two reads: `question
 (the wizard's active questions) and `categories.listActive` (the landing's business
 categories). `inquiries.create` takes the answers to the active questions + optional project
 link + email + WhatsApp number + optional picked categories + optional supporting documents
-(up to 2 files, 5MB each, PDF/Word only), and requires at least one of description, document,
+(up to 3 files, 5MB each, PDF/Word only), and requires at least one of description, document,
 or category. Risks and controls:
 
 - **Input validation** — every field zod-validated in the procedure (answers checked against
@@ -47,9 +47,9 @@ or category. Risks and controls:
   per-IP rate limit at the reverse proxy / `/rpc` route handler (before oRPC parses the body),
   `serverActions.bodySizeLimit` for the action path, post-parse quotas in oRPC middleware
   (RpcContext carries the request IP/headers), and a honeypot field on the wizard. All body
-  caps derive from **one shared byte budget (~12MB)** — proxy, `Content-Length` rejection,
+  caps derive from **one shared byte budget (~17MB)** — proxy, `Content-Length` rejection,
   action limit, and the RPC body plugin never drift apart.
-- **File uploads** — anonymous bytes are hostile by default. Enforce count/size caps (2 files,
+- **File uploads** — anonymous bytes are hostile by default. Enforce count/size caps (3 files,
   5MB each) and the allowlist (**PDF and Word only**) verified by magic-byte sniffing that
   proves document structure — OOXML WordprocessingML for `.docx`, a Word CFB stream for
   `.doc` — never extension, client MIME, or bare container headers. Objects live in

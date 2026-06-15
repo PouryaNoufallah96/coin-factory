@@ -20,8 +20,8 @@ export function InputSurface({
       style={{
         border: "1px solid transparent",
         background:
-          "linear-gradient(var(--color-cf-charcoal-900), var(--color-cf-charcoal-900)) padding-box, linear-gradient(90deg, #FFF2D1 0%, #28303F 100%) border-box",
-        boxShadow: "0px 0px 200px 0px #FFFAED3D",
+          "linear-gradient(var(--color-cf-charcoal-900), var(--color-cf-charcoal-900)) padding-box, linear-gradient(90deg, var(--color-cf-cream) 0%, var(--color-cf-charcoal-900) 100%) border-box",
+        boxShadow: "var(--cf-glow-active)",
       }}
       {...props}
     />

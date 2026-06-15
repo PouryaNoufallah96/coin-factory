@@ -1,7 +1,6 @@
-/// <reference types="react/canary" />
-
 "use client";
 
+import dynamic from "next/dynamic";
 import { ViewTransition } from "react";
 import type { PublicCategory } from "@/features/categories/schemas/category";
 import { FunnelPageTransition } from "@/features/inquiries/components/funnel-page-transition";
@@ -10,9 +9,16 @@ import {
   LandingPage,
 } from "@/features/inquiries/components/landing-page";
 import { OnboardingWizard } from "@/features/inquiries/components/onboarding-wizard";
-import { ThankYouPage } from "@/features/inquiries/components/thank-you-page";
 import { useFunnelDraft } from "@/features/inquiries/hooks/use-funnel-draft";
 import type { PublicQuestion } from "@/features/questions/schemas/question";
+
+// Reached only after a submit, so keep the thank-you screen and its
+// canvas-confetti dependency out of the landing's initial client bundle.
+const ThankYouPage = dynamic(() =>
+  import("@/features/inquiries/components/thank-you-page").then(
+    (mod) => mod.ThankYouPage
+  )
+);
 
 interface FunnelAppProps {
   categories: PublicCategory[];
@@ -20,11 +26,7 @@ interface FunnelAppProps {
 }
 
 export function FunnelApp({ categories, questions }: FunnelAppProps) {
-  const { view, step, isHydrated } = useFunnelDraft();
-
-  if (!isHydrated) {
-    return null;
-  }
+  const { view, step } = useFunnelDraft();
 
   if (view === "thank-you") {
     return (
@@ -34,17 +36,20 @@ export function FunnelApp({ categories, questions }: FunnelAppProps) {
     );
   }
 
-  if (view === "onboarding") {
+  // Clamp the persisted step: questions disabled/removed since the draft was
+  // saved can leave it out of range, which would render an undefined question.
+  if (view === "onboarding" && questions.length > 0) {
+    const safeStep = Math.min(Math.max(step, 1), questions.length);
     return (
       <FunnelPageTransition>
-        <OnboardingWizard questions={questions} step={step} />
+        <OnboardingWizard questions={questions} step={safeStep} />
       </FunnelPageTransition>
     );
   }
 
   return (
     <FunnelPageTransition>
-      <LandingPage>
+      <LandingPage categories={categories}>
         <ViewTransition default="none" enter="slide-up">
           <LandingCategoryChips categories={categories} />
         </ViewTransition>

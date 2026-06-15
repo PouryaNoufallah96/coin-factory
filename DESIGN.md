@@ -219,13 +219,15 @@ Respect `prefers-reduced-motion`.
 
 ## Screens
 
-| Route | Screen | Focal element |
+All screens are client view states within the single-page funnel at `/`.
+
+| View | Screen | Focal element |
 |---|---|---|
-| `/` | Landing | Hero search/upload pill + admin-managed business-category badges; social footer |
-| `/onboarding/1..4` | Question steps | One radio-row stack, 6-segment stepper, Back + Next |
-| `/onboarding/5` | Project link | Single pill TextField "Link"; optional empty value passes |
-| `/onboarding/6` | Contact | Email + WhatsApp fields; Back + Submit |
-| `/thank-you` | Confirmation | Halo "Thank You" headline; no CTA |
+| Landing | Landing | Hero search/upload pill + admin-managed business-category badges; social footer |
+| Wizard 1–4 | Question steps | One radio-row stack, 6-segment stepper, Back + Next |
+| Wizard 5 | Project link | Single pill TextField "Link"; optional empty value passes |
+| Wizard 6 | Contact | Email + WhatsApp fields; Back + Submit |
+| Thank-you | Confirmation | Halo "Thank You" headline; no CTA |
 
 Shared chrome everywhere: 96px header (logo lockup left, decorative hamburger right),
 charcoal gradient + cream spotlight canvas. Wizard CTAs stay enabled; Next moves freely,

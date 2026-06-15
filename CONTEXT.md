@@ -18,7 +18,7 @@ questions were active — it is not a fixed 6-column shape.
 _Avoid_: submission, application
 
 **Wizard / Onboarding funnel**:
-The question flow at `/onboarding/1..N` — renders the **active questions from the DB** in
+The question flow — the wizard steps within the single-page funnel at `/` — renders the **active questions from the DB** in
 sort order (6 seeded in v1), one per screen, segmented progress bar. Founders move with
 **Back / Next** and may navigate freely backward and forward to review or change answers
 (answers persist across steps). CTAs stay **enabled**; pressing Next/Submit on an unanswered

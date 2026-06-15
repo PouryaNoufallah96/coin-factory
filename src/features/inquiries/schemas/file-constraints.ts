@@ -1,7 +1,7 @@
 // Dependency-free on purpose: next.config.mts imports this module by
 // relative path, where the "@/" alias does not resolve.
 
-export const MAX_FILES = 2;
+export const MAX_FILES = 3;
 
 export const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
@@ -38,7 +38,7 @@ export const MAX_CATEGORIES_PER_INQUIRY = 20;
 // wrapped around the documents themselves.
 const FORM_OVERHEAD_BYTES = 2 * 1024 * 1024;
 
-// The single request-body budget (~12 MB, two 5 MB documents + overhead).
+// The single request-body budget (~17 MB, three 5 MB documents + overhead).
 // Every transport cap — server actions, /rpc, the reverse proxy — must read
 // this constant; a duplicated byte literal is a bug.
 export const MAX_REQUEST_BODY_BYTES =

@@ -65,8 +65,6 @@ services:
     build:
       <<: *app-build
       target: runner
-    profiles:
-      - app
     restart: unless-stopped
     depends_on:
       postgres:
@@ -74,6 +72,8 @@ services:
       minio:
         condition: service_healthy
       minio-init:
+        condition: service_completed_successfully
+      migrate:
         condition: service_completed_successfully
     environment: *app-environment
     ports:
@@ -97,8 +97,6 @@ services:
     build:
       <<: *app-build
       target: migrator
-    profiles:
-      - app
     depends_on:
       postgres:
         condition: service_healthy

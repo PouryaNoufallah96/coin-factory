@@ -1,6 +1,8 @@
 <svg
+  aria-label="Thank you background"
   fill="none"
   height="1024"
+  role="img"
   viewBox="0 0 1440 1024"
   width="1440"
   xmlns="http://www.w3.org/2000/svg"

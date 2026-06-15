@@ -1,6 +1,8 @@
 <svg
+  aria-label="Subtract icon"
   fill="none"
   height="34"
+  role="img"
   viewBox="0 0 34 34"
   width="34"
   xmlns="http://www.w3.org/2000/svg"

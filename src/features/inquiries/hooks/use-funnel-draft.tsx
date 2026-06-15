@@ -105,7 +105,9 @@ const FunnelDraftContext = createContext<FunnelDraft | null>(null);
 
 const isClient = () => true;
 const isServer = () => false;
-const noopSubscribe = () => () => {};
+const noopSubscribe = () => () => {
+  // noop
+};
 
 export function FunnelDraftProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(

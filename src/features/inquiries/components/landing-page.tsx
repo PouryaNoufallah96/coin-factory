@@ -3,7 +3,7 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { type ChangeEvent, type ReactNode, useEffect, useRef } from "react";
+import { type ChangeEvent, type ReactNode, useRef } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +45,10 @@ export function LandingPage({ children }: { children: ReactNode }) {
     setFiles,
   } = useFunnelDraft();
 
-  const searchActive = assetDescription.trim().length > 0 || files.length > 0;
+  const searchActive =
+    assetDescription.trim().length > 0 ||
+    files.length > 0 ||
+    selectedCategoryIds.length > 0;
 
   function addFiles(event: ChangeEvent<HTMLInputElement>) {
     const pickedFiles = Array.from(event.target.files ?? []);
@@ -239,22 +242,7 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const {
-    assetDescription,
-    selectedCategoryIds,
-    setSelectedCategoryIds,
-    setAssetDescription,
-  } = useFunnelDraft();
-
-  useEffect(() => {
-    const textParts = assetDescription.split(",").map((p) => p.trim());
-    setSelectedCategoryIds((currentIds) =>
-      currentIds.filter((id) => {
-        const category = categories.find((c) => c.id === id);
-        return category ? textParts.includes(category.label) : true;
-      })
-    );
-  }, [assetDescription, categories, setSelectedCategoryIds]);
+  const { selectedCategoryIds, setSelectedCategoryIds } = useFunnelDraft();
 
   function toggleCategory(category: PublicCategory) {
     const isSelected = selectedCategoryIds.includes(category.id);
@@ -270,16 +258,6 @@ export function LandingCategoryChips({
     setSelectedCategoryIds((currentIds) =>
       nextSelectedCategoryIds(currentIds, category.id)
     );
-
-    setAssetDescription((current) => {
-      if (isSelected) {
-        return removeLabelFromText(current, category.label);
-      }
-      const trimmed = current.trim();
-      return trimmed.length > 0
-        ? `${trimmed}, ${category.label}`
-        : category.label;
-    });
   }
 
   return (
@@ -315,14 +293,6 @@ export function LandingCategoryChips({
       </div>
     </div>
   );
-}
-
-function removeLabelFromText(text: string, label: string): string {
-  const parts = text
-    .split(",")
-    .map((p) => p.trim())
-    .filter((p) => p !== label);
-  return parts.join(", ");
 }
 
 function nextSelectedCategoryIds(

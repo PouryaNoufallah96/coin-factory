@@ -2,9 +2,9 @@
 
 "use client";
 
-import { X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import type React from "react";
-import { useId } from "react";
+import { useEffect, useId, useSyncExternalStore } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Button } from "@/components/ui/button";
@@ -48,6 +48,39 @@ const STEPPER_SEGMENT_KEYS = [
   "stepper-segment-12",
 ];
 
+let wizardSubmitPending = false;
+const wizardSubmitListeners = new Set<() => void>();
+
+function setWizardSubmitPending(value: boolean) {
+  if (wizardSubmitPending === value) {
+    return;
+  }
+
+  wizardSubmitPending = value;
+  for (const listener of wizardSubmitListeners) {
+    listener();
+  }
+}
+
+function subscribeToWizardSubmitPending(listener: () => void) {
+  wizardSubmitListeners.add(listener);
+  return () => {
+    wizardSubmitListeners.delete(listener);
+  };
+}
+
+function getWizardSubmitPendingSnapshot() {
+  return wizardSubmitPending;
+}
+
+function useWizardSubmitPending() {
+  return useSyncExternalStore(
+    subscribeToWizardSubmitPending,
+    getWizardSubmitPendingSnapshot,
+    getWizardSubmitPendingSnapshot
+  );
+}
+
 interface OnboardingWizardProps {
   questions: PublicQuestion[];
   step: number;
@@ -70,6 +103,13 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
     setWhatsapp,
     whatsapp,
   } = useFunnelDraft();
+
+  useEffect(() => {
+    setWizardSubmitPending(submit.isPending);
+    return () => {
+      setWizardSubmitPending(false);
+    };
+  }, [submit.isPending]);
 
   function validateQuestion(currentQuestion: PublicQuestion) {
     const value = answers[currentQuestion.id] ?? "";
@@ -231,6 +271,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
 
 export function OnboardingWizardControls({ total }: { total: number }) {
   const { goTo, step } = useFunnelDraft();
+  const isSubmitting = useWizardSubmitPending();
   const isLastStep = step === total;
 
   function onBack() {
@@ -239,6 +280,15 @@ export function OnboardingWizardControls({ total }: { total: number }) {
       return;
     }
     goTo("onboarding", step - 1, "nav-back");
+  }
+
+  let submitLabel: string;
+  if (isSubmitting) {
+    submitLabel = "Submitting";
+  } else if (isLastStep) {
+    submitLabel = "Submit";
+  } else {
+    submitLabel = "Next";
   }
 
   return (
@@ -250,6 +300,7 @@ export function OnboardingWizardControls({ total }: { total: number }) {
       <div className="cf-field-container relative z-10 flex w-full flex-row items-center justify-between">
         <Button
           className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
+          disabled={isSubmitting}
           onClick={onBack}
           type="button"
           variant="outline"
@@ -257,11 +308,16 @@ export function OnboardingWizardControls({ total }: { total: number }) {
           Back
         </Button>
         <Button
-          className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97]"
+          aria-busy={isSubmitting}
+          className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) gap-2 rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] disabled:pointer-events-none disabled:opacity-80"
+          disabled={isSubmitting}
           form="wizard-form"
           type="submit"
         >
-          {isLastStep ? "Submit" : "Next"}
+          {isSubmitting ? (
+            <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+          ) : null}
+          {submitLabel}
         </Button>
       </div>
     </div>

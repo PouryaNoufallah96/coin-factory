@@ -132,6 +132,11 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
     step = 1,
     direction: "nav-back" | "nav-forward" = "nav-forward"
   ) {
+    if (state.view === view) {
+      dispatch({ type: "navigate", view, step });
+      return;
+    }
+
     startTransition(() => {
       addTransitionType(direction);
       dispatch({ type: "navigate", view, step });

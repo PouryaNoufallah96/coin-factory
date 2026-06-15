@@ -1,0 +1,16 @@
+<svg
+  fill="none"
+  height="24"
+  viewBox="0 0 24 24"
+  width="24"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title>About</title>
+  <g opacity="0.4">
+    <path
+      d="M17.2266 19.5242C17.8611 20.1586 18.8897 20.1586 19.5242 19.5242C20.1586 18.8897 20.1586 17.8611 19.5242 17.2266L16.2975 14L14 16.2975L17.2266 19.5242Z"
+      fill="#FFF2D1"
+    />
+  </g>
+  <circle cx="11" cy="11" fill="#FFF2D1" r="7" transform="rotate(180 11 11)" />
+</svg>

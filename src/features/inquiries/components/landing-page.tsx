@@ -3,7 +3,7 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { type ChangeEvent, type ReactNode, useRef } from "react";
+import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +36,7 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
 
 export function LandingPage({ children }: { children: ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [inputFocused, setInputFocused] = useState(false);
   const {
     assetDescription,
     files,
@@ -45,7 +46,10 @@ export function LandingPage({ children }: { children: ReactNode }) {
     setFiles,
   } = useFunnelDraft();
 
-  const searchActive = assetDescription.trim().length > 0 || files.length > 0;
+  const searchActive =
+    assetDescription.trim().length > 0 ||
+    files.length > 0 ||
+    selectedCategoryIds.length > 0;
 
   function addFiles(event: ChangeEvent<HTMLInputElement>) {
     const pickedFiles = Array.from(event.target.files ?? []);
@@ -122,8 +126,17 @@ export function LandingPage({ children }: { children: ReactNode }) {
               className={cn(
                 files.length > 0
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
-                  : "min-h-[calc(var(--cf-search-h))] px-6 py-3"
+                  : "px-6 py-3"
               )}
+              style={
+                files.length === 0
+                  ? {
+                      minHeight: inputFocused
+                        ? "calc(var(--cf-search-h) * 1.2)"
+                        : "var(--cf-search-h)",
+                    }
+                  : undefined
+              }
             >
               <FileCardPanel files={files} onRemove={removeFile} />
               <div className="flex min-h-10 w-full items-center gap-4">
@@ -147,7 +160,9 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 <textarea
                   aria-label="Asset description"
                   className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
+                  onBlur={() => setInputFocused(false)}
                   onChange={onDescriptionChange}
+                  onFocus={() => setInputFocused(true)}
                   placeholder={SEARCH_PLACEHOLDER}
                   rows={1}
                   style={{
@@ -260,6 +275,8 @@ export function LandingCategoryChips({
       nextSelectedCategoryIds(currentIds, category.id)
     );
 
+    // Picking a chip mirrors its label into the search text; removing the chip
+    // pulls it back out. Typing in the search never touches chip selection.
     setAssetDescription((current) => {
       if (isSelected) {
         return removeLabelFromText(current, category.label);

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import type React from "react";
 import { useId, ViewTransition } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
@@ -96,6 +96,7 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
   const safeStep = Math.min(Math.max(step, 1), total);
   const question = questions[safeStep - 1];
   const isLastStep = safeStep === total;
+  const isSubmitting = submit.isPending;
 
   function validateQuestion(currentQuestion: PublicQuestion) {
     const value = answers[currentQuestion.id] ?? "";
@@ -190,10 +191,19 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
     goTo("thank-you", 1, "nav-forward");
   }
 
+  let submitLabel: string;
+  if (isSubmitting) {
+    submitLabel = "Submitting";
+  } else if (isLastStep) {
+    submitLabel = "Submit";
+  } else {
+    submitLabel = "Next";
+  }
+
   return (
-    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-[130px]">
+    <section className="relative flex h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] min-h-0 flex-none justify-center overflow-hidden px-(--cf-page-x)">
       <form
-        className="cf-content-container flex w-full flex-col items-center text-center"
+        className="cf-content-container flex h-full min-h-0 w-full flex-col items-center text-center"
         id="wizard-form"
         noValidate
         onSubmit={onSubmit}
@@ -213,13 +223,13 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
           name="wizard-question"
           share={WIZARD_QUESTION_TRANSITION}
         >
-          <div className="flex w-full flex-col items-center pt-(--cf-wizard-step-question-gap)">
+          <div className="flex h-0 min-h-0 w-full flex-1 flex-col items-center pt-(--cf-wizard-step-question-gap)">
             <h1 className="text-(length:--cf-text-question) max-w-(--cf-content-w) font-light text-cf-text-primary leading-snug">
               {question.text}
             </h1>
 
             {question.kind === "radio" ? (
-              <div className="mt-(--cf-wizard-question-options-gap) w-full">
+              <div className="scrollbar-none mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overflow-y-scroll overscroll-contain px-1 pb-50 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [touch-action:pan-y] [&::-webkit-scrollbar]:hidden">
                 <RadioQuestion
                   onChange={(value) => {
                     setAnswer(question.id, value);
@@ -277,10 +287,15 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
         name="wizard-actions"
         share={WIZARD_ACTIONS_TRANSITION}
       >
-        <div className="fixed right-0 bottom-12.5 left-0 z-20 px-(--cf-page-x)">
-          <div className="cf-field-container flex w-full flex-row items-center justify-between">
+        <div className="fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5">
+          <div
+            aria-hidden="true"
+            className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] pointer-events-none absolute inset-0 z-0 [backdrop-filter:blur(50px)]"
+          />
+          <div className="cf-field-container relative z-10 flex w-full flex-row items-center justify-between">
             <Button
               className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
+              disabled={isSubmitting}
               onClick={onBack}
               type="button"
               variant="outline"
@@ -288,12 +303,19 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
               Back
             </Button>
             <Button
-              aria-busy={submit.isPending}
-              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97]"
+              aria-busy={isSubmitting}
+              className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) gap-2 rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] disabled:pointer-events-none disabled:opacity-80"
+              disabled={isSubmitting}
               form="wizard-form"
               type="submit"
             >
-              {isLastStep ? "Submit" : "Next"}
+              {isSubmitting ? (
+                <LoaderCircle
+                  aria-hidden="true"
+                  className="size-4 animate-spin"
+                />
+              ) : null}
+              {submitLabel}
             </Button>
           </div>
         </div>

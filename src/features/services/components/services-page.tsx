@@ -35,10 +35,7 @@ export function ServicesPage() {
                 <h2 className="font-semibold text-cf-cream text-xl leading-tight">
                   {title}
                 </h2>
-                <div
-                  className="rounded-[12px] px-6 py-4"
-                  style={{ backgroundColor: "#FFFAED14" }}
-                >
+                <div className="rounded-[12px] bg-[#FFFAED14] px-6 py-4">
                   <p className="text-cf-text-primary text-sm leading-(--cf-leading-body)">
                     {description}
                   </p>
@@ -57,63 +54,63 @@ const SERVICES = [
     title: "Tokenization Strategy",
     description:
       "Evaluate opportunities and define the right tokenization model.",
-    icon: "/icons/strategy.svg",
+    icon: "/icons/interactive.svg",
     iconAlt: "Strategy icon",
   },
   {
     title: "Asset Tokenization",
     description:
       "Tokenize businesses, real-world assets, commodities, revenue streams, and digital ecosystems.",
-    icon: "/icons/tokenize.svg",
+    icon: "/icons/layers.svg",
     iconAlt: "Tokenize icon",
   },
   {
     title: "Tokenomics Design",
     description:
       "Design sustainable token economies, utility models, supply structures, and incentive systems.",
-    icon: "/icons/tokenomics.svg",
+    icon: "/icons/notification.svg",
     iconAlt: "Tokenomics icon",
   },
   {
     title: "Smart Contract Development",
     description:
       "Develop secure smart contracts for token issuance, distribution, governance, and ecosystem operations.",
-    icon: "/icons/smart.svg",
+    icon: "/icons/board.svg",
     iconAlt: "Smart contract icon",
   },
   {
     title: "Token Launch & Deployment",
     description:
       "Launch tokens across leading blockchain networks with scalable infrastructure.",
-    icon: "/icons/exchange.svg",
+    icon: "/icons/globe.svg",
     iconAlt: "Exchange icon",
   },
   {
     title: "Exchange Listing Support",
     description:
       "Coordinate professional smart contract audits through trusted security partners.",
-    icon: "/icons/launch.svg",
+    icon: "/icons/shield.svg",
     iconAlt: "Launch icon",
   },
   {
     title: "Security Audit Coordination",
     description:
       "Support token listing preparation for centralized and decentralized exchanges.",
-    icon: "/icons/launch.svg",
+    icon: "/icons/exchange.svg",
     iconAlt: "Launch icon",
   },
   {
     title: "Ecosystem Development",
     description:
       "Build loyalty systems, rewards, governance models, staking systems, and community engagement mechanisms.",
-    icon: "/icons/launch.svg",
+    icon: "/icons/share.svg",
     iconAlt: "Launch icon",
   },
   {
     title: "Venture Partnership",
     description:
       "For selected projects, CoinFactory may participate as a strategic tokenization partner.",
-    icon: "/icons/launch.svg",
+    icon: "/icons/venture.svg",
     iconAlt: "Launch icon",
   },
 ];

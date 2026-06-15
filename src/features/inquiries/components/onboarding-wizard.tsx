@@ -157,9 +157,9 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   }
 
   return (
-    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-[130px]">
+    <section className="relative flex h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] min-h-0 flex-none justify-center overflow-hidden px-(--cf-page-x)">
       <form
-        className="cf-content-container flex w-full flex-col items-center text-center"
+        className="cf-content-container flex h-full min-h-0 w-full flex-col items-center text-center"
         id="wizard-form"
         noValidate
         onSubmit={onSubmit}
@@ -167,7 +167,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
         <WizardStepper current={step} total={total} />
 
         <div
-          className="flex w-full flex-col items-center pt-(--cf-wizard-step-question-gap)"
+          className="flex h-0 min-h-0 w-full flex-1 flex-col items-center pt-(--cf-wizard-step-question-gap)"
           key={question.id}
         >
           <h1 className="text-(length:--cf-text-question) max-w-(--cf-content-w) font-light text-cf-text-primary leading-snug">
@@ -175,7 +175,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
           </h1>
 
           {question.kind === "radio" ? (
-            <div className="mt-(--cf-wizard-question-options-gap) w-full">
+            <div className="mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overscroll-contain px-1 pb-50 [-ms-overflow-style:none] [scrollbar-width:none] [touch-action:pan-y] [overflow-y:scroll] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden">
               <RadioQuestion
                 onChange={(value) => {
                   setAnswer(question.id, value);

@@ -7,7 +7,6 @@ import { type ChangeEvent, type ReactNode, useEffect, useRef } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import type { PublicCategory } from "@/features/categories/schemas/category";
 import {
   ALLOWED_DOCUMENT_MIME_TYPES,
@@ -135,14 +134,19 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   ref={fileInputRef}
                   type="file"
                 />
-                <Input
+                <textarea
                   aria-label="Asset description"
-                  className="cf-search-input h-10 border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none focus-visible:border-0 focus-visible:ring-0"
-                  onValueChange={(value) => {
-                    setAssetDescription(value);
+                  className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
+                  onChange={(e) => {
+                    setAssetDescription(e.target.value);
+                    e.target.style.height = "auto";
+                    const capped = Math.min(e.target.scrollHeight, 96);
+                    e.target.style.height = `${capped}px`;
+                    e.target.style.overflowY = e.target.scrollHeight > 96 ? "auto" : "hidden";
                   }}
                   placeholder={SEARCH_PLACEHOLDER}
-                  style={{ fontSize: "16px" }}
+                  rows={1}
+                  style={{ fontSize: "16px", overflowY: "hidden", maxHeight: "96px" }}
                   value={assetDescription}
                 />
                 <button

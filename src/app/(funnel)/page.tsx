@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 import { getActiveCategories } from "@/features/categories/api/server/get-active-categories";
-import { getActiveQuestions } from "@/features/questions/api/server/get-active-questions";
 import { FunnelApp } from "@/features/inquiries/components/funnel-app";
+import { getActiveQuestions } from "@/features/questions/api/server/get-active-questions";
 
 export const metadata: Metadata = {
   title: "Tokenize",

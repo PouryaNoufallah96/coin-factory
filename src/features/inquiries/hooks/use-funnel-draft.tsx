@@ -20,6 +20,12 @@ interface FunnelDraft {
   assetDescription: string;
   email: string;
   files: File[];
+  goTo: (
+    view: FunnelView,
+    step?: number,
+    direction?: "nav-back" | "nav-forward"
+  ) => void;
+  isHydrated: boolean;
   selectedCategoryIds: string[];
   setAnswer: (questionId: string, value: string) => void;
   setAssetDescription: Dispatch<SetStateAction<string>>;
@@ -27,15 +33,9 @@ interface FunnelDraft {
   setFiles: Dispatch<SetStateAction<File[]>>;
   setSelectedCategoryIds: Dispatch<SetStateAction<string[]>>;
   setWhatsapp: Dispatch<SetStateAction<string>>;
-  whatsapp: string;
-  view: FunnelView;
   step: number;
-  isHydrated: boolean;
-  goTo: (
-    view: FunnelView,
-    step?: number,
-    direction?: "nav-back" | "nav-forward"
-  ) => void;
+  view: FunnelView;
+  whatsapp: string;
 }
 
 interface FunnelDraftState {
@@ -44,9 +44,9 @@ interface FunnelDraftState {
   email: string;
   files: File[];
   selectedCategoryIds: string[];
-  whatsapp: string;
-  view: FunnelView;
   step: number;
+  view: FunnelView;
+  whatsapp: string;
 }
 
 type FunnelDraftAction =
@@ -77,7 +77,9 @@ const initialFunnelDraftState: FunnelDraftState = {
 function loadPersistedState(): FunnelDraftState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return initialFunnelDraftState;
+    if (!raw) {
+      return initialFunnelDraftState;
+    }
     const parsed: Partial<PersistedState> = JSON.parse(raw);
     return {
       ...initialFunnelDraftState,

@@ -177,7 +177,9 @@
   --cf-search-button-size: 2rem;
   --cf-search-affordance-size: 2.5rem;
   --cf-search-panel-min-h: calc(
-    var(--cf-file-card-h) + var(--cf-search-h) + var(--cf-space-6)
+    var(--cf-file-card-h) +
+    var(--cf-search-h) +
+    var(--cf-space-6)
   );
   --cf-cta-h: 2.25rem;
   --cf-cta-w: 8rem;
@@ -390,60 +392,70 @@
 }
 
 ::view-transition-old(.slide-down) {
-  animation: var(--cf-dur-vt-exit) ease-out both fade reverse,
+  animation:
+    var(--cf-dur-vt-exit) ease-out both fade reverse,
     var(--cf-dur-vt-exit) ease-out both slide-y reverse;
 }
 
 ::view-transition-new(.slide-up) {
-  animation: var(--cf-dur-vt-enter) ease-in var(--cf-dur-vt-exit) both fade,
+  animation:
+    var(--cf-dur-vt-enter) ease-in var(--cf-dur-vt-exit) both fade,
     var(--cf-dur-vt-move) ease-in both slide-y;
 }
 
 ::view-transition-new(.slide-from-right) {
   --slide-offset: var(--cf-vt-slide-x);
-  animation: var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
     var(--cf-dur-vt-move) ease-in-out both slide;
 }
 
 ::view-transition-old(.slide-to-left) {
   --slide-offset: calc(var(--cf-vt-slide-x) * -1);
-  animation: var(--cf-dur-vt-exit) ease-in both fade reverse,
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
     var(--cf-dur-vt-move) ease-in-out both slide reverse;
 }
 
 ::view-transition-new(.slide-from-left) {
   --slide-offset: calc(var(--cf-vt-slide-x) * -1);
-  animation: var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
     var(--cf-dur-vt-move) ease-in-out both slide;
 }
 
 ::view-transition-old(.slide-to-right) {
   --slide-offset: var(--cf-vt-slide-x);
-  animation: var(--cf-dur-vt-exit) ease-in both fade reverse,
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
     var(--cf-dur-vt-move) ease-in-out both slide reverse;
 }
 
 ::view-transition-old(.nav-forward) {
   --slide-offset: calc(var(--cf-vt-slide-x) * -1);
-  animation: var(--cf-dur-vt-exit) ease-in both fade reverse,
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
     var(--cf-dur-vt-move) ease-in-out both slide reverse;
 }
 
 ::view-transition-new(.nav-forward) {
   --slide-offset: var(--cf-vt-slide-x);
-  animation: var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
     var(--cf-dur-vt-move) ease-in-out both slide;
 }
 
 ::view-transition-old(.nav-back) {
   --slide-offset: var(--cf-vt-slide-x);
-  animation: var(--cf-dur-vt-exit) ease-in both fade reverse,
+  animation:
+    var(--cf-dur-vt-exit) ease-in both fade reverse,
     var(--cf-dur-vt-move) ease-in-out both slide reverse;
 }
 
 ::view-transition-new(.nav-back) {
   --slide-offset: calc(var(--cf-vt-slide-x) * -1);
-  animation: var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
+  animation:
+    var(--cf-dur-vt-enter) ease-out var(--cf-dur-vt-exit) both fade,
     var(--cf-dur-vt-move) ease-in-out both slide;
 }
 
@@ -458,27 +470,31 @@
 
 ::view-transition-old(.wizard-question-forward) {
   --slide-y-offset: calc(var(--cf-vt-slide-y) * -1);
-  animation: var(--cf-dur-vt-question-exit) var(--cf-ease) both fade reverse,
+  animation:
+    var(--cf-dur-vt-question-exit) var(--cf-ease) both fade reverse,
     var(--cf-dur-vt-question-enter) var(--cf-ease) both slide-y reverse;
 }
 
 ::view-transition-new(.wizard-question-forward) {
   --slide-y-offset: var(--cf-vt-slide-y-strong);
-  animation: var(--cf-dur-vt-question-enter) var(--cf-ease)
-      var(--cf-vt-delay-short) both fade,
+  animation:
+    var(--cf-dur-vt-question-enter) var(--cf-ease) var(--cf-vt-delay-short) both
+    fade,
     var(--cf-dur-vt-question-move) var(--cf-ease) both slide-y;
 }
 
 ::view-transition-old(.wizard-question-back) {
   --slide-y-offset: var(--cf-vt-slide-y);
-  animation: var(--cf-dur-vt-question-exit) var(--cf-ease) both fade reverse,
+  animation:
+    var(--cf-dur-vt-question-exit) var(--cf-ease) both fade reverse,
     var(--cf-dur-vt-question-enter) var(--cf-ease) both slide-y reverse;
 }
 
 ::view-transition-new(.wizard-question-back) {
   --slide-y-offset: calc(var(--cf-vt-slide-y-strong) * -1);
-  animation: var(--cf-dur-vt-question-enter) var(--cf-ease)
-      var(--cf-vt-delay-short) both fade,
+  animation:
+    var(--cf-dur-vt-question-enter) var(--cf-ease) var(--cf-vt-delay-short) both
+    fade,
     var(--cf-dur-vt-question-move) var(--cf-ease) both slide-y;
 }
 
@@ -631,9 +647,9 @@
   }
 
   .cf-search-input::placeholder {
+    -webkit-text-fill-color: transparent;
     background: linear-gradient(90deg, #ffffff 0%, #282d36 100%);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 }

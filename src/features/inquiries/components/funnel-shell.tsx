@@ -28,9 +28,9 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         <FunnelFooter />
       </Suspense>
       <Toaster
-        position="top-left"
         closeButton
         expand
+        position="top-left"
         toastOptions={{
           classNames: {
             toast: "w-max! max-w-[80vw]! whitespace-normal!",

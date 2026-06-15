@@ -1,15 +1,19 @@
 "use client";
 
 import {
-  useFunnelDraft,
   type FunnelView,
+  useFunnelDraft,
 } from "@/features/inquiries/hooks/use-funnel-draft";
 
 type FunnelSpotlightVariant = "landing" | "onboarding" | "thank-you";
 
 function resolveVariant(view: FunnelView): FunnelSpotlightVariant {
-  if (view === "onboarding") return "onboarding";
-  if (view === "thank-you") return "thank-you";
+  if (view === "onboarding") {
+    return "onboarding";
+  }
+  if (view === "thank-you") {
+    return "thank-you";
+  }
   return "landing";
 }
 
@@ -36,8 +40,8 @@ export function FunnelSpotlights() {
     <div aria-hidden="true" className="cf-funnel-backdrop">
       {VARIANTS.map((variant) => (
         <div
-          key={variant}
           className={LAYER}
+          key={variant}
           style={{
             opacity: active === variant ? 1 : 0,
             backgroundImage: BACKGROUNDS[variant],

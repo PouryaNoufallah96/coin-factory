@@ -3,12 +3,7 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import {
-  type ChangeEvent,
-  type ReactNode,
-  useEffect,
-  useRef,
-} from "react";
+import { type ChangeEvent, type ReactNode, useEffect, useRef } from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -103,8 +98,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
 
   return (
     <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
-      <div className="flex w-full flex-col items-center gap-20 sm:14">
-        <div className="cf-content-container flex flex-col items-center gap-(--cf-hero-stack-gap) text-center animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
+      <div className="sm:14 flex w-full flex-col items-center gap-20">
+        <div className="cf-content-container flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
             {HERO_SUBLINE}
           </p>
@@ -112,20 +107,20 @@ export function LandingPage({ children }: { children: ReactNode }) {
             {HERO_WORD}
           </h1>
         </div>
-        <div className="flex w-full flex-col items-center gap-8 animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both]">
+        <div className="flex w-full animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] flex-col items-center gap-8">
           <form className="cf-search-container" onSubmit={continueToWizard}>
             <InputSurface
               className={cn(
                 files.length > 0
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
-                  : "min-h-[calc(var(--cf-search-h))] py-3 px-6"
+                  : "min-h-[calc(var(--cf-search-h))] px-6 py-3"
               )}
             >
               <FileCardPanel files={files} onRemove={removeFile} />
               <div className="flex min-h-10 w-full items-center gap-4">
                 <button
                   aria-label="Attach PDF or Word document"
-                  className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 hover:scale-110 active:scale-95"
+                  className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95"
                   onClick={() => fileInputRef.current?.click()}
                   type="button"
                 >
@@ -142,19 +137,19 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 />
                 <Input
                   aria-label="Asset description"
-                  className="cf-search-input h-10 border-0 bg-transparent px-0 shadow-none outline-none text-cf-cream focus-visible:border-0 focus-visible:ring-0"
-                  style={{ fontSize: "16px" }}
+                  className="cf-search-input h-10 border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none focus-visible:border-0 focus-visible:ring-0"
                   onValueChange={(value) => {
                     setAssetDescription(value);
                   }}
                   placeholder={SEARCH_PLACEHOLDER}
+                  style={{ fontSize: "16px" }}
                   value={assetDescription}
                 />
                 <button
                   aria-label="Continue"
                   className="shrink-0"
-                  type="submit"
                   disabled={!searchActive}
+                  type="submit"
                 >
                   <Image
                     alt=""
@@ -164,6 +159,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
                       searchActive &&
                         "[button:hover_&]:animate-[pulse-scale_1.3s_ease-in-out_infinite]"
                     )}
+                    height={24}
+                    src="/icons/Subtract.svg"
                     style={
                       searchActive
                         ? {
@@ -172,9 +169,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                           }
                         : {}
                     }
-                    src="/icons/Subtract.svg"
                     width={24}
-                    height={24}
                   />
                 </button>
               </div>
@@ -202,7 +197,7 @@ function FileCardPanel({
     <div className="flex w-full flex-wrap gap-5">
       {files.map((file, index) => (
         <div
-          className="relative flex h-(--cf-file-card-h) w-full min-w-0 items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w) animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both]"
+          className="relative flex h-(--cf-file-card-h) w-full min-w-0 animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both] items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
           key={`${file.name}-${file.lastModified}-${file.size}`}
         >
           <div className="flex size-(--cf-file-card-tile) shrink-0 items-center justify-center rounded-(--cf-radius-segment) bg-cf-cream text-cf-text-on-accent">
@@ -235,8 +230,12 @@ export function LandingCategoryChips({
 }: {
   categories: PublicCategory[];
 }) {
-  const { assetDescription, selectedCategoryIds, setSelectedCategoryIds, setAssetDescription } =
-    useFunnelDraft();
+  const {
+    assetDescription,
+    selectedCategoryIds,
+    setSelectedCategoryIds,
+    setAssetDescription,
+  } = useFunnelDraft();
 
   useEffect(() => {
     const textParts = assetDescription.split(",").map((p) => p.trim());
@@ -282,7 +281,7 @@ export function LandingCategoryChips({
           return (
             <Badge
               className={cn(
-                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04] ",
+                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04]",
                 selected
                   ? "border-transparent bg-cf-chip-bg-active text-cf-text-on-accent"
                   : "border-cf-border-muted bg-cf-chip-bg text-cf-text-on-accent hover:border-cf-border-active"

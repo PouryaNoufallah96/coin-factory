@@ -185,8 +185,8 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
   return (
     <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-[130px]">
       <form
-        id="wizard-form"
         className="cf-content-container flex w-full flex-col items-center text-center"
+        id="wizard-form"
         noValidate
         onSubmit={onSubmit}
       >
@@ -269,7 +269,7 @@ export function OnboardingWizard({ questions, step }: OnboardingWizardProps) {
         name="wizard-actions"
         share={WIZARD_ACTIONS_TRANSITION}
       >
-        <div className="fixed bottom-12.5 left-0 right-0 z-20 px-(--cf-page-x)">
+        <div className="fixed right-0 bottom-12.5 left-0 z-20 px-(--cf-page-x)">
           <div className="cf-field-container flex w-full flex-row items-center justify-between">
             <Button
               className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
@@ -348,12 +348,12 @@ function RadioQuestion({
           return (
             <FieldLabel
               className={cn(
-                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015]  rounded-(--cf-radius-row) border",
+                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 rounded-(--cf-radius-row) border px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015]",
                 selected
                   ? cn(
                       "text-cf-cream-bright has-data-checked:border-cf-border-active has-data-checked:bg-cf-charcoal-900"
                     )
-                  : " border-cf-border-muted bg-cf-surface-muted text-cf-text-primary hover:border-cf-border-active"
+                  : "border-cf-border-muted bg-cf-surface-muted text-cf-text-primary hover:border-cf-border-active"
               )}
               key={`${questionId}-${option}`}
             >
@@ -400,14 +400,14 @@ function FunnelTextField({
       </FieldLabel>
       <InputSurface
         active={active}
-        className="flex flex-row h-(--cf-search-h) items-center px-7"
+        className="flex h-(--cf-search-h) flex-row items-center px-7"
       >
         <Input
           className="h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
-          style={{ fontSize: "16px" }}
           id={id}
           onValueChange={onChange}
           placeholder={placeholder}
+          style={{ fontSize: "16px" }}
           type={type}
           value={value}
         />

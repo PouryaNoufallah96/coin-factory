@@ -131,6 +131,10 @@ const create = publicProcedure
 
     await sendSubmissionNotification(inquiryId);
 
+    // Refresh the cached admin list (no id — a new row only adds to it).
+    // revalidateTag-based, not updateTag, which throws on the public /rpc path.
+    revalidateInquiryTags();
+
     return { id: inquiryId };
   });
 

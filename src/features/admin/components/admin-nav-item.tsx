@@ -21,7 +21,6 @@ interface AdminNavItemProps {
 }
 
 const navItems = [
-  // { href: "/admin", icon: LayoutDashboard, label: "Overview" },
   { href: "/admin/questions", icon: ListChecks, label: "Questions" },
   { href: "/admin/categories", icon: Tags, label: "Categories" },
   { href: "/admin/inquiries", icon: Inbox, label: "Inquiries" },

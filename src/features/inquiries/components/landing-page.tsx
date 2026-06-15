@@ -34,13 +34,7 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".pdf": "PDF",
 };
 
-export function LandingPage({
-  categories,
-  children,
-}: {
-  categories: PublicCategory[];
-  children: ReactNode;
-}) {
+export function LandingPage({ children }: { children: ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
   const {
@@ -50,7 +44,6 @@ export function LandingPage({
     selectedCategoryIds,
     setAssetDescription,
     setFiles,
-    setSelectedCategoryIds,
   } = useFunnelDraft();
 
   const searchActive =
@@ -92,15 +85,9 @@ export function LandingPage({
   }
 
   function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    const { value } = event.target;
-    setAssetDescription(value);
-    // Editing the description by hand can drop a label a chip added: keep the
-    // selected chips in sync with the text instead of mirroring it in an effect.
-    setSelectedCategoryIds((currentIds) =>
-      pruneSelectedCategoryIds(currentIds, value, categories)
-    );
-
     const textarea = event.target;
+    setAssetDescription(textarea.value);
+
     textarea.style.height = "auto";
     const capped = Math.min(textarea.scrollHeight, 96);
     textarea.style.height = `${capped}px`;
@@ -123,7 +110,10 @@ export function LandingPage({
   }
 
   return (
-    <section className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6">
+    <section
+      className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6"
+      data-funnel-resume-hide
+    >
       <div className="sm:14 flex w-full flex-col items-center gap-20">
         <div className="cf-content-container flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
@@ -141,17 +131,18 @@ export function LandingPage({
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
                   : "px-6 py-3"
               )}
+              filled={assetDescription.trim().length > 0 || files.length > 0}
+              focused={inputFocused}
               style={
                 files.length === 0
                   ? {
                       minHeight: inputFocused
                         ? "calc(var(--cf-search-h) * 1.2)"
                         : "var(--cf-search-h)",
-                      transition:
-                        "min-height 300ms cubic-bezier(0.2,0,0,1), border-radius 300ms cubic-bezier(0.2,0,0,1)",
                     }
                   : undefined
               }
+              variant="search"
             >
               <FileCardPanel files={files} onRemove={removeFile} />
               <div className="flex min-h-10 w-full items-center gap-4">
@@ -285,6 +276,8 @@ export function LandingCategoryChips({
       return;
     }
 
+    // Chip selection is independent of the search text: picking a chip never
+    // writes its label into the input, and typing never changes the chips.
     setSelectedCategoryIds((currentIds) =>
       nextSelectedCategoryIds(currentIds, category.id)
     );
@@ -323,18 +316,6 @@ export function LandingCategoryChips({
       </div>
     </div>
   );
-}
-
-function pruneSelectedCategoryIds(
-  currentIds: string[],
-  text: string,
-  categories: PublicCategory[]
-): string[] {
-  const textParts = text.split(",").map((part) => part.trim());
-  return currentIds.filter((id) => {
-    const category = categories.find((c) => c.id === id);
-    return category ? textParts.includes(category.label) : true;
-  });
 }
 
 function nextSelectedCategoryIds(

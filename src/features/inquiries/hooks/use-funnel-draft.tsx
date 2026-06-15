@@ -1,3 +1,5 @@
+/// <reference types="react/canary" />
+
 "use client";
 
 import {
@@ -115,6 +117,12 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     dispatch({ type: "hydrate", state: loadPersistedState() });
   }, []);
+
+  useEffect(() => {
+    if (state.view !== "landing") {
+      document.getElementById("cf-resume-guard")?.remove();
+    }
+  }, [state.view]);
 
   useEffect(() => {
     const handle = setTimeout(() => persistState(state), 150);

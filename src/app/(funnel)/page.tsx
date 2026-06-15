@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import { getActiveCategories } from "@/features/categories/api/server/get-active-categories";
 import { FunnelApp } from "@/features/inquiries/components/funnel-app";
-import { getActiveQuestions } from "@/features/questions/api/server/get-active-questions";
+import {
+  CategoryChipsSkeleton,
+  FunnelCategoryChips,
+} from "@/features/inquiries/components/funnel-category-chips";
+import {
+  FunnelWizard,
+  WizardSkeleton,
+} from "@/features/inquiries/components/funnel-wizard";
 
 export const metadata: Metadata = {
   title: "CoinFactory",
@@ -10,11 +17,21 @@ export const metadata: Metadata = {
     "Start a private CoinFactory tokenization inquiry for your real-world asset or business project.",
 };
 
-export default async function Page() {
-  const [categories, questions] = await Promise.all([
-    getActiveCategories(),
-    getActiveQuestions(),
-  ]);
-
-  return <FunnelApp categories={categories} questions={questions} />;
+// Hero, search, and chrome need no data and stay in the static PPR shell; the
+// chips and wizard stream from connection()-gated islands (also a DB-free build).
+export default function Page() {
+  return (
+    <FunnelApp
+      categoriesSlot={
+        <Suspense fallback={<CategoryChipsSkeleton />}>
+          <FunnelCategoryChips />
+        </Suspense>
+      }
+      wizardSlot={
+        <Suspense fallback={<WizardSkeleton />}>
+          <FunnelWizard />
+        </Suspense>
+      }
+    />
+  );
 }

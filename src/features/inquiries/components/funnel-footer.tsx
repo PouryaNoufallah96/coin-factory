@@ -32,6 +32,10 @@ export function FunnelFooterContent() {
       className="fixed right-0 bottom-0 left-0 z-20 flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)"
       data-funnel-resume-hide
     >
+      <div
+        aria-hidden="true"
+        className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] pointer-events-none absolute inset-0 -z-10 [backdrop-filter:blur(50px)]"
+      />
       <nav
         aria-label="CoinFactory social links"
         className="flex items-center gap-(--cf-social-gap)"

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function ServicesPage() {
   return (
-    <section className="relative flex flex-1 flex-col items-center justify-start overflow-hidden">
+    <section className="relative flex min-h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] flex-1 flex-col items-center justify-start overflow-visible">
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-1 bg-center bg-cover bg-no-repeat"
@@ -11,7 +11,7 @@ export function ServicesPage() {
         }}
       />
 
-      <div className="relative z-10 w-full max-w-4xl animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
+      <div className="relative z-10 w-full max-w-4xl flex-1 animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
         <div className="mb-12 flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
             Services

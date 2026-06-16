@@ -29,7 +29,7 @@ export function FunnelFooter() {
 export function FunnelFooterContent() {
   return (
     <footer
-      className="sticky bottom-0 z-20 mt-auto flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)"
+      className="fixed right-0 bottom-0 left-0 z-20 flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)"
       data-funnel-resume-hide
     >
       <nav

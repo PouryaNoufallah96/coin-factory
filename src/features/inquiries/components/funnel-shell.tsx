@@ -62,7 +62,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <Suspense fallback={null}>
         <FunnelSpotlights />
       </Suspense>
-      <header className="relative z-40 flex h-(--cf-header-h) shrink-0 items-center justify-between px-(--cf-page-x)">
+      <header className="fixed top-0 right-0 left-0 z-40 flex h-(--cf-header-h) shrink-0 items-center justify-between px-(--cf-page-x)">
         <FunnelLogo />
         <button
           aria-expanded={menuOpen}
@@ -113,7 +113,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           </Link>
         ))}
       </nav>
-      <main className="relative z-10 flex min-h-0 flex-1 flex-col">
+      <main className="relative z-10 flex min-h-0 flex-1 flex-col pt-(--cf-header-h) pb-(--cf-footer-h)">
         {children}
       </main>
       <Suspense fallback={null}>

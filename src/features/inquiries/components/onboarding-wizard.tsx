@@ -229,7 +229,7 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
           </h1>
 
           {question.kind === "radio" ? (
-            <div className="scrollbar-none mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overflow-y-scroll overscroll-contain px-1 pt-1 pb-18 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [touch-action:pan-y] [&::-webkit-scrollbar]:hidden">
+            <div className="scrollbar-none mt-(--cf-wizard-question-options-gap) h-0 min-h-0 w-full flex-1 overflow-y-scroll overscroll-contain px-1 pt-1 pb-25 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [touch-action:pan-y] [&::-webkit-scrollbar]:hidden">
               <RadioQuestion
                 onChange={(value) => {
                   setAnswer(question.id, value);

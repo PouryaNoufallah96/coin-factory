@@ -22,7 +22,7 @@ export function FunnelFooter() {
 
   return (
     <footer
-      className="relative z-20 flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)"
+      className="relative z-20 mt-auto flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)"
       data-funnel-resume-hide
     >
       <nav
@@ -47,7 +47,7 @@ export function FunnelFooter() {
           </a>
         ))}
       </nav>
-      <span className="text-(length:--cf-text-base) whitespace-nowrap font-legal text-cf-text-on-accent opacity-90">
+      <span className="text-(length:--cf-text-base) whitespace-nowrap font-legal text-cf-charcoal-900">
         @ 2026 CoinFactory AG
       </span>
     </footer>

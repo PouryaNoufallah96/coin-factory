@@ -3,7 +3,13 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +42,7 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
 
 export function LandingPage({ children }: { children: ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
   const {
     assetDescription,
@@ -45,6 +52,14 @@ export function LandingPage({ children }: { children: ReactNode }) {
     setAssetDescription,
     setFiles,
   } = useFunnelDraft();
+
+  useEffect(() => {
+    const textarea = descriptionRef.current;
+    if (!textarea) {
+      return;
+    }
+    resizeDescriptionTextarea(textarea);
+  }, []);
 
   const searchActive =
     assetDescription.trim().length > 0 ||
@@ -87,11 +102,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
   function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const textarea = event.target;
     setAssetDescription(textarea.value);
-
-    textarea.style.height = "auto";
-    const capped = Math.min(textarea.scrollHeight, 96);
-    textarea.style.height = `${capped}px`;
-    textarea.style.overflowY = textarea.scrollHeight > 96 ? "auto" : "hidden";
+    resizeDescriptionTextarea(textarea);
   }
 
   function continueToWizard(event: React.SubmitEvent<HTMLFormElement>) {
@@ -149,7 +160,14 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 <button
                   aria-label="Attach PDF or Word document"
                   className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95"
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => {
+                    if (files.length >= MAX_FILES) {
+                      funnelAlert(`
+                        You can attach up to ${MAX_FILES} documents.`);
+                      return;
+                    }
+                    fileInputRef.current?.click();
+                  }}
                   type="button"
                 >
                   <Plus aria-hidden="true" className="size-5" />
@@ -165,11 +183,12 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 />
                 <textarea
                   aria-label="Asset description"
-                  className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
+                  className="cf-search-input cf-scrollbar-custom w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
                   onBlur={() => setInputFocused(false)}
                   onChange={onDescriptionChange}
                   onFocus={() => setInputFocused(true)}
                   placeholder={SEARCH_PLACEHOLDER}
+                  ref={descriptionRef}
                   rows={1}
                   style={{
                     fontSize: "16px",
@@ -331,6 +350,13 @@ function nextSelectedCategoryIds(
   }
 
   return [...currentIds, categoryId];
+}
+
+function resizeDescriptionTextarea(textarea: HTMLTextAreaElement) {
+  textarea.style.height = "auto";
+  const capped = Math.min(textarea.scrollHeight, 96);
+  textarea.style.height = `${capped}px`;
+  textarea.style.overflowY = textarea.scrollHeight > 96 ? "auto" : "hidden";
 }
 
 function isAllowedDocument(file: File): boolean {

@@ -1,26 +1,28 @@
-import Image from "next/image";
 import { PageBackdrop } from "@/components/common/page-backdrop";
+import { ApproachIllustration } from "@/features/about/components/illustrations/approach-illustration";
+import { WhatIllustration } from "@/features/about/components/illustrations/what-illustration";
+import { WorldIllustration } from "@/features/about/components/illustrations/world-illustration";
 
 const CARDS = [
   {
     title: "Who We Are",
     description:
       "CoinFactory is a Switzerland-based tokenization company located in Zug, helping businesses transform assets, communities, products, and ventures into blockchain-powered economies.",
-    image: "/about/world.svg",
+    Illustration: WorldIllustration,
     imageAlt: "World map illustration",
   },
   {
     title: "What We Do",
     description:
       "We evaluate, design, and launch tokenization opportunities. From real-world assets and businesses to digital communities and platforms, we help founders build sustainable token economies.",
-    image: "/about/what.svg",
+    Illustration: WhatIllustration,
     imageAlt: "What we do illustration",
   },
   {
     title: "Our Approach",
     description:
       "We do more than create tokens. We identify opportunities, evaluate potential, and support the development of long-term token ecosystems.",
-    image: "/about/approach.svg",
+    Illustration: ApproachIllustration,
     imageAlt: "Approach illustration",
   },
 ];
@@ -47,18 +49,16 @@ export function AboutPage() {
         </div>
 
         <div className="mt-4 grid grid-cols-1 gap-10 sm:grid-cols-3">
-          {CARDS.map(({ title, description, image, imageAlt }) => (
+          {CARDS.map(({ title, description, Illustration, imageAlt }) => (
             <div
-              className="flex max-w-90 flex-col overflow-hidden rounded-(--cf-radius-panel) border border-cf-border-muted bg-cf-cream-soft/24"
+              className="group flex max-w-90 flex-col overflow-hidden rounded-(--cf-radius-panel) border border-cf-border-muted bg-cf-cream-soft/24"
               key={title}
             >
               <div className="w-full overflow-hidden">
-                <Image
-                  alt={imageAlt}
+                <Illustration
+                  aria-label={imageAlt}
                   className="h-full w-full object-cover"
-                  height={247}
-                  src={image}
-                  width={380}
+                  role="img"
                 />
               </div>
               <div className="flex flex-col gap-3 p-6">

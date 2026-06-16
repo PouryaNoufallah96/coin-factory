@@ -3,10 +3,10 @@ import { PageBackdrop } from "@/components/common/page-backdrop";
 
 export function ServicesPage() {
   return (
-    <section className="relative flex flex-1 flex-col items-center justify-start overflow-hidden">
+    <section className="relative flex min-h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] flex-1 flex-col items-center justify-start overflow-visible">
       <PageBackdrop src="/brand/services-back.svg" />
 
-      <div className="relative z-10 w-full max-w-4xl animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
+      <div className="relative z-10 w-full max-w-4xl flex-1 animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
         <div className="mb-12 flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
             Services
@@ -15,15 +15,21 @@ export function ServicesPage() {
 
         <div className="flex flex-col">
           {SERVICES.map(({ title, description, icon, iconAlt }, index) => (
-            <div className="flex gap-8" key={title}>
-              <div className="flex flex-col items-center">
+            <div className="group flex gap-8" key={title}>
+              <div className="flex flex-col items-center pt-4">
                 <div className="flex size-18 items-center justify-center rounded-full bg-cf-charcoal-900 shadow-(--cf-glow-icon)">
-                  <Image alt={iconAlt} height={32} src={icon} width={32} />
+                  <Image
+                    alt={iconAlt}
+                    className="group-hover:animate-[icon-shake_0.3s_ease-in-out]"
+                    height={32}
+                    src={icon}
+                    width={32}
+                  />
                 </div>
                 {index < SERVICES.length - 1 && (
                   <div
                     aria-hidden="true"
-                    className="my-3 w-px flex-1 bg-[repeating-linear-gradient(to_bottom,var(--cf-cream-bright)_0_4px,transparent_4px_10px)]"
+                    className="mt-1 -mb-4 w-px flex-1 bg-[repeating-linear-gradient(to_bottom,var(--cf-cream-bright)_0_4px,transparent_4px_10px)]"
                   />
                 )}
               </div>

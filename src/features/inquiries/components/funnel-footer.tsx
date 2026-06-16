@@ -21,7 +21,10 @@ export function FunnelFooter() {
   }
 
   return (
-    <footer className="relative z-20 mt-auto flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)">
+    <footer
+      className="relative z-20 mt-auto flex h-(--cf-footer-h) shrink-0 items-center justify-between gap-6 px-(--cf-page-x)"
+      data-funnel-resume-hide
+    >
       <nav
         aria-label="CoinFactory social links"
         className="flex items-center gap-(--cf-social-gap)"
@@ -29,12 +32,7 @@ export function FunnelFooter() {
         {SOCIAL_LINKS.map((link) => (
           <a
             aria-label={link.label}
-            className={cn(
-              "flex size-(--cf-social-size) shrink-0 items-center justify-center rounded-full opacity-100 transition-opacity duration-(--cf-dur-feedback) ease-(--cf-ease) hover:opacity-70",
-              link.platform === "x"
-                ? "bg-cf-cream text-cf-text-on-accent"
-                : "border border-cf-cream/40 text-cf-cream"
-            )}
+            className="flex size-(--cf-social-size) shrink-0 items-center justify-center rounded-full border border-cf-cream/40 text-cf-cream transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/15 hover:text-cf-cream-bright"
             href={link.href}
             key={link.platform}
           >

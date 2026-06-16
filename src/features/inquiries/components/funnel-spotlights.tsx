@@ -41,6 +41,7 @@ export function FunnelSpotlights() {
       {VARIANTS.map((variant) => (
         <div
           className={LAYER}
+          data-funnel-resume-hide={variant === "landing" ? "" : undefined}
           key={variant}
           style={{
             opacity: active === variant ? 1 : 0,

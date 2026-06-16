@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-coin-factory}"
-DEPLOY_ENV_FILE="${DEPLOY_ENV_FILE:-/srv/coinfactory/.env}"
+# Defaults to the .env sitting next to this script; override with DEPLOY_ENV_FILE.
+DEPLOY_ENV_FILE="${DEPLOY_ENV_FILE:-$SCRIPT_DIR/.env}"
 FOLLOW_LOGS="${FOLLOW_LOGS:-1}"
 
 if [[ ! -f "$DEPLOY_ENV_FILE" ]]; then

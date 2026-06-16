@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,6 +21,10 @@ export default function AdminSettingsPage(
 }
 
 async function NotificationRecipientsSettingsContent() {
+  // connection() defers the read to request time so the image builds without a
+  // database; it still caches at runtime via "use cache".
+  await connection();
+
   const { recipients } = await getNotificationRecipients();
 
   return <NotificationRecipientsSettings recipients={recipients} />;

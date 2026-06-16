@@ -1,15 +1,10 @@
 import Image from "next/image";
+import { PageBackdrop } from "@/components/common/page-backdrop";
 
 export function ServicesPage() {
   return (
     <section className="relative flex min-h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] flex-1 flex-col items-center justify-start overflow-visible">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-1 bg-center bg-cover bg-no-repeat"
-        style={{
-          backgroundImage: "url('/brand/services-back.svg')",
-        }}
-      />
+      <PageBackdrop src="/brand/services-back.svg" />
 
       <div className="relative z-10 w-full max-w-4xl flex-1 animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
         <div className="mb-12 flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
@@ -22,7 +17,7 @@ export function ServicesPage() {
           {SERVICES.map(({ title, description, icon, iconAlt }, index) => (
             <div className="flex gap-8" key={title}>
               <div className="flex flex-col items-center pt-4">
-                <div className="flex size-18 items-center justify-center rounded-full bg-[#232831] shadow-[0_0_16px_0_#FFF2D199]">
+                <div className="flex size-18 items-center justify-center rounded-full bg-cf-charcoal-900 shadow-(--cf-glow-icon)">
                   <Image alt={iconAlt} height={32} src={icon} width={32} />
                 </div>
                 {index < SERVICES.length - 1 && (
@@ -37,7 +32,7 @@ export function ServicesPage() {
                 <h2 className="font-semibold text-cf-cream text-xl leading-tight">
                   {title}
                 </h2>
-                <div className="rounded-[12px] bg-[#FFFAED14] px-6 py-4">
+                <div className="rounded-[12px] bg-cf-cream-soft/8 px-6 py-4">
                   <p className="text-cf-text-primary text-sm leading-(--cf-leading-body)">
                     {description}
                   </p>

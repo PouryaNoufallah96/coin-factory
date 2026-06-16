@@ -69,7 +69,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           className={cn(
             "flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 active:scale-95",
-            menuOpen && "bg-[#23283266]"
+            menuOpen && "bg-cf-charcoal-900/40"
           )}
           onClick={() => setMenuOpen((open) => !open)}
           ref={menuButtonRef}
@@ -82,7 +82,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <nav
         aria-label="Main menu"
         className={cn(
-          "t-0 fixed top-0 -right-8 z-30 w-140 overflow-hidden rounded-[2rem] border border-cf-cream/10 bg-[#232832CC] shadow-[0_0_32px_0px_#FFF2D166,0_0_8px_0px_#FFF2D166] backdrop-blur-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "t-0 fixed top-0 -right-8 z-30 w-140 overflow-hidden rounded-[2rem] border border-cf-cream/10 bg-cf-charcoal-900/80 shadow-(--cf-glow-menu) backdrop-blur-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           menuOpen
             ? "pointer-events-auto translate-y-0 scale-50 opacity-100"
             : "pointer-events-none -translate-y-2 scale-50 opacity-0"

@@ -283,12 +283,12 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
         </div>
       </form>
 
-      <div className="fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5">
+      <div className="pointer-events-none fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5">
         <div
           aria-hidden="true"
-          className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] pointer-events-none absolute inset-0 z-0 [backdrop-filter:blur(50px)]"
+          className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] absolute inset-0 -z-10 [backdrop-filter:blur(50px)]"
         />
-        <div className="cf-field-container relative z-10 flex w-full flex-row items-center justify-between">
+        <div className="cf-field-container pointer-events-auto relative z-10 flex w-full flex-row items-center justify-between">
           <Button
             className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
             disabled={isSubmitting}

@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   type FunnelView,
   useFunnelDraft,
@@ -34,7 +35,8 @@ const VARIANTS: FunnelSpotlightVariant[] = [
 
 export function FunnelSpotlights() {
   const { view } = useFunnelDraft();
-  const active = resolveVariant(view);
+  const pathname = usePathname();
+  const active = pathname === "/" ? resolveVariant(view) : null;
 
   return (
     <div aria-hidden="true" className="cf-funnel-backdrop">

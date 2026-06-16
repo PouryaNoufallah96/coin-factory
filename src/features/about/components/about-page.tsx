@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PageBackdrop } from "@/components/common/page-backdrop";
 
 const CARDS = [
   {
@@ -27,13 +28,7 @@ const CARDS = [
 export function AboutPage() {
   return (
     <section className="relative flex flex-1 flex-col items-center justify-start overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-1 bg-center bg-cover bg-no-repeat"
-        style={{
-          backgroundImage: "url('/brand/about-back.svg')",
-        }}
-      />
+      <PageBackdrop src="/brand/about-back.svg" />
 
       <div className="relative z-10 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-11">
         <div className="flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
@@ -54,9 +49,8 @@ export function AboutPage() {
         <div className="mt-4 grid grid-cols-1 gap-10 sm:grid-cols-3">
           {CARDS.map(({ title, description, image, imageAlt }) => (
             <div
-              className="flex max-w-90 flex-col overflow-hidden rounded-(--cf-radius-panel) border border-cf-border-muted"
+              className="flex max-w-90 flex-col overflow-hidden rounded-(--cf-radius-panel) border border-cf-border-muted bg-cf-cream-soft/24"
               key={title}
-              style={{ backgroundColor: "#FFFAED3D" }}
             >
               <div className="w-full overflow-hidden">
                 <Image
@@ -68,13 +62,7 @@ export function AboutPage() {
                 />
               </div>
               <div className="flex flex-col gap-3 p-6">
-                <h2
-                  className="font-logo text-2xl leading-tight"
-                  style={{
-                    color: "#FFF4D7",
-                    textShadow: "0px 0px 4px #232831",
-                  }}
-                >
+                <h2 className="font-logo text-2xl text-cf-cream-bright text-shadow-[0px_0px_4px_var(--cf-charcoal-900)] leading-tight">
                   {title}
                 </h2>
                 <p className="text-cf-charcoal-900 text-sm leading-(--cf-leading-body)">

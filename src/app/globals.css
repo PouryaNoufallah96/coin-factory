@@ -505,6 +505,34 @@
   animation: cf-orbit-spin 18s linear infinite;
 }
 
+@keyframes cf-rocket-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes cf-cloud-drift {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+.group:hover .cf-rocket-part {
+  animation: cf-rocket-float 2.5s ease-in-out infinite;
+}
+
+.group:hover .cf-cloud-group {
+  animation: cf-cloud-drift 3s ease-in-out infinite;
+}
+
 ::view-transition-old(.fade-out) {
   animation: var(--cf-dur-vt-exit) ease-in fade reverse;
 }

@@ -3,7 +3,13 @@
 import { CircleX, FileText, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
-import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +42,7 @@ const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
 
 export function LandingPage({ children }: { children: ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
   const {
     assetDescription,
@@ -45,6 +52,14 @@ export function LandingPage({ children }: { children: ReactNode }) {
     setAssetDescription,
     setFiles,
   } = useFunnelDraft();
+
+  useEffect(() => {
+    const textarea = descriptionRef.current;
+    if (!textarea) {
+      return;
+    }
+    resizeDescriptionTextarea(textarea);
+  }, []);
 
   const searchActive =
     assetDescription.trim().length > 0 ||
@@ -87,11 +102,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
   function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const textarea = event.target;
     setAssetDescription(textarea.value);
-
-    textarea.style.height = "auto";
-    const capped = Math.min(textarea.scrollHeight, 96);
-    textarea.style.height = `${capped}px`;
-    textarea.style.overflowY = textarea.scrollHeight > 96 ? "auto" : "hidden";
+    resizeDescriptionTextarea(textarea);
   }
 
   function continueToWizard(event: React.SubmitEvent<HTMLFormElement>) {
@@ -170,6 +181,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   onChange={onDescriptionChange}
                   onFocus={() => setInputFocused(true)}
                   placeholder={SEARCH_PLACEHOLDER}
+                  ref={descriptionRef}
                   rows={1}
                   style={{
                     fontSize: "16px",
@@ -331,6 +343,13 @@ function nextSelectedCategoryIds(
   }
 
   return [...currentIds, categoryId];
+}
+
+function resizeDescriptionTextarea(textarea: HTMLTextAreaElement) {
+  textarea.style.height = "auto";
+  const capped = Math.min(textarea.scrollHeight, 96);
+  textarea.style.height = `${capped}px`;
+  textarea.style.overflowY = textarea.scrollHeight > 96 ? "auto" : "hidden";
 }
 
 function isAllowedDocument(file: File): boolean {

@@ -394,6 +394,117 @@
   }
 }
 
+/* About page card illustrations: subtle hover animation for world map,
+   sparkle stars, and orbit dots/lines. */
+@keyframes cf-country-swap {
+  0%,
+  100% {
+    fill: #fff2d1;
+  }
+  50% {
+    fill: #fdfdfd;
+  }
+}
+
+@keyframes cf-star-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes cf-dot-blink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes cf-orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cf-country {
+  transform-origin: center;
+}
+
+.group:hover .cf-country-0 {
+  animation: cf-country-swap 2.4s ease-in-out infinite;
+}
+
+.group:hover .cf-country-1 {
+  animation: cf-country-swap 2.4s ease-in-out infinite 0.3s;
+}
+
+.group:hover .cf-country-2 {
+  animation: cf-country-swap 2.4s ease-in-out infinite 0.6s;
+}
+
+.group:hover .cf-country-3 {
+  animation: cf-country-swap 2.4s ease-in-out infinite 0.9s;
+}
+
+.cf-star {
+  transform-origin: center;
+}
+
+.group:hover .cf-star-0 {
+  animation: cf-star-blink 1.6s ease-in-out infinite;
+}
+
+.group:hover .cf-star-1 {
+  animation: cf-star-blink 1.6s ease-in-out infinite 0.4s;
+}
+
+.group:hover .cf-star-2 {
+  animation: cf-star-blink 1.6s ease-in-out infinite 0.8s;
+}
+
+.group:hover .cf-star-3 {
+  animation: cf-star-blink 1.6s ease-in-out infinite 1.2s;
+}
+
+.cf-dot {
+  transform-origin: center;
+}
+
+.group:hover .cf-dot-0 {
+  animation: cf-dot-blink 1.8s ease-in-out infinite;
+}
+
+.group:hover .cf-dot-1 {
+  animation: cf-dot-blink 1.8s ease-in-out infinite 0.45s;
+}
+
+.group:hover .cf-dot-2 {
+  animation: cf-dot-blink 1.8s ease-in-out infinite 0.9s;
+}
+
+.group:hover .cf-dot-3 {
+  animation: cf-dot-blink 1.8s ease-in-out infinite 1.35s;
+}
+
+.cf-orbit-group {
+  transform-origin: 191.6px 195.16px;
+}
+
+.group:hover .cf-orbit-group {
+  animation: cf-orbit-spin 18s linear infinite;
+}
+
 ::view-transition-old(.fade-out) {
   animation: var(--cf-dur-vt-exit) ease-in fade reverse;
 }

@@ -21,7 +21,7 @@ export function ServicesPage() {
         <div className="flex flex-col">
           {SERVICES.map(({ title, description, icon, iconAlt }, index) => (
             <div className="flex gap-8" key={title}>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center pt-4">
                 <div className="flex size-18 items-center justify-center rounded-full bg-[#232831] shadow-[0_0_16px_0_#FFF2D199]">
                   <Image alt={iconAlt} height={32} src={icon} width={32} />
                 </div>

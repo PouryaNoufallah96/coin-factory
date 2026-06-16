@@ -1,4 +1,8 @@
+import { preload } from "react-dom";
+
 export function PageBackdrop({ src }: { src: string }) {
+  preload(src, { as: "image", fetchPriority: "high" });
+
   return (
     <div
       aria-hidden="true"

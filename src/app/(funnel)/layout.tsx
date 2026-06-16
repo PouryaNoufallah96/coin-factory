@@ -8,8 +8,9 @@ export default function FunnelLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  preload("/brand/landing-back.svg", { as: "image" });
+  preload("/brand/landing-back.svg", { as: "image", fetchPriority: "high" });
   preload("/brand/q-back.svg", { as: "image" });
+  preload("/brand/thankyou-back.svg", { as: "image" });
 
   return (
     <>

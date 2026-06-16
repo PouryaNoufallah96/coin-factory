@@ -160,7 +160,14 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 <button
                   aria-label="Attach PDF or Word document"
                   className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95"
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => {
+                    if (files.length >= MAX_FILES) {
+                      funnelAlert(`
+                        You can attach up to ${MAX_FILES} documents.`);
+                      return;
+                    }
+                    fileInputRef.current?.click();
+                  }}
                   type="button"
                 >
                   <Plus aria-hidden="true" className="size-5" />

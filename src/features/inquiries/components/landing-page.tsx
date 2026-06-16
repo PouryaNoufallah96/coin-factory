@@ -165,7 +165,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 />
                 <textarea
                   aria-label="Asset description"
-                  className="cf-search-input w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
+                  className="cf-search-input cf-scrollbar-custom w-full resize-none border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none"
                   onBlur={() => setInputFocused(false)}
                   onChange={onDescriptionChange}
                   onFocus={() => setInputFocused(true)}

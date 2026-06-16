@@ -567,6 +567,38 @@
     background-attachment: fixed;
   }
 
+  .cf-scrollbar-custom {
+    scrollbar-color: transparent transparent;
+    scrollbar-width: thin;
+  }
+
+  .cf-scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .cf-scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .cf-scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+  }
+
+  .cf-scrollbar-custom:hover {
+    scrollbar-color: color-mix(in srgb, var(--cf-charcoal-700) 40%, transparent)
+      transparent;
+  }
+
+  .cf-scrollbar-custom:hover::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+      in srgb,
+      var(--cf-charcoal-700) 40%,
+      transparent
+    );
+  }
+
   .cf-spotlight {
     position: absolute;
     inset-inline: -8rem;

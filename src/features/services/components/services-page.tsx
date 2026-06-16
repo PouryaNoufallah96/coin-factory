@@ -15,9 +15,9 @@ export function ServicesPage() {
 
         <div className="flex flex-col">
           {SERVICES.map(({ title, description, icon, iconAlt }, index) => (
-            <div className="flex gap-8" key={title}>
+            <div className="group flex gap-8" key={title}>
               <div className="flex flex-col items-center pt-4">
-                <div className="group flex size-18 items-center justify-center rounded-full bg-cf-charcoal-900 shadow-(--cf-glow-icon)">
+                <div className="flex size-18 items-center justify-center rounded-full bg-cf-charcoal-900 shadow-(--cf-glow-icon)">
                   <Image
                     alt={iconAlt}
                     className="group-hover:animate-[icon-shake_0.3s_ease-in-out]"

@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { FunnelFooter } from "@/features/inquiries/components/funnel-footer";
 import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
 import { FunnelSpotlights } from "@/features/inquiries/components/funnel-spotlights";
+import { useFunnelHome } from "@/features/inquiries/hooks/use-funnel-home";
 import { cn } from "@/lib/utils";
 
 const FUNNEL_MENU_ITEMS = [
@@ -38,6 +39,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLElement>(null);
+  const goHome = useFunnelHome();
 
   function closeMenuFromOutside(event: PointerEvent<HTMLDivElement>) {
     if (!(menuOpen && event.target instanceof Node)) {
@@ -98,7 +100,12 @@ export function FunnelShell({ children }: { children: ReactNode }) {
             className="group text-(length:--cf-text-field-label) flex h-30 items-center gap-8 border-cf-cream/15 border-b px-11 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8"
             href={item.href}
             key={item.href}
-            onClick={() => setMenuOpen(false)}
+            onClick={(event) => {
+              setMenuOpen(false);
+              if (item.href === "/") {
+                goHome(event);
+              }
+            }}
             style={{
               transitionDelay: menuOpen ? `${index * 35}ms` : "0ms",
             }}

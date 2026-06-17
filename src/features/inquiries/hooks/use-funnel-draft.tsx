@@ -26,6 +26,7 @@ interface FunnelDraft {
     step?: number,
     direction?: "nav-back" | "nav-forward"
   ) => void;
+  reset: () => void;
   selectedCategoryIds: string[];
   setAnswer: (questionId: string, value: string) => void;
   setAssetDescription: Dispatch<SetStateAction<string>>;
@@ -57,6 +58,7 @@ type FunnelDraftAction =
   | { type: "setSelectedCategoryIds"; value: SetStateAction<string[]> }
   | { type: "setWhatsapp"; value: SetStateAction<string> }
   | { type: "navigate"; view: FunnelView; step: number }
+  | { type: "reset" }
   | { type: "hydrate"; state: FunnelDraftState };
 
 const STORAGE_KEY = "cf-funnel-draft";
@@ -149,6 +151,13 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  function reset() {
+    startTransition(() => {
+      addTransitionType("nav-back");
+      dispatch({ type: "reset" });
+    });
+  }
+
   return (
     <FunnelDraftContext.Provider
       value={{
@@ -161,6 +170,7 @@ export function FunnelDraftProvider({ children }: { children: ReactNode }) {
         view: state.view,
         step: state.step,
         goTo,
+        reset,
         setAnswer,
         setAssetDescription: (value) =>
           dispatch({ type: "setAssetDescription", value }),
@@ -213,6 +223,8 @@ function funnelDraftReducer(
       };
     case "navigate":
       return { ...state, view: action.view, step: action.step };
+    case "reset":
+      return initialFunnelDraftState;
     case "hydrate":
       return action.state;
     default:

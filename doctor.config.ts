@@ -12,6 +12,12 @@
  *   server-rendered landing for a returning visitor; next/script beforeInteractive is
  *   hydration-timed (and must live in the root layout), so it cannot prevent the flash.
  *   Scoped to the one file so the rule still guards every other script.
+ * - rendering-svg-precision / no-giant-component (about/illustrations only) — these are
+ *   machine-exported SVG art kept inline because their CSS keyframe animations target inner
+ *   nodes (cf-orbit-group, cf-rocket-part, cf-star). Hand-rounding the generated path/transform
+ *   data or splitting the export by paint group would risk the rendered result and churn a
+ *   file that is meant to be re-exported, so both cosmetic rules are scoped off there while
+ *   staying enforced for every hand-written component.
  * - supplyChain.minScore 50→46 accepts `server-only` (official Vercel guard;
  *   composite dragged down solely by the one-line-stub `quality` axis).
  * - ignore.files excludes docs and hidden local tooling artifacts; React Doctor is the
@@ -35,8 +41,16 @@ export default {
         files: ["src/features/inquiries/components/funnel-resume-guard.tsx"],
         rules: ["react-doctor/nextjs-no-native-script"],
       },
+      {
+        files: ["src/features/about/components/illustrations/**"],
+        rules: [
+          "react-doctor/rendering-svg-precision",
+          "react-doctor/no-giant-component",
+        ],
+      },
     ],
   },
+
   supplyChain: {
     minScore: 46,
   },

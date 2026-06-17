@@ -17,254 +17,254 @@ export function ApproachIllustration(props: SVGProps<SVGSVGElement>) {
           <path
             d="M205.424 223.351C201.293 225.479 196.606 226.679 191.64 226.679C174.988 226.679 161.488 213.18 161.488 196.528C161.488 194.33 161.723 192.188 162.17 190.124"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M185.564 166.987C187.527 166.586 189.56 166.375 191.641 166.375C208.293 166.375 221.793 179.874 221.793 196.526C221.793 206.177 217.259 214.769 210.204 220.288"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M169.73 175.81C169.999 175.526 170.273 175.247 170.553 174.974"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M163.914 184.655C164.718 182.779 165.708 181.002 166.859 179.345"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M177.363 153.468C181.852 151.981 186.651 151.175 191.638 151.175C207.863 151.175 222.097 159.695 230.112 172.505"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M152.357 219.203C148.498 212.532 146.289 204.788 146.289 196.527C146.289 178.931 156.31 163.675 170.957 156.156"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M164.507 232.871C163.745 232.301 163.003 231.709 162.279 231.094"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M235.965 206.168C231.545 226.584 213.379 241.879 191.64 241.879C183.378 241.879 175.633 239.669 168.961 235.809"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M234.018 180.344C234.824 182.455 235.478 184.641 235.964 186.89"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M180.925 255.88C152.733 250.824 131.338 226.174 131.338 196.527C131.338 163.223 158.336 136.226 191.639 136.226C224.943 136.226 251.941 163.224 251.941 196.527C251.941 219.33 239.284 239.177 220.612 249.425"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M117.317 208.401C117.08 206.904 116.886 205.393 116.738 203.868"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M123.447 228.396C121.732 224.734 120.305 220.912 119.191 216.958"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M265.365 211.693C258.348 245.985 228.007 271.78 191.642 271.78C165.748 271.78 142.909 258.702 129.369 238.79"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M220.641 127.068C247.804 138.422 266.892 165.247 266.892 196.528"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M201.93 121.973C203.976 122.252 205.996 122.614 207.986 123.055"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M118.115 180.413C125.493 146.596 155.609 121.276 191.638 121.276"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M135.809 125.199C137.756 123.672 139.768 122.223 141.84 120.857C156.129 111.435 173.244 105.951 191.64 105.951C197.221 105.951 202.684 106.456 207.988 107.422C209.19 107.641 210.384 107.884 211.569 108.15"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M109.449 234.648C104.065 223.061 101.061 210.145 101.061 196.528C101.061 172.468 110.441 150.599 125.745 134.38"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M233.096 115.974C262.269 131.018 282.216 161.443 282.216 196.528C282.216 220.058 273.244 241.493 258.533 257.597"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M291.202 231.589C276.747 272.635 237.629 302.054 191.639 302.054C185.217 302.054 178.93 301.481 172.824 300.382"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M253.174 110.788C279.815 129.943 297.165 161.208 297.165 196.526C297.165 203.84 296.421 210.979 295.005 217.873"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M178.111 91.8584C182.541 91.2919 187.056 90.9996 191.639 90.9996C204.865 90.9996 217.522 93.4325 229.188 97.8756"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M163.914 94.6797C165.679 94.2007 167.462 93.7657 169.263 93.3767"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M88.8594 172.505C96.885 138.03 121.809 110.043 154.427 97.7488"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M123.443 277.062C114.401 269.398 106.666 260.237 100.621 249.963C91.3995 234.291 86.1113 216.026 86.1113 196.527"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M98.7019 273.197C81.4978 252.366 71.1621 225.654 71.1621 196.527C71.1621 169.202 80.2587 144.002 95.5891 123.79"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M307.038 161.797C310.343 172.794 312.119 184.454 312.119 196.528C312.119 240.584 288.472 279.117 253.178 300.126"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M303.963 152.865C304.253 153.613 304.537 154.363 304.813 155.117"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M125.746 95.6496C144.682 83.2558 167.32 76.0498 191.64 76.0498C239.224 76.0498 280.366 103.637 299.943 143.689"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M100.316 117.945C101.005 117.145 101.704 116.355 102.413 115.574"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M318.768 242.224C318.153 243.932 317.506 245.624 316.826 247.299"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M323.483 225.936C322.771 229.139 321.946 232.3 321.012 235.413"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M257.656 78.6794C298.856 101.808 326.694 145.917 326.694 196.528C326.694 204.847 325.942 212.99 324.502 220.894"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M231.762 67.5333C233.516 68.0787 235.256 68.6582 236.979 69.2725"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M58.3359 174.717C68.7622 110.499 124.475 61.4725 191.638 61.4725C199.499 61.4725 207.203 62.1439 214.696 63.4332"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
           <path
             d="M164.505 328.855C102.921 316.294 56.584 261.822 56.584 196.527"
             stroke="#FFF2D1"
-            stroke-width="2"
             strokeLinecap="round"
             strokeMiterlimit="10"
+            strokeWidth="2"
           />
         </g>
         <g filter="url(#filter0_dd_428_3829)">

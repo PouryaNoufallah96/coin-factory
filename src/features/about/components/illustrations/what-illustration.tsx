@@ -182,8 +182,8 @@ export function WhatIllustration(props: SVGProps<SVGSVGElement>) {
             className="cf-rocket-part"
             d="M190.972 83.2229C195.128 83.2229 198.498 79.8415 198.498 75.6703C198.498 71.4991 195.128 68.1177 190.972 68.1177C186.815 68.1177 183.445 71.4991 183.445 75.6703C183.445 79.8415 186.815 83.2229 190.972 83.2229Z"
             stroke="#FDFDFD"
-            stroke-width="4"
             strokeMiterlimit="10"
+            strokeWidth="4"
           />
           <g className="cf-cloud-group">
             <path

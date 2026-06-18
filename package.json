@@ -5,10 +5,10 @@
   "private": true,
   "packageManager": "pnpm@10.33.2",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build --turbopack",
+    "dev": "node api.js && next dev",
+    "build": "node api.js && next build --turbopack",
     "email:dev": "email dev --dir src/features/inquiries/email/templates --port 3001",
-    "start": "next start",
+    "start": "node api.js && next start",
     "prepare": "husky",
     "format": "biome check --write .",
     "lint": "biome check .",

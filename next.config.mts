@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 // @ts-expect-error TS5097: the explicit .ts extension is required — Node
@@ -12,6 +13,8 @@ const serverActionOrigins = new Set(["localhost:3000"]);
 if (process.env.BETTER_AUTH_URL) {
   serverActionOrigins.add(new URL(process.env.BETTER_AUTH_URL).host);
 }
+
+const hasSentryAuthToken = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -51,4 +54,20 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG ?? "rz-prime",
+  project: process.env.SENTRY_PROJECT ?? "coinfactory-app",
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  tunnelRoute: "/monitoring",
+  widenClientFileUpload: hasSentryAuthToken,
+  sourcemaps: {
+    disable: !hasSentryAuthToken,
+  },
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeReplayIframe: true,
+    excludeReplayShadowDom: true,
+  },
+  silent: !process.env.CI,
+  telemetry: false,
+});

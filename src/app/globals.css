@@ -235,6 +235,7 @@
 
   --cf-glow-active: 0 0 12.5rem 0 rgb(255 250 237 / 0.24);
   --cf-glow-soft: 0 0 6.25rem 0 rgb(255 250 237 / 0.24);
+  --cf-glow-circle-active: 0 0 0.74rem 0 rgb(255 242 209 / 0.4);
   --cf-cta-shadow: 0 0 0.5rem 0 rgb(0 0 0 / 0.24);
   --cf-hero-shadow:
     0 0 4px var(--cf-cream),

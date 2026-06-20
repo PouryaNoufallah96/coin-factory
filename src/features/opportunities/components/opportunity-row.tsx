@@ -56,7 +56,7 @@ export function OpportunityRow({
               className={cn(
                 "mr-6 flex size-32 shrink-0 items-center justify-center rounded-full border px-4 text-center transition-[background-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease)",
                 isActive
-                  ? "scale-105 border-cf-cream bg-cf-cream text-cf-charcoal-900 shadow-(--cf-glow-active)"
+                  ? "scale-105 border-cf-cream bg-cf-cream text-cf-charcoal-900 shadow-(--cf-glow-circle-active)"
                   : "border-cf-cream/15 bg-cf-charcoal-900 text-cf-cream shadow-(--cf-glow-icon) hover:border-cf-cream/40"
               )}
               key={`${item.id}-${item.copy}`}

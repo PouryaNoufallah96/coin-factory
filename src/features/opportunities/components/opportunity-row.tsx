@@ -31,10 +31,7 @@ export function OpportunityRow({
   const sourceIndexById = new Map(items.map((item, index) => [item.id, index]));
 
   return (
-    <section
-      aria-label={ariaLabel}
-      className="mask-[linear-gradient(to_right,transparent,black_9.5rem,black_calc(100%-9.5rem),transparent)] -my-4 overflow-hidden py-4"
-    >
+    <section aria-label={ariaLabel} className="-my-4 overflow-hidden py-4">
       <div
         className={cn(
           "flex w-max will-change-transform",

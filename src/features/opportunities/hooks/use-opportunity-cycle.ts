@@ -25,14 +25,6 @@ interface UseOpportunityCycleResult {
   onCircleLeave: () => void;
 }
 
-/**
- * Drives a single page-wide "active" opportunity. It sweeps through every
- * item in row one, then every item in row two, then loops back - so only
- * one circle is ever highlighted across both rows. Hovering a circle pins it
- * (pausing the sweep and both rows' marquees) until released. Clicking a
- * circle instead jumps the sweep to that circle and keeps it running from
- * there.
- */
 export function useOpportunityCycle({
   rowOneLength,
   rowTwoLength,
@@ -80,8 +72,9 @@ export function useOpportunityCycle({
     isPaused: pausedGlobalIndex !== null,
     onCircleClick: (row, index) => {
       cancelPendingResume();
-      setPausedGlobalIndex(null);
-      setAutoGlobalIndex(toGlobalIndex(row, index, rowOneLength));
+      const globalIndex = toGlobalIndex(row, index, rowOneLength);
+      setAutoGlobalIndex(globalIndex);
+      setPausedGlobalIndex(globalIndex);
     },
     onCircleEnter: (row, index) => {
       cancelPendingResume();

@@ -33,7 +33,7 @@ export function OpportunityRow({
   return (
     <section
       aria-label={ariaLabel}
-      className="mask-[linear-gradient(to_right,transparent,black_9.5rem,black_calc(100%-9.5rem),transparent)] overflow-hidden"
+      className="mask-[linear-gradient(to_right,transparent,black_9.5rem,black_calc(100%-9.5rem),transparent)] -my-4 overflow-hidden py-4"
     >
       <div
         className={cn(

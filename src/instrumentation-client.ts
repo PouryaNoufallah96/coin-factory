@@ -6,7 +6,7 @@ const sentryDsn =
 
 init({
   dsn: sentryDsn,
-  enabled: Boolean(sentryDsn),
+  enabled: process.env.NODE_ENV === "production" && Boolean(sentryDsn),
   environment: process.env.NODE_ENV,
   sendDefaultPii: false,
   tracePropagationTargets: ["localhost", /^\//],

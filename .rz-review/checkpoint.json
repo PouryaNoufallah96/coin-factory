@@ -1,0 +1,1041 @@
+{
+  "version": 1,
+  "contexts": [
+    "architecture",
+    "backend",
+    "conventions",
+    "domain",
+    "frontend",
+    "risk-map",
+    "security",
+    "testing",
+    "workflows"
+  ],
+  "files": {
+    ".dockerignore": {
+      "classification": "config",
+      "hash": "bb4d19f4c777bd244b03767872ed9bc254e2739c2b0a51c795b9cefeb031583c"
+    },
+    ".env.example": {
+      "classification": "config",
+      "hash": "2ea9df7e6d37293cbfea8163cae9ac9269e71fa4c5c363fcac3017a0c326b7ab"
+    },
+    ".gitattributes": {
+      "classification": "config",
+      "hash": "ade9e80bed2aa6d68bfbe252275affea22ae84156c3e8bc5781f7432d79d5f32"
+    },
+    ".gitignore": {
+      "classification": "config",
+      "hash": "56086d02346501f3c3a47e2095e2e8cb4e8fbcc13abe068d569e3954a910dbe1"
+    },
+    ".gitlab-ci.yml.disabled": {
+      "classification": "other",
+      "hash": "99eec18357245a3e3af5c46b175b029ac31c406c2ba200fed2b7a89d82fe0c2a"
+    },
+    ".husky/pre-commit": {
+      "classification": "other",
+      "hash": "ea072112cd8e3032442b45264271d571864e2440bec2cff8d1d2d32632b4d69b"
+    },
+    ".rz-review.json": {
+      "classification": "config",
+      "hash": "de8ec1bcdc3d302ec850a5113d90ba4c9d464fff7ea55dd18edabed38019a7b6"
+    },
+    "CONTEXT.md": {
+      "classification": "doc",
+      "hash": "522ce0b7bed97bf85b9c709c03d3c9e85e6942de1dcbccc933b52910f16d095e"
+    },
+    "CONTRIBUTING.md": {
+      "classification": "doc",
+      "hash": "635bef548ba2a9ac001f0aee2e68ebf815c980112caf78c09a8ee4b3b7a6d37d"
+    },
+    "DESIGN.md": {
+      "classification": "doc",
+      "hash": "4c4e76dd4cb2b06a81a2f663bd12841aca47676b30f6732433f39b5b48dfae05"
+    },
+    "Dockerfile": {
+      "classification": "config",
+      "hash": "2da0cbbf026cc25c27c4941e77bf89680a15a82e2b8f0dc682d0ebbf236d8ea1"
+    },
+    "README.md": {
+      "classification": "doc",
+      "hash": "40182b2dbd36c363729199b65390c9e34d70df9c8ea84d962c82b1a2269131a9"
+    },
+    "biome.jsonc": {
+      "classification": "other",
+      "hash": "1bd397fb2ba1bef1688a9b27ba5ab818cfc095b7261db6ead93c13f70b632148"
+    },
+    "components.json": {
+      "classification": "config",
+      "hash": "bef25b1090e31fcecda3733e9bcedd655bc3d81d256e11ee046d56956662ab28"
+    },
+    "deploy.sh": {
+      "classification": "other",
+      "hash": "25714a2a95223e7dbec3ff3aab7edf36673562a93ab51a4721234384c6f23e25"
+    },
+    "docker-compose.yml": {
+      "classification": "config",
+      "hash": "1bbd5bf7b3836e44ec8ce7d628c25bcbca8cc8f7c25fe3ae599d937899c6e1df"
+    },
+    "docs/ARCHITECTURE.md": {
+      "classification": "doc",
+      "hash": "06a38d914869715f1274ef1999a5e3726686b244979cd922cf32512335d32433"
+    },
+    "docs/REVIEW_GUIDE.md": {
+      "classification": "doc",
+      "hash": "bc16bd1d7a5fc7a27ced072446e112742dd6fb1484bdcd3f40b779ad16326583"
+    },
+    "docs/REVIEW_INDEX.md": {
+      "classification": "doc",
+      "hash": "b752d6f97b705e3c975ac22fbdcfc8b991441f412a7a1a3e58b325401dff3695"
+    },
+    "docs/SECURITY.md": {
+      "classification": "doc",
+      "hash": "c090f892b39353b6dba64efaa7ce1adc6ebb09ac3e82822901b663616859134e"
+    },
+    "docs/playbooks/feature-flow.md": {
+      "classification": "doc",
+      "hash": "a3f80103a2af038f679760868989e2728feb32c3ae33552e32d560d898c245da"
+    },
+    "docs/review/architecture.md": {
+      "classification": "doc",
+      "hash": "68e6d87e99de09ab5ce310f4ff76dce79997fa800081af163856b8612af3820c"
+    },
+    "docs/review/backend.md": {
+      "classification": "doc",
+      "hash": "d8f62ff1594668c23801253e6953bbc6d610f305aaf790c25ff52486a95022ba"
+    },
+    "docs/review/conventions.md": {
+      "classification": "doc",
+      "hash": "71193942e162a6a03c861d8a6ab738f58155a49f38f9ad01f5d3e3c75565daf5"
+    },
+    "docs/review/domain.md": {
+      "classification": "doc",
+      "hash": "dca6856db88cab6d62e0522ca7fb5b3352e449c78acc4e0785623f2a84e80c86"
+    },
+    "docs/review/frontend.md": {
+      "classification": "doc",
+      "hash": "1014bf3d3a214bd6dc0128d7864adfd01cef5a42aac0c9e6ce63442a96ee7580"
+    },
+    "docs/review/risk-map.md": {
+      "classification": "doc",
+      "hash": "550b62d1fd1f3b6a140dcea2e52700c5c04fe7797d4475bc900f5e96cd083b41"
+    },
+    "docs/review/security.md": {
+      "classification": "doc",
+      "hash": "65bbb6bf352a430a253a17f7897ea86db3ef2b9a98792351e5e104f01d4c094d"
+    },
+    "docs/review/testing.md": {
+      "classification": "doc",
+      "hash": "5823f2a6e2b1cfd8e1350a67290fb5d0fd0c005a0911531a72e25ca82a45217b"
+    },
+    "docs/review/workflows.md": {
+      "classification": "doc",
+      "hash": "66c5cd20cb134807a0a9e1d5b74b7be0b7e02a29f3b1aab257f5c665accd08ca"
+    },
+    "doctor.config.ts": {
+      "classification": "source",
+      "hash": "7c2ddf4bb9650221c5fd1469bb0987084e0b8332d91c1ee74d2f785aab494f90"
+    },
+    "drizzle.config.ts": {
+      "classification": "source",
+      "hash": "11025c74e9a2f4d13204c91366c30d3d2ac93535ea733a1c8ee3c05f7cddd847"
+    },
+    "drizzle/20260611100055_bored_rattler/migration.sql": {
+      "classification": "other",
+      "hash": "27faf454f49e716a47d8ac46ff6d4ba2ff3cdf5191f4bb27069a58804a7fb2ff"
+    },
+    "drizzle/20260611100055_bored_rattler/snapshot.json": {
+      "classification": "config",
+      "hash": "8910607d58cc088711352602ea0cae29255a99455cdd19619ce65584d60e29f4"
+    },
+    "drizzle/20260611100116_seed-questions-and-categories/migration.sql": {
+      "classification": "other",
+      "hash": "7258c14778986df160b6314f60f06fc84aedf98ac0d8644d7c50d01fbbdbdffe"
+    },
+    "drizzle/20260611100116_seed-questions-and-categories/snapshot.json": {
+      "classification": "config",
+      "hash": "5200eb551e3c485ba011aada1bb63ab3d0dc695774d253b021fdfbbb5b44b0ef"
+    },
+    "drizzle/20260612130859_clammy_pretty_boy/migration.sql": {
+      "classification": "other",
+      "hash": "b5d87c22d255060bd1f203e92c4a0d8d6dd9c1f7dfb5116dd9fa2189651d4bfa"
+    },
+    "drizzle/20260612130859_clammy_pretty_boy/snapshot.json": {
+      "classification": "config",
+      "hash": "7a2063b17374f105d8e8c0a0948f019eb201869d78eef05562fe462dfab1f3fe"
+    },
+    "drizzle/20260613000406_vengeful_warbird/migration.sql": {
+      "classification": "other",
+      "hash": "6c2ecd89abdbdd5a28d0141b5b6d0cff9faaec6738e911e82b28b05bdcb9133e"
+    },
+    "drizzle/20260613000406_vengeful_warbird/snapshot.json": {
+      "classification": "config",
+      "hash": "5ee56d047c65f91c816a9d680c13ef9f188c14a878def95cbf10cbc9c05d0af6"
+    },
+    "next.config.mts": {
+      "classification": "other",
+      "hash": "30c2e789267bb1dd44b978f3d0863d8552c3374f54aa44e36bece732ad3cd5f9"
+    },
+    "package.json": {
+      "classification": "config",
+      "hash": "9d741bcee6c19a7cb4ba392a38c1e4dd2e1ead9715957939109857a16d49c256"
+    },
+    "pnpm-lock.yaml": {
+      "classification": "config",
+      "hash": "a84e6e36ee4c4d3e4938eb8e07a500b253faa4d2d75a7e69da96405d37de17ea"
+    },
+    "pnpm-workspace.yaml": {
+      "classification": "config",
+      "hash": "f3086948440cc102bcbec9d808f6fd66c921eddad60326efa990881f64e09172"
+    },
+    "postcss.config.mjs": {
+      "classification": "source",
+      "hash": "47c12dfcd065690a63d1a34af9e9203a7bda73a7890c64290a59e99e229e762d"
+    },
+    "public/.gitkeep": {
+      "classification": "other",
+      "hash": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "public/about/approach.svg": {
+      "classification": "asset",
+      "hash": "8996e6ebd3edb2342b2674da0f2d68806fa84383128a200646822a1c0122757b"
+    },
+    "public/about/what.svg": {
+      "classification": "asset",
+      "hash": "0698621c7d1573de56756ca60ead4cc9c5a4cbf1e397bf34a8f75fc4ca2d0172"
+    },
+    "public/about/world.svg": {
+      "classification": "asset",
+      "hash": "12ffdac4bdb12451dd1279cc1396cd39988fca9e427afc7082500ccf143fb49f"
+    },
+    "public/brand/about-back.svg": {
+      "classification": "asset",
+      "hash": "9d2ae20f7191e784d2178d0d13adc2bed7310233a9b21401c2c0ede6b1e473d1"
+    },
+    "public/brand/funnel-light-final.svg": {
+      "classification": "asset",
+      "hash": "1a1289abf5147e1a2075b9d3824bcfba00d86ed101c5cede3eec7623cd84240a"
+    },
+    "public/brand/funnel-light-landing.svg": {
+      "classification": "asset",
+      "hash": "a4c6e6016ace1d63125274bc2c8a0eedc49236b6abefa1958877827d4bc312c0"
+    },
+    "public/brand/funnel-light-wizard.svg": {
+      "classification": "asset",
+      "hash": "b149f2300422a6b687ee9e2075fd7fe354f391a9cd2033e67bd85d704f1aef5f"
+    },
+    "public/brand/landing-back.svg": {
+      "classification": "asset",
+      "hash": "e75a8c2c3fbbe54f610720fe3366e086c94263f69e3801ddca0ce23d8d06e1e0"
+    },
+    "public/brand/logo-c.svg": {
+      "classification": "asset",
+      "hash": "4deca4fd70769d88685e8a7a937c69b16d9b939f1b4cacbd190c53993fdda739"
+    },
+    "public/brand/q-back.svg": {
+      "classification": "asset",
+      "hash": "a2456e0da6fe0d5eea60f3f09f73262463add28d6415b426d63cfc94fd1fa798"
+    },
+    "public/brand/services-back.svg": {
+      "classification": "asset",
+      "hash": "2b1d7ed7e05054f59b6f1bb17ba6785d254c55055abaf5bcc616cbfc7ce6a065"
+    },
+    "public/brand/social-discord.svg": {
+      "classification": "asset",
+      "hash": "4c20438966621e609ee3744efd3c4575c35b4ce2d6e0c471b16db5bb8a6c6297"
+    },
+    "public/brand/social-instagram.svg": {
+      "classification": "asset",
+      "hash": "8fdfb8a831db64a329d89294b5df7b3a1efc1daa0c3d388a70ce7e18b3ddbb9c"
+    },
+    "public/brand/social-telegram.svg": {
+      "classification": "asset",
+      "hash": "64b373993fb607b70a68d83078132d6aa13b795be59930c70ceeea41dd064cff"
+    },
+    "public/brand/social-whatsapp.svg": {
+      "classification": "asset",
+      "hash": "7be7f7ce9112e97f1204fd1a3eb195a36db892ae9fe16e3a6700e7ea940be087"
+    },
+    "public/brand/social-x.svg": {
+      "classification": "asset",
+      "hash": "90e0cfa5be9965c114c70d59924cea9c94e7e3eec8f0d3b9d4837db8771db52c"
+    },
+    "public/brand/social-youtube.svg": {
+      "classification": "asset",
+      "hash": "aa8a21c4439249dff09f899542e3cb8c4fd5eeafddb8a3584a533b26ade8c456"
+    },
+    "public/brand/thankyou-back.svg": {
+      "classification": "asset",
+      "hash": "dce6b166148534a821762fdc6d8213839278e08257aaf0467da95733f5c3173f"
+    },
+    "public/icons/Subtract.svg": {
+      "classification": "asset",
+      "hash": "b0a8d27c985c0af0eefe7c3830b8e96a53e21d863c09191fffd375e87c47f670"
+    },
+    "public/icons/about.svg": {
+      "classification": "asset",
+      "hash": "9d13ec204fb4e6d3278577e14ed00dc5f5cab7d1be43e34c3a55081d14da3b36"
+    },
+    "public/icons/board.svg": {
+      "classification": "asset",
+      "hash": "42d02cc5efdc2a7ea26ec3934cf7b9721e3ff0b1a92a22bcdbfaa3e2841319fa"
+    },
+    "public/icons/exchange.svg": {
+      "classification": "asset",
+      "hash": "98fd61a6e1c3777e95722b0b62963afac061e45b473faca206ee5b070a31d9f9"
+    },
+    "public/icons/globe.svg": {
+      "classification": "asset",
+      "hash": "ae98cf03b52f97e268e987c7d9c9dc0e2f47f9922d841800e0d5f97ef700b8ca"
+    },
+    "public/icons/interactive.svg": {
+      "classification": "asset",
+      "hash": "050d3c0b52554732973cd9b8b1b3a3aba4091f7128a32967bfbf0f832c8887b9"
+    },
+    "public/icons/layers.svg": {
+      "classification": "asset",
+      "hash": "8cdca7fb4460bc3e22741f66431b6374826f9848b88d5ff823e46f77cbbb6d17"
+    },
+    "public/icons/notification.svg": {
+      "classification": "asset",
+      "hash": "e40c1478fc3bef56d26551ea74ebadc55f3c03f012a7a8ddb89588a27db9150e"
+    },
+    "public/icons/opportunity.svg": {
+      "classification": "asset",
+      "hash": "83c0f7d689f6c53825e71034644865e043b91cf2b8915384a946f6cf29e68c29"
+    },
+    "public/icons/services.svg": {
+      "classification": "asset",
+      "hash": "37f06ad0d5b42adb090fc74d816f0c916707da18c177038f66f6479576881ea2"
+    },
+    "public/icons/share.svg": {
+      "classification": "asset",
+      "hash": "a77d7ed8b813aeb5dabbea28f255f59c644f293d25479dc7e91b3752ae9af869"
+    },
+    "public/icons/shield.svg": {
+      "classification": "asset",
+      "hash": "fb9cda24b0dc7169c5de34714fa2b5e87c26fd485be26122e6aed8f6130f8144"
+    },
+    "public/icons/venture.svg": {
+      "classification": "asset",
+      "hash": "9c45d8347e3251640125ab4c4a96558481632516046f4631b23a7326e6fb00ea"
+    },
+    "src/app/(funnel)/about/page.tsx": {
+      "classification": "source",
+      "hash": "19041af5c3321fe6850d62c4b9c7df93aeb865c9575efc778ea53b16d2dba984"
+    },
+    "src/app/(funnel)/error.tsx": {
+      "classification": "source",
+      "hash": "37a44dfd79c6f33b19c8e94a0c2ae5aadbe825a74945d9a3ab9122d66cd3a32b"
+    },
+    "src/app/(funnel)/layout.tsx": {
+      "classification": "source",
+      "hash": "560d969e446363610a33729e58b72cdd9c69f36b9ed98a349e5a9c5c42e230cf"
+    },
+    "src/app/(funnel)/page.tsx": {
+      "classification": "source",
+      "hash": "4af707589d5ebb8de17a12fbd9e0d02bc4bd2e6b88bf110fbe21e7824384638d"
+    },
+    "src/app/(funnel)/services/page.tsx": {
+      "classification": "source",
+      "hash": "0ff84f2214d096045068ae3792b2c44832423c78b88be5819a2bc9b92cc26d78"
+    },
+    "src/app/[...catch]/page.tsx": {
+      "classification": "source",
+      "hash": "133216d9468e0876698d4035bd893b0f40eb22221071d13d1256576402ca374a"
+    },
+    "src/app/admin/(panel)/error.tsx": {
+      "classification": "source",
+      "hash": "eece73203c982917d5dc93ab7135b55c09f6ea1b45fb41106bf93c92951f5396"
+    },
+    "src/app/admin/(panel)/layout.tsx": {
+      "classification": "source",
+      "hash": "474ef13794d960fa2c1d13b71bfc8f5edd62411a44b742069daadab3e4e20a42"
+    },
+    "src/app/admin/(panel)/page.tsx": {
+      "classification": "source",
+      "hash": "156ee2911809496bd70fcbe684aee22d2726d95572a86d73a5cf9ee1e6f39d59"
+    },
+    "src/app/admin/login/page.tsx": {
+      "classification": "source",
+      "hash": "feadae5b58408cfcbaeb3e56edd54529e89d0d75601181f11a30abf1b3a94504"
+    },
+    "src/app/favicon.ico": {
+      "classification": "asset",
+      "hash": "23fa3bbabd585a8f1306572d9a4c5189ec876007bb96c9bea6de06a963fd2c5e"
+    },
+    "src/app/global-error.tsx": {
+      "classification": "source",
+      "hash": "768a710dae0195598fa978850574f83a8d246b37edaa3b870f4e5395b59d8db0"
+    },
+    "src/app/globals.css": {
+      "classification": "source",
+      "hash": "c75efe10761be0bc0d98dac85521e9d6f923cbffab3eb560b4244544acbc7130"
+    },
+    "src/app/layout.tsx": {
+      "classification": "source",
+      "hash": "7871f81da85aa33fe0db6d8c020decc1479a7096769af1c4f170e2b8a7485f35"
+    },
+    "src/app/rpc/[[...rest]]/route.ts": {
+      "classification": "source",
+      "hash": "3b5d71a735e2f2b01866617fd9f91a8ef5a35dce791cb061bbeef69f6716d441"
+    },
+    "src/components/common/confirm-modal.tsx": {
+      "classification": "source",
+      "hash": "87621cdcbfa0379e38985269ebcc68f59a5c99e94f0f055c330d2e7401016043"
+    },
+    "src/components/common/form/form-field.tsx": {
+      "classification": "source",
+      "hash": "6a9c108fc193b647e39da284250992197adc6b0c77be83f5589765319c9f88c5"
+    },
+    "src/components/common/funnel-alert.tsx": {
+      "classification": "source",
+      "hash": "e46d7ac61e1c1f67fb04826360ac81ce667030e90dcef192178d78365d11939b"
+    },
+    "src/components/common/input-surface.tsx": {
+      "classification": "source",
+      "hash": "99a8aa2d0971f3456e621b99f4a8bbb6ce2ca1ec7a8fe612afee51a5bc6394b1"
+    },
+    "src/components/common/mask-icon.tsx": {
+      "classification": "source",
+      "hash": "7c2c5ab373c564fdd336c3d4946e6e737d7271cfffd4e25370f0b8bfdf3144d8"
+    },
+    "src/components/common/page-backdrop.tsx": {
+      "classification": "source",
+      "hash": "268858549750a77e5bac9e17b192ec57150cd226146d5c7fc2da4c2447d75b5c"
+    },
+    "src/components/common/responsive-modal.tsx": {
+      "classification": "source",
+      "hash": "b5bed23ee334761d1c08add20efc3b8016cfd475d4ab3aa9c38bb95089bce24a"
+    },
+    "src/components/data-table/data-table-column-header.tsx": {
+      "classification": "source",
+      "hash": "8fa18d358e4f9bd0400d3e5fc3b18e6d305913c55a4c863aeb738a379ed4c6f0"
+    },
+    "src/components/data-table/data-table-pagination.tsx": {
+      "classification": "source",
+      "hash": "d0234631e24cec9ad1694ce702d2467eef012278eb194e56590a5bd058f9554f"
+    },
+    "src/components/data-table/data-table-skeleton.tsx": {
+      "classification": "source",
+      "hash": "ec08d6a0c9dae3f7eb2b5ad6dd42a070f48f31c08e721dc955e45fca5bd94c84"
+    },
+    "src/components/data-table/data-table-toolbar.tsx": {
+      "classification": "source",
+      "hash": "aed13c34304ebcc8098e072e176b21ccc839ae6593cd428421c92497cd6e97c2"
+    },
+    "src/components/data-table/data-table.tsx": {
+      "classification": "source",
+      "hash": "8d03b90b7d28d5a98bf4e42542610e366dea892cf82bf77b7ac7455b4e6f3289"
+    },
+    "src/components/data-table/use-data-table.ts": {
+      "classification": "source",
+      "hash": "957e4ce8c47586ca6317a378c4e26042896aa044e5092c941d0dea85888ccab3"
+    },
+    "src/components/fetcher/error-boundary.tsx": {
+      "classification": "source",
+      "hash": "57ccd2d72e8248c7b2774efdfb09d9067c9556360210e484d7472b6d34156fb1"
+    },
+    "src/components/fetcher/fetch.server.tsx": {
+      "classification": "source",
+      "hash": "cfeb41d09315edb46d2b303af1a1d4f8a36b2a6c8a2ce3bd688036d45cffd5d2"
+    },
+    "src/components/providers/query-provider.tsx": {
+      "classification": "source",
+      "hash": "9920ab44da06580d582574fefc941b523002f83ea43df7328a12d0ffc67c2727"
+    },
+    "src/components/ui/badge-variants.ts": {
+      "classification": "source",
+      "hash": "3503647d7282a99229257baf22b4372fc4cf6258146431be5ab42d58ffe033cd"
+    },
+    "src/components/ui/badge.tsx": {
+      "classification": "source",
+      "hash": "a440423235b873ab719a7f3c6cfc5a3375448645b84568990bee9f81215f0756"
+    },
+    "src/components/ui/button-variants.ts": {
+      "classification": "source",
+      "hash": "fc9e5217b33eec4bf4837a0c98cd97d0fa38b9c357a5bd15471207bae775cffd"
+    },
+    "src/components/ui/button.tsx": {
+      "classification": "source",
+      "hash": "ee251b5e3ca8252083afdeb9abd8f9a6798054635fe31f5959739b170c7536a3"
+    },
+    "src/components/ui/dialog.tsx": {
+      "classification": "source",
+      "hash": "89b1dd76a18c5bc97d9c50062ff1e4823df3d5c211a89ba380421b870c5eb2e9"
+    },
+    "src/components/ui/drawer.tsx": {
+      "classification": "source",
+      "hash": "f48bfddbdc87fa890c1a33110458839c138ad5b167d6efc322fd4c2576108b94"
+    },
+    "src/components/ui/field.tsx": {
+      "classification": "source",
+      "hash": "9cc3eb8718cc658c5b308b174f8668934849adc1918eefa82133462a164a2ecb"
+    },
+    "src/components/ui/input.tsx": {
+      "classification": "source",
+      "hash": "2aaa4feedac7ef1fb93cb2c1ca0b3503d87269ddcd6d42ec4626dca6169fed0f"
+    },
+    "src/components/ui/label.tsx": {
+      "classification": "source",
+      "hash": "4960113eb3369879d55c942dfec06002cbf745787f91eb2bdce313aab880f8aa"
+    },
+    "src/components/ui/progress.tsx": {
+      "classification": "source",
+      "hash": "37950e9d65856b53f45b48284fd7dbcdf84a894d21a0958891480bbc3b797e97"
+    },
+    "src/components/ui/radio-group.tsx": {
+      "classification": "source",
+      "hash": "72b4da161ca8b7b302fc13d12f38b678b5088366033371d6c109496aa21e176f"
+    },
+    "src/components/ui/separator.tsx": {
+      "classification": "source",
+      "hash": "8b7793108b8a2766fbb9a8a5d3cf70141fc4c5dff946bf31a4a1fc261cb45fc6"
+    },
+    "src/components/ui/sheet.tsx": {
+      "classification": "source",
+      "hash": "9efd71cc05545047d6188d6d42109265939664b8097990dcff9d9e8b54841b72"
+    },
+    "src/components/ui/skeleton.tsx": {
+      "classification": "source",
+      "hash": "b87565b92f23ea4a2d3855a6e0c5cb06efff4ec6cfb10b9214adbfc62d986b8d"
+    },
+    "src/components/ui/sonner.tsx": {
+      "classification": "source",
+      "hash": "ae6acb6b8e2ff92a64b5b60fc92e6e5b4e1e91d7f7093348be44a5e3fd1ae942"
+    },
+    "src/components/ui/spinner.tsx": {
+      "classification": "source",
+      "hash": "3ef37873bf6ba84e656c9a0002ef3c245eeddf67dcceefdadf8d88f5b75e6eec"
+    },
+    "src/components/ui/table.tsx": {
+      "classification": "source",
+      "hash": "23336ab5c5714fc30bfc851a2abbc9348a8835683302db0f8ea065d79a5f8bbf"
+    },
+    "src/components/ui/textarea.tsx": {
+      "classification": "source",
+      "hash": "7c55102d99533512d1053abacfc4f1fdf7fb2e3c378721d3036b227f0ae99dbb"
+    },
+    "src/config/env/client.ts": {
+      "classification": "source",
+      "hash": "046aca5f199142389015a7a54fbee214fd1347dcab93982dd02a9d44ee9c2cd1"
+    },
+    "src/config/env/server.ts": {
+      "classification": "source",
+      "hash": "8c7f2d54bf515d1e929e5c9ac38b533ff467161f295917a02694fe27eeabb5b2"
+    },
+    "src/features/about/components/about-page.tsx": {
+      "classification": "source",
+      "hash": "45d52d51ad89d8ea994a6b02659046242d85ecdc498908de33de6b93b9aa8177"
+    },
+    "src/features/admin/actions/with-admin-mutation-refresh.ts": {
+      "classification": "source",
+      "hash": "ed98ca7b529e3295333b7e3c3f2f4d88f18fa00ab7afe9bcda746e83473cdc4a"
+    },
+    "src/features/admin/components/admin-action-error-banner.tsx": {
+      "classification": "source",
+      "hash": "360a3162427b2e9e8c480599f4d3662a292bfe0ad47f7a5a689547ffb0bb27d2"
+    },
+    "src/features/admin/components/admin-entity-table.tsx": {
+      "classification": "source",
+      "hash": "2b14fe8029e49a1af4a60d68913bb0e86926e3778088941e8ffbc18bc2bd8659"
+    },
+    "src/features/admin/components/admin-login-form.tsx": {
+      "classification": "source",
+      "hash": "c3e5a1a07f6159ae21524f24caa48a84c0e0cbc12afbb075126e678e02605fb7"
+    },
+    "src/features/admin/components/admin-nav-item.tsx": {
+      "classification": "source",
+      "hash": "4ac872c39eed6e8c49fa7a7dcd3c1b42fbc8b498450b0a23c9f402cf93559785"
+    },
+    "src/features/admin/components/admin-row-action-button.tsx": {
+      "classification": "source",
+      "hash": "fe5b91dbc857f9defbbbb9fd6bdfadba45f8aca547f57c1eb14cb201bead8c9f"
+    },
+    "src/features/admin/components/admin-section-placeholder.tsx": {
+      "classification": "source",
+      "hash": "b8896ff4c755705dc4c1f7a1c0ea8d3a835b12f381c8122aa28abdcadbd8a42b"
+    },
+    "src/features/admin/components/admin-shell.tsx": {
+      "classification": "source",
+      "hash": "a13a6fe11495647b8b29fa655f40b9867ab250b9e64af9deb70b5122247f123c"
+    },
+    "src/features/admin/components/admin-sign-out-button.tsx": {
+      "classification": "source",
+      "hash": "5909fe04738c453e9647b54e84cb5dcbeb7fa88a6dc13c6aacbfd098f815a919"
+    },
+    "src/features/admin/components/entity-status-badge.tsx": {
+      "classification": "source",
+      "hash": "113ff27c4e488f8d9b1435648e679c60a3ae0bb9dd9a6bb3d7acc54404849a74"
+    },
+    "src/features/admin/lib/build-admin-rows-version.ts": {
+      "classification": "source",
+      "hash": "94fb8d6ec24fe1aa50836b7c2b7bde0da449632d7a8097f19ed3bca79dce5d99"
+    },
+    "src/features/admin/lib/find-db-error.ts": {
+      "classification": "source",
+      "hash": "dd24bdb0959fb3aedc9f26498322c7520db88556369bee93b0f7b136f59776b8"
+    },
+    "src/features/admin/lib/format-admin-date.ts": {
+      "classification": "source",
+      "hash": "35a83b19409cbec4233f1aab02c3e977f942a3e0ab68f94b89c871f99ab24cd1"
+    },
+    "src/features/admin/lib/move-ordered-id.ts": {
+      "classification": "source",
+      "hash": "2377cb1e887e387613ae672436edc16cf4df5afb313d1081d9009774944f10d6"
+    },
+    "src/features/admin/schemas/admin-row-action.ts": {
+      "classification": "source",
+      "hash": "6d5b4fd7d92569e07b249f0a8a819878445e44d097e3bd4654bca52a62f0d9e3"
+    },
+    "src/features/admin/schemas/ok-output.ts": {
+      "classification": "source",
+      "hash": "768fc4565fd9aa330e9f0400eb614cbb2c6f08c50e0ff70082cf400c55eb0120"
+    },
+    "src/features/admin/schemas/ordered-entity-list.ts": {
+      "classification": "source",
+      "hash": "a261781fd3c6408d0bd78ec2f19c67fadf7213ad3b346b04d250e4d1fe22f187"
+    },
+    "src/features/auth/actions/sign-in-admin.ts": {
+      "classification": "source",
+      "hash": "be482e43e286e50ccc7b3c7eeb4fa624068e27dec4a69a96d878214e896762f9"
+    },
+    "src/features/auth/api/client.ts": {
+      "classification": "source",
+      "hash": "77292720a9c03db4821edd2b72c27bdb69f9f5b1a0eab4211c539ac72e3682d8"
+    },
+    "src/features/auth/schemas/admin-login.ts": {
+      "classification": "source",
+      "hash": "5444687658b0080c4b2717465fab258edbb3e338bb6374c18b869dfdb418fe8e"
+    },
+    "src/features/categories/actions/admin-category-actions.ts": {
+      "classification": "source",
+      "hash": "3a238fa5565ba7e1b2405fb71e4c16ba26ec2b0e8b9372ad24c3332fd3197ef4"
+    },
+    "src/features/categories/components/categories-admin-manager.tsx": {
+      "classification": "source",
+      "hash": "c69b60a864fe18d25dd38fe8c6e7074d97f226e7c490b54ce21f475e4607f8b0"
+    },
+    "src/features/categories/components/category-form.tsx": {
+      "classification": "source",
+      "hash": "abb6c99d840cf92f1e859f15ebae023803bccdd6ebf8ca84536d6bf2fd49f785"
+    },
+    "src/features/categories/db/queries.ts": {
+      "classification": "source",
+      "hash": "99759daf05623d951bdc52906d54ae564f32b9cd0622a8273166a8647b49b4a2"
+    },
+    "src/features/categories/schemas/category.ts": {
+      "classification": "source",
+      "hash": "09a4e3c128aeb842707a0dfdaae3ea9c1711def745453715dbdd34df916195b2"
+    },
+    "src/features/inquiries/actions/admin-inquiry-actions.ts": {
+      "classification": "source",
+      "hash": "edd71d2132ad5cc8464bf4374a38d9b1ca17a24813ae0ab5d7f5a13c7ce872af"
+    },
+    "src/features/inquiries/actions/create-inquiry.ts": {
+      "classification": "source",
+      "hash": "24446fa8a362fde34fab031e604e43ea1a6e141830a91d4142e8f6c0f86b3aae"
+    },
+    "src/features/inquiries/components/funnel-app.tsx": {
+      "classification": "source",
+      "hash": "d992cbeb9513d8d73f77a3af2ade692f96a20664a3a0141e6ba4000405addb98"
+    },
+    "src/features/inquiries/components/funnel-category-chips.tsx": {
+      "classification": "source",
+      "hash": "c2912b40078dd9b67c517a49dacc28b6ea332bc6411861779add75d155f097e0"
+    },
+    "src/features/inquiries/components/funnel-footer.tsx": {
+      "classification": "source",
+      "hash": "d360a95243ed7ac25fe75e4080ff62dbfb64faa2738263caba1f39877c0b7c35"
+    },
+    "src/features/inquiries/components/funnel-logo.tsx": {
+      "classification": "source",
+      "hash": "a0a1f2f3ce4f2cbe6341b4675a96f70eaba6b4dd6249a05d4d3a172360802114"
+    },
+    "src/features/inquiries/components/funnel-page-transition.tsx": {
+      "classification": "source",
+      "hash": "b5410dacd431bcec2646ec3241081dc429000abf7669657d679d1583e4fb9c04"
+    },
+    "src/features/inquiries/components/funnel-resume-guard.tsx": {
+      "classification": "source",
+      "hash": "3cb8543e7c3b54691fb92fb645c8376e1b21c00eb3e7ee350591a3d5267f1982"
+    },
+    "src/features/inquiries/components/funnel-shell.tsx": {
+      "classification": "source",
+      "hash": "d346d13ac30666bd70fe6b2de62b9aa92ff5dbca66ad2c8de826ff33330ad72f"
+    },
+    "src/features/inquiries/components/funnel-spotlights.tsx": {
+      "classification": "source",
+      "hash": "34d4fd3916e4bb97d8cb8bfc04ad16b0c2f0a13619541817c9c3e0206f715781"
+    },
+    "src/features/inquiries/components/funnel-wizard.tsx": {
+      "classification": "source",
+      "hash": "b263fb8ecd1f00656e150fd71b588f2833dd0e2226d7c9db2c40983b95fd6db0"
+    },
+    "src/features/inquiries/components/inquiries-admin-manager.tsx": {
+      "classification": "source",
+      "hash": "0b64e1405f7016032fdd71ea1479ca583d305fced692d52c60bc36fe5f564a61"
+    },
+    "src/features/inquiries/components/inquiry-detail-actions.tsx": {
+      "classification": "source",
+      "hash": "07144b8edad1c999bab9d6d5e592d044722320f7992ee22645e86ab36800d01f"
+    },
+    "src/features/inquiries/components/inquiry-detail.tsx": {
+      "classification": "source",
+      "hash": "e934e241e5269cf9750d28f0c9b8924efa74ad89de2cbcc091de8049634c7e66"
+    },
+    "src/features/inquiries/components/inquiry-status-badge.tsx": {
+      "classification": "source",
+      "hash": "eb8ca454b7e55ba246a1ba8e207e69b2d9ac5dfbc2d3626fe045d67dd1ab391b"
+    },
+    "src/features/inquiries/components/landing-page.tsx": {
+      "classification": "source",
+      "hash": "367939441165a881cf549460de8409a97afe78628b94790f991d75f39c613844"
+    },
+    "src/features/inquiries/components/onboarding-wizard.tsx": {
+      "classification": "source",
+      "hash": "ca25c38ef6b5be6cbbe88efe1e607bcc35be0c2796fd68e888ff8f3215e79764"
+    },
+    "src/features/inquiries/components/thank-you-confetti.tsx": {
+      "classification": "source",
+      "hash": "8a202ea30fd12ad2762756d1b3b726f7f3a5db46071cc2bd5e1688e041df767d"
+    },
+    "src/features/inquiries/components/thank-you-page.tsx": {
+      "classification": "source",
+      "hash": "481a976f25c7cdf7d6674b169b55c804646d80211956a0636770d240f491df87"
+    },
+    "src/features/inquiries/db/queries.ts": {
+      "classification": "source",
+      "hash": "4f7514030270e9e153b57e7d96ac5e1acff1a84d45de082f40c54eb5dc394d10"
+    },
+    "src/features/inquiries/email/email-theme.ts": {
+      "classification": "source",
+      "hash": "2c28829c6c5c29818e0fb2e4b9bd987ee2de0e0d2bc0ed456db68605fe19cd9b"
+    },
+    "src/features/inquiries/email/send-submission-notification.tsx": {
+      "classification": "source",
+      "hash": "d12ab4c1c34bbec2715424494b0ad0bc71b71b82e5f220d1a291de286c83eb5f"
+    },
+    "src/features/inquiries/email/submission-email-content.ts": {
+      "classification": "source",
+      "hash": "70a5c00574f86ccd7ae2916fb0bee296ae42a86f5c1a322c360e2b5aa61e7766"
+    },
+    "src/features/inquiries/hooks/use-funnel-draft.tsx": {
+      "classification": "source",
+      "hash": "8f9151c7206f248f85a99af21dff96ff7dea9f1863d775f707b9da9edbc08d0a"
+    },
+    "src/features/inquiries/hooks/use-funnel-home.ts": {
+      "classification": "source",
+      "hash": "bf3b99e66a94aa6eb7041a65f532019a25bd087a0abf985b6fea07f1cedf00d2"
+    },
+    "src/features/inquiries/lib/build-answer-payload.ts": {
+      "classification": "source",
+      "hash": "fda5b4017b375e4ba6e86c66dc187762e4abd1d5a2489c6b54e55e5b9affe262"
+    },
+    "src/features/inquiries/lib/document-sniff.ts": {
+      "classification": "source",
+      "hash": "7fabd56e121e60f2bae4ec4ae6253e44da8d5b3f64877acbc12777f39209a6bb"
+    },
+    "src/features/inquiries/lib/status.ts": {
+      "classification": "source",
+      "hash": "06a7fd5ddf403536c2ac43846c41aff0bf9ec1ae2042092660d7facd9247b665"
+    },
+    "src/features/inquiries/schemas/admin-inquiry.ts": {
+      "classification": "source",
+      "hash": "48cb0d036a017b7a76075c1f61275f8c17b38729851cf71664cd21eed8d82e0e"
+    },
+    "src/features/inquiries/schemas/contact.ts": {
+      "classification": "source",
+      "hash": "4c7802a188b63eb116ec7e440215486c38085f587f269c31d047dd749d03a10c"
+    },
+    "src/features/inquiries/schemas/file-constraints.ts": {
+      "classification": "source",
+      "hash": "ab88f9476795c83585cac06a7c2f05b53b5f5e061688959c375ff75dae5f208b"
+    },
+    "src/features/inquiries/schemas/inquiry-submission.ts": {
+      "classification": "source",
+      "hash": "be269f1e112b1c1d70bf5b5061ae5091e8526083d2632d144e60252bc69e9b76"
+    },
+    "src/features/inquiries/schemas/intake-signal.ts": {
+      "classification": "source",
+      "hash": "bfcb71684b54394a8158b46252a88b3fd26b8fe49ccb6aab2cb7d366cc56fd4c"
+    },
+    "src/features/inquiries/schemas/validation-messages.ts": {
+      "classification": "source",
+      "hash": "d37630385248f9d204db902cee99400adf2a1c12e6f998fcd8c90cb5cc38ead5"
+    },
+    "src/features/questions/actions/admin-question-actions.ts": {
+      "classification": "source",
+      "hash": "1e7b7a7bcbfc8f3b341675aab182ed551b075a26c41bb612d7975e75b207dfd7"
+    },
+    "src/features/questions/components/question-form.tsx": {
+      "classification": "source",
+      "hash": "f83f045c88eb1d666c412482dc92803641630477524938c99b858ef11f3286d6"
+    },
+    "src/features/questions/components/questions-admin-manager.tsx": {
+      "classification": "source",
+      "hash": "2676b20ad94885992cd174feb92a732fd96796c0bd25e4e78daf22061b74a641"
+    },
+    "src/features/questions/db/queries.ts": {
+      "classification": "source",
+      "hash": "22cdb4f7e39ffb9e6b2cf325e04c10958969b34e337fffdbac0bc11dd2ced551"
+    },
+    "src/features/questions/schemas/question.ts": {
+      "classification": "source",
+      "hash": "aa22fcaf1fc5cde418ab0989ecbbbfab9ba6fe7176a95ff104a08b950a6ef947"
+    },
+    "src/features/services/components/services-page.tsx": {
+      "classification": "source",
+      "hash": "bf329379ec3c3ae062173efdab0f53ad42fe65af923fd4b8dd29550817442b04"
+    },
+    "src/features/settings/actions/notification-recipient-actions.ts": {
+      "classification": "source",
+      "hash": "30d05f177ed284d06749522b814a7be8c65dc65cd825d7d59ee2df52b17432d1"
+    },
+    "src/features/settings/components/notification-recipients-settings.tsx": {
+      "classification": "source",
+      "hash": "6d3107c700eb69b0346751f1ef5815481dc3c8b718478e839dcd279ff28cd7e4"
+    },
+    "src/features/settings/db/queries.ts": {
+      "classification": "source",
+      "hash": "4a671320e503725c708cc60d24f53336f686b0316e46012b41e0e3007bf5ffe4"
+    },
+    "src/features/settings/lib/notification-recipients.ts": {
+      "classification": "source",
+      "hash": "2417e5e7176d1a0c1f1f5ccd79985e1e049d825ffac667a454ddfb6f74799bd5"
+    },
+    "src/features/settings/schemas/notification-recipient.ts": {
+      "classification": "source",
+      "hash": "e5b29d53f9bf7031be22c0523b824cbd3c4a7d0c5592886401f13ea671821052"
+    },
+    "src/hooks/filter-transition-types.ts": {
+      "classification": "source",
+      "hash": "d61d4995db8b9000c04eb68e12dfda4072aaac1b3c101aa002eac5cbc3292a6c"
+    },
+    "src/hooks/use-action.ts": {
+      "classification": "source",
+      "hash": "b98a0f799ef348fa419a4d83207e80458c5fefc6132d724b2bcc1ec5a9f06bd2"
+    },
+    "src/hooks/use-confirm.tsx": {
+      "classification": "source",
+      "hash": "82acc0874e6ff2a3cdddaf55ab1167f14424f757574492451a5829aae7692601"
+    },
+    "src/hooks/use-debounced-callback.ts": {
+      "classification": "source",
+      "hash": "d2ecc878197fd0f794d649208440be48cd7707c429e3fc75824bb2ca41e9e231"
+    },
+    "src/hooks/use-filter-params-transition.ts": {
+      "classification": "source",
+      "hash": "b0578561a3fbda9ce356207fd46f3598c8f060d852af58967dfc1214cb2ae055"
+    },
+    "src/hooks/use-media-query.ts": {
+      "classification": "source",
+      "hash": "a1f13f03c2c11899d9937a6a578af23c7a862848e4fe632dc9199624387c8ab5"
+    },
+    "src/hooks/use-table-transition.ts": {
+      "classification": "source",
+      "hash": "2bf609edc8d0c1e2b5b2836e9d05908c37483c6724f3d75119a018f7fe4a955c"
+    },
+    "src/instrumentation-client.ts": {
+      "classification": "source",
+      "hash": "4a45703f24606245b7c23b8ec92e0db766ce1f8f84030847f6bbce8dc6d98823"
+    },
+    "src/instrumentation.ts": {
+      "classification": "source",
+      "hash": "716a0ee89678aa161ecadc211c9f022efcbbc91ea5cbd3111a2479952303792f"
+    },
+    "src/lib/admin-redirect.ts": {
+      "classification": "source",
+      "hash": "797c95c239950709397212ea72415722021924b543ced16954e5ad6ebe590584"
+    },
+    "src/lib/cache-tags.ts": {
+      "classification": "source",
+      "hash": "6710612cba874599405f1e00216e9d8dd689d79301051780c14b99e429255c0f"
+    },
+    "src/lib/filter-params.ts": {
+      "classification": "source",
+      "hash": "6d4b7839d93e4613d9d1056ec855d553794cd24bb8542638200f7e30ed9cdc0a"
+    },
+    "src/lib/orpc.server.ts": {
+      "classification": "source",
+      "hash": "e8ebeb291df16e894f3b7dac483c925d7afc3ec1f6cf5c30cb8d34ca5091dd1a"
+    },
+    "src/lib/orpc.ts": {
+      "classification": "source",
+      "hash": "33e05ebe46e7b906e7f01e388a4edc9ed9cfc3804cd205862466c261cb95e570"
+    },
+    "src/lib/query-client.ts": {
+      "classification": "source",
+      "hash": "dd4246cb20693e29b683d005f1fe305f2d3d3e957631d48da95ad988e9fe9a07"
+    },
+    "src/lib/schemas/email.ts": {
+      "classification": "source",
+      "hash": "73e5cc0bbe5d5092b00cd23c954c4a0353c001c6871df4512968ab447ea59efa"
+    },
+    "src/lib/utils.ts": {
+      "classification": "source",
+      "hash": "c8503e3b2f1e56ec4cabf9904ed1171fc00524fd0fab29d7b895bd9ecee89e8b"
+    },
+    "src/proxy.ts": {
+      "classification": "source",
+      "hash": "0e9343d4047465f534a75cee32e604d4b507e92d7f2529c035fb4b72c58b1337"
+    },
+    "src/sentry.edge.config.ts": {
+      "classification": "source",
+      "hash": "439104534c679e89c23f0fcae5319c11222cb6012a965c9c4744344edc72e1f7"
+    },
+    "src/sentry.server.config.ts": {
+      "classification": "source",
+      "hash": "439104534c679e89c23f0fcae5319c11222cb6012a965c9c4744344edc72e1f7"
+    },
+    "src/server/auth/auth.ts": {
+      "classification": "source",
+      "hash": "89ea9612f9aa99348a3942f72b4e20d91888379d61266bc41899e8a19c8a3818"
+    },
+    "src/server/auth/seed-admin.ts": {
+      "classification": "source",
+      "hash": "8ff166af116c2556f39f52e78b59945bf9b5ce200e3a34a789b1fcbd29b50df6"
+    },
+    "src/server/auth/session.ts": {
+      "classification": "source",
+      "hash": "797845549cbd584bc25ea8f24e93461278a90e8e65a56cebe26f95408c9cf6e2"
+    },
+    "src/server/db/filters.ts": {
+      "classification": "source",
+      "hash": "66b52af01cafe41c58d6c5599c5012904f138721bbe6638927dfbf071bdea3ec"
+    },
+    "src/server/db/index.ts": {
+      "classification": "source",
+      "hash": "41cea70c61bd77d226f5be76a2b36663d5a754df380527b26fe4b24a437dc712"
+    },
+    "src/server/db/ordered-entity.ts": {
+      "classification": "source",
+      "hash": "752dc76059d5850dd56191e99782e04d8ea7d03cf47521f8a558487a303a7341"
+    },
+    "src/server/db/relations.ts": {
+      "classification": "source",
+      "hash": "0a477debf11647906af79a5722d3f80fa089b8f64662da350266c6fae304b76f"
+    },
+    "src/server/db/schema/auth.ts": {
+      "classification": "source",
+      "hash": "5937a977458e0c4795c8d2e981ceac6e1fe34ebef7bf0dae032c5de33fe5e475"
+    },
+    "src/server/db/schema/categories.ts": {
+      "classification": "source",
+      "hash": "b3f14e1d279f40643968b38158acd38210c7c3e7a6f5ccc5fb3b437aaae72441"
+    },
+    "src/server/db/schema/helpers.ts": {
+      "classification": "source",
+      "hash": "304bb114911ad88d02287f420cc0230f26c08740f45e53d525b95ffb04fda164"
+    },
+    "src/server/db/schema/index.ts": {
+      "classification": "source",
+      "hash": "a7b02e65f7658b2bde44363a262e35400edfbafc6da2d243e80d5bb888d17e9f"
+    },
+    "src/server/db/schema/inquiries.ts": {
+      "classification": "source",
+      "hash": "736f484124487bba7aeed39b3a70cf7a2519d34315e34b7c8c759bc15f2e55d4"
+    },
+    "src/server/db/schema/inquiry-answers.ts": {
+      "classification": "source",
+      "hash": "e51bbe4685b18ffb37f3b5a3c42cc83a4332a4f2f9f45617282283cad588c8b4"
+    },
+    "src/server/db/schema/inquiry-categories.ts": {
+      "classification": "source",
+      "hash": "f4c6f4c029878a2acba534605be1a9f63c889bad94025d584cf6b552b70d80d0"
+    },
+    "src/server/db/schema/inquiry-files.ts": {
+      "classification": "source",
+      "hash": "0f39bf77bd5ff666cca5a19c22d3544d3c7e479f0676fbe47fe7510dd0a33319"
+    },
+    "src/server/db/schema/notification-recipients.ts": {
+      "classification": "source",
+      "hash": "c83f81539e683d29c3945d733072d7a388792d9958f87126f1025f644b7629c2"
+    },
+    "src/server/db/schema/questions.ts": {
+      "classification": "source",
+      "hash": "fcc0c13d6671ed864cb7aa39a9606bfe48c841b66109a24e49ef0b3779701f27"
+    },
+    "src/server/rpc/context.ts": {
+      "classification": "source",
+      "hash": "2115abf1ca37fac74bd22d22543f26a3c97f4fe42d0947977aa9821f320aad4b"
+    },
+    "src/server/rpc/middleware.ts": {
+      "classification": "source",
+      "hash": "affbf8526125e51b2d955817e670a0ce19de429e92048f2498f6751178f4cdd6"
+    },
+    "src/server/rpc/rate-limit.ts": {
+      "classification": "source",
+      "hash": "da21666dadb8f97892e920b1913770445341e909232af0ad2e1d35abd84bf4d7"
+    },
+    "src/server/rpc/routers/admin.ts": {
+      "classification": "source",
+      "hash": "4c7036d0b9a3b36199b4f159a748ea320c1805c68f07283740ce50249a291db1"
+    },
+    "src/server/rpc/routers/auth.ts": {
+      "classification": "source",
+      "hash": "c61177a4443043455e13e7f228a5d42429eb64743259e12f29307d2776df8dc7"
+    },
+    "src/server/rpc/routers/categories.ts": {
+      "classification": "source",
+      "hash": "e7edc1296b880a063e09abac873fd2256988c87c1faf4623822883d00141272c"
+    },
+    "src/server/rpc/routers/index.ts": {
+      "classification": "source",
+      "hash": "2facd3324f5c0a922a348c8b21069f898e986928120275ae2107e43c3abba59a"
+    },
+    "src/server/rpc/routers/inquiries.ts": {
+      "classification": "source",
+      "hash": "2f32da76031c2ee9c2c9cb9fc3c37e9a1f6f69ec626f417636646c853e1ec92f"
+    },
+    "src/server/rpc/routers/questions.ts": {
+      "classification": "source",
+      "hash": "071bd8723adae92bd7c421b2fd4fb86ae35ac65e726c6387bf96d847f9c2a6be"
+    },
+    "src/server/rpc/routers/settings.ts": {
+      "classification": "source",
+      "hash": "240ffe88266040cfe56c56175f95401a0c7f023776c2ea800fae8175cfcd6d55"
+    },
+    "src/services/README.md": {
+      "classification": "doc",
+      "hash": "6ea1d0218d54bfbff8b9849823644735d308f6b227e62ed2fb9f4cefd326fb47"
+    },
+    "src/services/resend/client.ts": {
+      "classification": "source",
+      "hash": "f150d02b27d06aa38312625cef0768cb4a4840b42e826bc6ad72a3dd76241546"
+    },
+    "src/services/storage/blob.ts": {
+      "classification": "source",
+      "hash": "a98bd6e4f525b93ecb6814a4c8220992855c6601d9771880625f09a17f699cf0"
+    },
+    "src/services/storage/index.ts": {
+      "classification": "source",
+      "hash": "b9ecb0e4c4ec1fdd4394863eae234e2f54ef7a59408e8f8c59493f7f928f2df0"
+    },
+    "src/services/storage/minio.ts": {
+      "classification": "source",
+      "hash": "d737a14a1888f70b9a4e81027a9780eefe487f2799b38e3df3b633fa5bb471fe"
+    },
+    "src/services/storage/types.ts": {
+      "classification": "source",
+      "hash": "a84c62ece52e103d81e75ea9fe641b3042ad3460287374864bbdcf1b0f706111"
+    },
+    "tsconfig.json": {
+      "classification": "config",
+      "hash": "5707a40784f94cfeecaddb45b39aa6e26169f15587eba8562c77b3e3d5ea9c84"
+    }
+  },
+  "generatedDocs": {
+    "docs/REVIEW_GUIDE.md": "2b90865344113a97fc80bab340168c4cbe43f40b624765013494f500af531f27",
+    "docs/REVIEW_INDEX.md": "d29da53213961c75f066ec2fc6f147f00b5e447dae6be186911bfa7af508777f",
+    "docs/review/architecture.md": "00dc6670e68764d4ede93bcd298d4a8341485b6608c8ad82e8cc2370beb5a6a9",
+    "docs/review/backend.md": "0bb072f1b2218353c22889263e8378f9a4c35077adb67c0bf1cf1fd568bfac35",
+    "docs/review/conventions.md": "f6dfcefc979c29a2793adaa08701ef6b26f8e86574c3ac49b1c3be27701659b4",
+    "docs/review/domain.md": "5b7dc4827b305520aed3f39e46d2da504c8d5e0c04443112bb8e3e9662ed5615",
+    "docs/review/frontend.md": "43dc4a636bf70b390be1fb3eded3453ba031440285d7a182243b2acf349c5516",
+    "docs/review/risk-map.md": "9105cfb39ec9d9589dbca8bf12c527491ebc97756c73b51f58bcfa2f1bb8254e",
+    "docs/review/security.md": "0024228b0468296f9f46c062b5249800aadbe00f35c766bdc132b2dc27e2d09c",
+    "docs/review/testing.md": "9e23cd761a0180cd332a682fb2a8e3881eb56008eb2e81d590d0bced46832bdf",
+    "docs/review/workflows.md": "62cf733bad582cac9ea037f56ecb8b724e0e511fc99250891a8c88df1ca84ce7"
+  }
+}

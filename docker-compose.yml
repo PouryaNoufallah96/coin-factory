@@ -23,6 +23,8 @@ x-app-environment: &app-environment
   NEXT_PUBLIC_AUTH_URL: ${NEXT_PUBLIC_AUTH_URL:-}
   ADMIN_EMAIL: ${ADMIN_EMAIL:-}
   ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+  SENTRY_DSN: ${SENTRY_DSN:-}
+  NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
 
 x-reverse-proxy-nginx: |
   limit_req_zone $$binary_remote_addr zone=coinfactory_public:10m rate=10r/m;

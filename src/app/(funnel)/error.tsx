@@ -1,8 +1,21 @@
 "use client";
 
+import { captureException } from "@sentry/nextjs";
+import { useEffect } from "react";
+
 import { Button } from "@/components/ui/button";
 
-export default function FunnelError({ reset }: { reset: () => void }) {
+export default function FunnelError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    captureException(error);
+  }, [error]);
+
   return (
     <section className="flex flex-1 items-center justify-center px-6 py-12 sm:px-10 lg:px-(--cf-page-x)">
       <div className="cf-field-container flex flex-col items-center gap-5 text-center">

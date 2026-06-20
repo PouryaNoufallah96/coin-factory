@@ -29,7 +29,7 @@ export function OpportunitiesPage() {
           </div>
 
           <div className="flex flex-col text-center">
-            <p className="mx-auto max-w-[80%] font-light text-cf-cream text-lg leading-(--cf-leading-body)">
+            <p className="mx-auto max-w-[80%] font-light text-cf-cream text-lg leading-tight">
               Tokenization allows assets, rights, revenue streams, businesses,
               communities, and digital ecosystems to be represented as
               blockchain-based digital assets. It creates new opportunities for
@@ -66,14 +66,14 @@ export function OpportunitiesPage() {
         </div>
 
         <div
-          className="cf-focus-panel mx-auto max-w-4xl rounded-(--cf-radius-panel) px-9 py-10 text-center backdrop-blur-sm"
+          className="cf-focus-panel mx-auto max-w-4xl rounded-(--cf-radius-panel) px-9 py-9 text-center backdrop-blur-sm"
           key={focusedItem.id}
         >
-          <div className="flex animate-[enter-fade-up_0.3s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-5">
-            <h2 className="font-semibold text-[22px] text-cf-cream-bright leading-tight">
+          <div className="flex animate-[enter-fade-up_0.3s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-5 leading-tight">
+            <h2 className="font-semibold text-[22px] text-cf-cream-bright">
               {focusedItem.title}
             </h2>
-            <p className="text-[16px] text-cf-charcoal-900 leading-(--cf-leading-body)">
+            <p className="text-[16px] text-cf-charcoal-900">
               {focusedItem.description}
             </p>
           </div>

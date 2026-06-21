@@ -11,4 +11,9 @@ init({
   environment: process.env.NODE_ENV,
   sendDefaultPii: false,
   tracesSampleRate: process.env.NODE_ENV === "production" ? 0.05 : 1.0,
+  // Unactionable noise: Next.js parses Server Action request bodies via
+  // request.formData() before our code runs. Bots/scanners (and the odd
+  // truncated multipart upload) POST non-form bodies to action routes like
+  // /(funnel)/page, making undici throw this. Real submissions parse fine.
+  ignoreErrors: ["Failed to parse body as FormData"],
 });

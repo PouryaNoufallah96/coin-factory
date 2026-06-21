@@ -31,10 +31,8 @@ export function useOpportunityCycle({
   intervalMs = 5000,
 }: UseOpportunityCycleOptions): UseOpportunityCycleResult {
   const total = rowOneLength + rowTwoLength;
-  const [autoGlobalIndex, setAutoGlobalIndex] = useState(0);
-  const [pausedGlobalIndex, setPausedGlobalIndex] = useState<number | null>(
-    null
-  );
+  const [autoStep, setAutoStep] = useState(0);
+  const [pausedStep, setPausedStep] = useState<number | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function cancelPendingResume() {
@@ -54,57 +52,51 @@ export function useOpportunityCycle({
   );
 
   useEffect(() => {
-    if (pausedGlobalIndex !== null) {
+    if (pausedStep !== null) {
       return;
     }
 
     const id = setInterval(() => {
-      setAutoGlobalIndex((current) => (current + 1) % total);
+      setAutoStep((current) => (current + 1) % total);
     }, intervalMs);
 
     return () => clearInterval(id);
-  }, [pausedGlobalIndex, total, intervalMs]);
+  }, [pausedStep, total, intervalMs]);
 
-  const displayGlobalIndex = pausedGlobalIndex ?? autoGlobalIndex;
+  const displayStep = pausedStep ?? autoStep;
 
   return {
-    active: toPosition(displayGlobalIndex, rowOneLength),
-    isPaused: pausedGlobalIndex !== null,
+    active: toPosition(displayStep, rowOneLength),
+    isPaused: pausedStep !== null,
     onCircleClick: (row, index) => {
       cancelPendingResume();
-      const globalIndex = toGlobalIndex(row, index, rowOneLength);
-      setAutoGlobalIndex(globalIndex);
-      setPausedGlobalIndex(globalIndex);
+      const step = toStep(row, index, rowOneLength);
+      setAutoStep(step);
+      setPausedStep(step);
     },
     onCircleEnter: (row, index) => {
       cancelPendingResume();
-      setPausedGlobalIndex(toGlobalIndex(row, index, rowOneLength));
+      setPausedStep(toStep(row, index, rowOneLength));
     },
     onCircleLeave: () => {
       cancelPendingResume();
       resumeTimeoutRef.current = setTimeout(() => {
-        setPausedGlobalIndex(null);
+        setPausedStep(null);
       }, RESUME_DELAY_MS);
     },
   };
 }
 
-// Row one steps backward through its items (matches its rightward scroll);
-// row two steps forward through its own items (matches its leftward scroll).
-function toPosition(globalIndex: number, rowOneLength: number): ActivePosition {
-  if (globalIndex < rowOneLength) {
-    return { row: "row-one", index: rowOneLength - 1 - globalIndex };
+function toPosition(step: number, rowOneLength: number): ActivePosition {
+  if (step < rowOneLength) {
+    return { row: "row-one", index: (rowOneLength - step) % rowOneLength };
   }
-  return { row: "row-two", index: globalIndex - rowOneLength };
+  return { row: "row-two", index: step - rowOneLength };
 }
 
-function toGlobalIndex(
-  row: RowId,
-  index: number,
-  rowOneLength: number
-): number {
+function toStep(row: RowId, index: number, rowOneLength: number): number {
   if (row === "row-one") {
-    return rowOneLength - 1 - index;
+    return (rowOneLength - index) % rowOneLength;
   }
   return rowOneLength + index;
 }

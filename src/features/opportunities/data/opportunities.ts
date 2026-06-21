@@ -4,8 +4,6 @@ export interface Opportunity {
   title: string;
 }
 
-// Two independent marquee rows. Order within each row is the order the
-// circles appear in the strip before it loops.
 export const ROW_ONE: Opportunity[] = [
   {
     id: "asset",

@@ -36,8 +36,8 @@ export function OpportunityRow({
         className={cn(
           "flex w-max will-change-transform",
           visualDirection === "right"
-            ? "animate-[cf-marquee-track-reverse_70s_linear_infinite]"
-            : "animate-[cf-marquee-track_70s_linear_infinite]"
+            ? "animate-[cf-marquee-track-reverse_220s_linear_infinite]"
+            : "animate-[cf-marquee-track_220s_linear_infinite]"
         )}
         style={{
           animationPlayState: isPaused ? "paused" : "running",

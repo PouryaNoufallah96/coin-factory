@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Edit3, Eye, EyeOff, RotateCcw, Trash2 } from "lucide-react";
+import { Archive, Edit3, Eye, EyeOff, RotateCcw } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { ResponsiveModal } from "@/components/common/responsive-modal";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
@@ -60,10 +60,10 @@ export function QuestionsAdminManager({
   );
   const rowAction = useAction(runQuestionRowAction);
   const [deleteDialog, confirmDelete] = useConfirm({
-    confirmLabel: "Delete question",
+    confirmLabel: "Archive question",
     message:
       "The question is removed from the onboarding wizard and can be restored later.",
-    title: "Delete question",
+    title: "Archive question",
     variant: "destructive",
   });
   const canReorder =
@@ -214,11 +214,11 @@ export function QuestionsAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Delete question"
+                  label="Archive question"
                   onClick={() => deleteQuestion(question)}
                   variant="destructive"
                 >
-                  <Trash2 aria-hidden="true" />
+                  <Archive aria-hidden="true" />
                 </AdminRowActionButton>
               </>
             )}

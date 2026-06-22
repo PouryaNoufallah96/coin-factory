@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Edit3, Eye, EyeOff, RotateCcw, Trash2 } from "lucide-react";
+import { Archive, Edit3, Eye, EyeOff, RotateCcw } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { ResponsiveModal } from "@/components/common/responsive-modal";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
@@ -59,10 +59,10 @@ export function CategoriesAdminManager({
   );
   const rowAction = useAction(runCategoryRowAction);
   const [deleteDialog, confirmDelete] = useConfirm({
-    confirmLabel: "Delete category",
+    confirmLabel: "Archive category",
     message:
       "The category is removed from the landing funnel and can be restored later.",
-    title: "Delete category",
+    title: "Archive category",
     variant: "destructive",
   });
   const canReorder =
@@ -204,11 +204,11 @@ export function CategoriesAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Delete category"
+                  label="Archive category"
                   onClick={() => deleteCategory(category)}
                   variant="destructive"
                 >
-                  <Trash2 aria-hidden="true" />
+                  <Archive aria-hidden="true" />
                 </AdminRowActionButton>
               </>
             )}

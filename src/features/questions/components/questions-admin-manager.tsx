@@ -231,7 +231,6 @@ export function QuestionsAdminManager({
         description="Manage the ordered questions used by the onboarding wizard."
         emptyMessage="No questions found."
         enableRowDrag={canReorder && !isRowActionPending}
-        eyebrow="Admin"
         onReorderRow={reorderQuestionRow}
         pending={isRowActionPending}
         rows={optimisticRows}

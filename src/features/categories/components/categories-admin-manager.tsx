@@ -221,7 +221,6 @@ export function CategoriesAdminManager({
         description="Manage the business categories used by the landing funnel."
         emptyMessage="No categories found."
         enableRowDrag={canReorder && !isRowActionPending}
-        eyebrow="Admin"
         onReorderRow={reorderCategoryRow}
         pending={isRowActionPending}
         rows={optimisticRows}

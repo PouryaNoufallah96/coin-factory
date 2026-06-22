@@ -17,7 +17,6 @@ interface AdminEntityTableProps<TData extends RowData & { id: string }> {
   description: string;
   emptyMessage?: string;
   enableRowDrag?: boolean;
-  eyebrow: string;
   onReorderRow?: (activeId: string, overId: string) => void;
   pending?: boolean;
   rows: TData[];
@@ -33,7 +32,6 @@ export function AdminEntityTable<TData extends RowData & { id: string }>({
   description,
   emptyMessage = "No records found.",
   enableRowDrag = false,
-  eyebrow,
   onReorderRow,
   pending = false,
   rows,
@@ -61,7 +59,6 @@ export function AdminEntityTable<TData extends RowData & { id: string }>({
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
       <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex min-w-0 flex-col gap-2">
-          <p className="text-cf-cream text-sm">{eyebrow}</p>
           <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
             {title}
           </h1>

@@ -127,17 +127,7 @@ export function CategoriesAdminManager({
         <DataTableColumnHeader column={column} title="Label" />
       ),
     },
-    {
-      accessorKey: "sortOrder",
-      cell: ({ row }) => (
-        <span className="text-cf-text-muted tabular-nums">
-          {row.original.sortOrder}
-        </span>
-      ),
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Order" />
-      ),
-    },
+
     {
       accessorKey: "active",
       cell: ({ row }) => (

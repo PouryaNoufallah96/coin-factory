@@ -170,7 +170,7 @@ export function QuestionsAdminManager({
             {isDeleted ? (
               <AdminRowActionButton
                 disabled={isRowActionPending}
-                label="Restore question"
+                label="Restore"
                 onClick={() => restoreQuestionRow(question)}
                 variant="outline"
               >
@@ -180,7 +180,7 @@ export function QuestionsAdminManager({
               <>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Edit question"
+                  label="Edit"
                   onClick={() => setModal({ mode: "edit", question })}
                   variant="ghost"
                 >
@@ -188,11 +188,7 @@ export function QuestionsAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label={
-                    question.active
-                      ? "Deactivate question"
-                      : "Activate question"
-                  }
+                  label={question.active ? "Deactivate" : "Activate"}
                   onClick={() => setQuestionActiveRow(question)}
                   variant="ghost"
                 >
@@ -204,7 +200,7 @@ export function QuestionsAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Archive question"
+                  label="Archive"
                   onClick={() => deleteQuestion(question)}
                   variant="destructive"
                 >

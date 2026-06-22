@@ -160,7 +160,7 @@ export function CategoriesAdminManager({
             {isDeleted ? (
               <AdminRowActionButton
                 disabled={isRowActionPending}
-                label="Restore category"
+                label="Restore"
                 onClick={() => restoreCategoryRow(category)}
                 variant="outline"
               >
@@ -170,7 +170,7 @@ export function CategoriesAdminManager({
               <>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Edit category"
+                  label="Edit"
                   onClick={() => setModal({ category, mode: "edit" })}
                   variant="ghost"
                 >
@@ -178,11 +178,7 @@ export function CategoriesAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label={
-                    category.active
-                      ? "Deactivate category"
-                      : "Activate category"
-                  }
+                  label={category.active ? "Deactivate" : "Activate"}
                   onClick={() => setCategoryActiveRow(category)}
                   variant="ghost"
                 >
@@ -194,7 +190,7 @@ export function CategoriesAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Archive category"
+                  label="Archive"
                   onClick={() => deleteCategory(category)}
                   variant="destructive"
                 >

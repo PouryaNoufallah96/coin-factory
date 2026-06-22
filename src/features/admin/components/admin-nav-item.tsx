@@ -40,7 +40,9 @@ export function AdminNavList({ compact }: { compact?: boolean }) {
 function AdminNavItem({ compact, href, icon: Icon, label }: AdminNavItemProps) {
   const pathname = usePathname();
   const active =
-    pathname === href || (href !== "/admin" && pathname.startsWith(`${href}/`));
+    pathname === href ||
+    (href === "/admin/inquiries" && pathname === "/admin") ||
+    pathname.startsWith(`${href}/`);
 
   return (
     <Link

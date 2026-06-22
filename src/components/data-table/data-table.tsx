@@ -44,6 +44,7 @@ interface DataTableProps<TData extends RowData> {
   enableRowDrag?: boolean;
   isPending?: boolean;
   onReorderRow?: (activeId: string, overId: string) => void;
+  onRowClick?: (row: TData) => void;
   table: TanStackTable<TData>;
   toolbar?: ReactNode;
 }
@@ -55,6 +56,7 @@ export function DataTable<TData extends RowData>({
   enableRowDrag = false,
   isPending,
   onReorderRow,
+  onRowClick,
   table,
   toolbar,
 }: DataTableProps<TData>) {
@@ -139,8 +141,10 @@ export function DataTable<TData extends RowData>({
             {rows.length > 0 && !dragEnabled
               ? rows.map((row) => (
                   <TableRow
+                    className={cn(onRowClick && "cursor-pointer")}
                     data-state={row.getIsSelected() ? "selected" : undefined}
                     key={row.id}
+                    onClick={() => onRowClick?.(row.original)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

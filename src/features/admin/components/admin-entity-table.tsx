@@ -16,7 +16,9 @@ interface AdminEntityTableProps<TData extends RowData & { id: string }> {
   deletedLabel: string;
   description: string;
   emptyMessage?: string;
+  enableRowDrag?: boolean;
   eyebrow: string;
+  onReorderRow?: (activeId: string, overId: string) => void;
   pending?: boolean;
   rows: TData[];
   searchPlaceholder: string;
@@ -30,7 +32,9 @@ export function AdminEntityTable<TData extends RowData & { id: string }>({
   deletedLabel,
   description,
   emptyMessage = "No records found.",
+  enableRowDrag = false,
   eyebrow,
+  onReorderRow,
   pending = false,
   rows,
   searchPlaceholder,
@@ -70,7 +74,9 @@ export function AdminEntityTable<TData extends RowData & { id: string }>({
 
       <DataTable
         emptyMessage={emptyMessage}
+        enableRowDrag={enableRowDrag}
         isPending={tablePending}
+        onReorderRow={onReorderRow}
         table={table}
         toolbar={
           <DataTableToolbar

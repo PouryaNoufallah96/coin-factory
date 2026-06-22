@@ -11,32 +11,45 @@ import type { AdminInquiryDetail } from "@/features/inquiries/schemas/admin-inqu
 
 interface InquiryDetailProps {
   inquiry: AdminInquiryDetail;
+  showHeader?: boolean;
 }
 
-export function InquiryDetail({ inquiry }: InquiryDetailProps) {
+export function InquiryDetail({
+  inquiry,
+  showHeader = true,
+}: InquiryDetailProps) {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex min-w-0 flex-col gap-2">
-          <Button
-            className="mb-1 w-fit"
-            nativeButton={false}
-            render={<Link href="/admin/inquiries" />}
-            size="sm"
-            variant="ghost"
-          >
-            <ArrowLeft data-icon="inline-start" />
-            Inquiries
-          </Button>
-          <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
-            Inquiry details
-          </h1>
+      {showHeader ? (
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex min-w-0 flex-col gap-2">
+            <Button
+              className="mb-1 w-fit"
+              nativeButton={false}
+              render={<Link href="/admin/inquiries" />}
+              size="sm"
+              variant="ghost"
+            >
+              <ArrowLeft data-icon="inline-start" />
+              Inquiries
+            </Button>
+            <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+              Inquiry details
+            </h1>
+            <p className="text-cf-text-muted text-sm">
+              {formatAdminDate(inquiry.createdAt)}
+            </p>
+          </div>
+          <InquiryDetailActions inquiry={inquiry} />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-cf-text-muted text-sm">
             {formatAdminDate(inquiry.createdAt)}
           </p>
+          <InquiryDetailActions inquiry={inquiry} />
         </div>
-        <InquiryDetailActions inquiry={inquiry} />
-      </div>
+      )}
 
       <section className="grid gap-4 border-cf-border-muted/40 border-y py-5 sm:grid-cols-2">
         <DetailItem label="Email" value={inquiry.email} withCopy />

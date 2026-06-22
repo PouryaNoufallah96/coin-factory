@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 
 interface NotificationRecipientsSettingsProps {
   recipients: AdminNotificationRecipient[];
+  showHeader?: boolean;
 }
 
 type OptimisticRecipientAction =
@@ -39,6 +40,7 @@ type OptimisticRecipientAction =
 
 export function NotificationRecipientsSettings({
   recipients,
+  showHeader = true,
 }: NotificationRecipientsSettingsProps) {
   const [actionError, setActionError] = useState<string | null>(null);
   const [isOptimisticPending, startOptimisticTransition] = useTransition();
@@ -121,22 +123,24 @@ export function NotificationRecipientsSettings({
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-      <section className="flex flex-col gap-3">
-        <p className="text-cf-cream text-sm">Settings</p>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex min-w-0 flex-col gap-2">
-            <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
-              Notification recipients
-            </h1>
-            <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
-              Manage the internal addresses that receive new inquiry emails.
-            </p>
+      {showHeader ? (
+        <section className="flex flex-col gap-3">
+          <p className="text-cf-cream text-sm">Settings</p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex min-w-0 flex-col gap-2">
+              <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+                Notification recipients
+              </h1>
+              <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
+                Manage the internal addresses that receive new inquiry emails.
+              </p>
+            </div>
+            <Badge className="w-fit" variant="secondary">
+              {optimisticRecipients.length} / {MAX_NOTIFICATION_RECIPIENTS}
+            </Badge>
           </div>
-          <Badge className="w-fit" variant="secondary">
-            {optimisticRecipients.length} / {MAX_NOTIFICATION_RECIPIENTS}
-          </Badge>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {actionError ? <AdminActionErrorBanner message={actionError} /> : null}
 

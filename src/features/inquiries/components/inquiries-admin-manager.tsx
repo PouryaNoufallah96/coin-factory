@@ -38,6 +38,7 @@ import { hasActiveFilterParams } from "@/lib/filter-params";
 
 interface InquiriesAdminManagerProps {
   rows: AdminInquiry[];
+  showHeader?: boolean;
   totalRows: number;
 }
 
@@ -47,6 +48,7 @@ type InquiryOptimisticAction =
 
 export function InquiriesAdminManager({
   rows,
+  showHeader = true,
   totalRows,
 }: InquiriesAdminManagerProps) {
   const router = useRouter();
@@ -215,16 +217,18 @@ export function InquiriesAdminManager({
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
       {actionError ? <AdminActionErrorBanner message={actionError} /> : null}
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex min-w-0 flex-col gap-2">
-          <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
-            Inquiries
-          </h1>
-          <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
-            Review founder submissions, files, and notification status.
-          </p>
-        </div>
-      </section>
+      {showHeader ? (
+        <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex min-w-0 flex-col gap-2">
+            <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+              Inquiries
+            </h1>
+            <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
+              Review founder submissions, files, and notification status.
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <DataTable
         emptyMessage="No inquiries found."

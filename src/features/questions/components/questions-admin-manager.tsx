@@ -35,6 +35,7 @@ interface QuestionsAdminManagerProps {
   >;
   orderedIds: string[];
   rows: AdminQuestion[];
+  showHeader?: boolean;
   totalRows: number;
 }
 
@@ -49,6 +50,7 @@ export function QuestionsAdminManager({
   filters,
   orderedIds,
   rows,
+  showHeader = true,
   totalRows,
 }: QuestionsAdminManagerProps) {
   const [modal, setModal] = useState<QuestionModal>(null);
@@ -235,6 +237,7 @@ export function QuestionsAdminManager({
         pending={isRowActionPending}
         rows={optimisticRows}
         searchPlaceholder="Search questions"
+        showHeader={showHeader}
         title="Questions"
         totalRows={totalRows}
       />

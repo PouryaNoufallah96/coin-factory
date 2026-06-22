@@ -34,6 +34,7 @@ interface CategoriesAdminManagerProps {
   >;
   orderedIds: string[];
   rows: AdminCategory[];
+  showHeader?: boolean;
   totalRows: number;
 }
 
@@ -48,6 +49,7 @@ export function CategoriesAdminManager({
   filters,
   orderedIds,
   rows,
+  showHeader = true,
   totalRows,
 }: CategoriesAdminManagerProps) {
   const [modal, setModal] = useState<CategoryModal>(null);
@@ -225,6 +227,7 @@ export function CategoriesAdminManager({
         pending={isRowActionPending}
         rows={optimisticRows}
         searchPlaceholder="Search categories"
+        showHeader={showHeader}
         title="Categories"
         totalRows={totalRows}
       />

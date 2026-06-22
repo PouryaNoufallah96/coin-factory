@@ -261,7 +261,7 @@ export function CategoriesAdminManager({
             New category
           </AdminCreateButton>
         }
-        deletedLabel="Deleted"
+        deletedLabel="Archived"
         description="Manage the business categories used by the landing funnel."
         emptyMessage="No categories found."
         eyebrow="Admin"

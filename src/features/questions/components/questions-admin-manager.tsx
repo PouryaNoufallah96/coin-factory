@@ -271,7 +271,7 @@ export function QuestionsAdminManager({
             New question
           </AdminCreateButton>
         }
-        deletedLabel="Deleted"
+        deletedLabel="Archived"
         description="Manage the ordered questions used by the onboarding wizard."
         emptyMessage="No questions found."
         eyebrow="Admin"

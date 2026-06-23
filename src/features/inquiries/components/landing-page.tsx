@@ -246,7 +246,9 @@ export function LandingPage({ children }: { children: ReactNode }) {
             </InputSurface>
           </form>
           <div aria-hidden="true" className="h-20 shrink-0 sm:hidden" />
-          {children}
+          <div className="flex w-full animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] flex-col items-center gap-8">
+            {children}
+          </div>
         </div>
       </div>
     </section>

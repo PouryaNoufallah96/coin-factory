@@ -134,8 +134,26 @@ export function LandingPage({ children }: { children: ReactNode }) {
             {HERO_WORD}
           </h1>
         </div>
-        <div className="flex w-full animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] flex-col items-center gap-8">
-          <form className="cf-search-container" onSubmit={continueToWizard}>
+        <div className="flex w-full flex-col items-center gap-8">
+          <form
+            className="cf-search-container fixed inset-x-0 bottom-0 z-20 flex animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] items-center gap-3 px-(--cf-page-x) pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:px-0 sm:pb-0"
+            onSubmit={continueToWizard}
+          >
+            <button
+              aria-label="Attach PDF or Word document"
+              className="flex size-12 shrink-0 items-center justify-center rounded-full border border-cf-cream/60 text-cf-cream transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95 sm:hidden"
+              onClick={() => {
+                if (files.length >= MAX_FILES) {
+                  funnelAlert(`
+                    You can attach up to ${MAX_FILES} documents.`);
+                  return;
+                }
+                fileInputRef.current?.click();
+              }}
+              type="button"
+            >
+              <Plus aria-hidden="true" className="size-5" />
+            </button>
             <InputSurface
               className={cn(
                 files.length > 0
@@ -159,7 +177,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
               <div className="flex min-h-10 w-full items-center gap-4">
                 <button
                   aria-label="Attach PDF or Word document"
-                  className="-m-1.5 flex size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95"
+                  className="-m-1.5 hidden size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95 sm:flex"
                   onClick={() => {
                     if (files.length >= MAX_FILES) {
                       funnelAlert(`
@@ -199,7 +217,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 />
                 <button
                   aria-label="Continue"
-                  className="shrink-0"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cf-cream/10 sm:size-auto sm:bg-transparent"
                   disabled={!searchActive}
                   type="submit"
                 >
@@ -227,6 +245,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
               </div>
             </InputSurface>
           </form>
+          <div aria-hidden="true" className="h-20 shrink-0 sm:hidden" />
           {children}
         </div>
       </div>

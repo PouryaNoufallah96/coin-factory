@@ -20,7 +20,7 @@ export function FunnelLogo() {
         src="/brand/logo-c.svg"
       />
       <span className="text-(length:--cf-text-logo) font-logo leading-none">
-        coinfactory
+        oinfactory
       </span>
     </Link>
   );

@@ -154,8 +154,8 @@
   --cf-space-7: 3.5rem;
 
   /* Layout */
-  --cf-page-x: var(--cf-space-4);
-  --cf-header-h: 3.5rem;
+  --cf-page-x: var(--cf-space-3);
+  --cf-header-h: 4.1rem;
   --cf-footer-h: 3.25rem;
   --cf-content-w: 45rem;
   --cf-field-w: 32.5rem;
@@ -194,8 +194,8 @@
   --cf-file-card-w: 15rem;
   --cf-file-card-name-w: 8rem;
   --cf-file-card-tile: 3rem;
-  --cf-logo-mark-w: 1.5625rem;
-  --cf-logo-mark-h: 1.75rem;
+  --cf-logo-mark-w: 1.6rem;
+  --cf-logo-mark-h: 1.8rem;
   --cf-social-size: 2rem;
   --cf-social-gap: 1.125rem;
   --cf-social-mark-size: 1.1rem;
@@ -265,7 +265,7 @@
   --cf-text-field-label: 1.125rem;
   --cf-text-lg: 0.875rem;
   --cf-text-base: 0.75rem;
-  --cf-text-logo: 1.1875rem;
+  --cf-text-logo: 1.3rem;
   --cf-text-thank-you-sub: 1.5rem;
   --cf-leading-tight: 1;
   --cf-leading-snug: 1.1;

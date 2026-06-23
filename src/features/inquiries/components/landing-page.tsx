@@ -303,8 +303,8 @@ export function LandingCategoryChips({
   }
 
   return (
-    <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overscroll-x-contain pb-1 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-      <div className="flex w-max min-w-full flex-nowrap justify-center gap-4 px-1">
+    <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overscroll-x-contain pb-1 [-ms-overflow-style:none] sm:overflow-x-auto [&::-webkit-scrollbar]:hidden">
+      <div className="flex w-full flex-wrap justify-center gap-4 px-1 sm:w-max sm:min-w-full sm:flex-nowrap">
         {categories.map((category) => {
           const selected = selectedCategoryIds.includes(category.id);
           return (

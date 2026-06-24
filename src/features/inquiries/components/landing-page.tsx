@@ -176,8 +176,8 @@ export function LandingPage({ children }: { children: ReactNode }) {
                 ...(files.length === 0
                   ? {
                       minHeight: inputFocused
-                        ? "calc(var(--cf-search-h) * 1.2)"
-                        : "var(--cf-search-h)",
+                        ? "var(--cf-search-surface-h-focused)"
+                        : "var(--cf-search-surface-h)",
                     }
                   : {}),
               }}

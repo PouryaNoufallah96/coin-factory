@@ -1,160 +1,142 @@
 "use client";
 
-import { Download, Share, X } from "lucide-react";
-import { type ReactNode, useEffect, useRef } from "react";
+import { Download, X } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { SITE_NAME } from "@/config/site";
 
-const DISMISS_STORAGE_KEY = "cf-install-prompt-dismissed-at";
-const DISMISS_DAYS = 14;
-const SHOW_DELAY_MS = 3000;
+const DISMISSED_KEY = "cf-install-prompt-dismissed";
+const SHOW_DELAY_MS = 4000;
+const INSTALL_TOAST_ID = "pwa-install";
+const IOS_UA_REGEX = /iPad|iPhone|iPod/;
+const ANDROID_UA_REGEX = /Android/;
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-function wasRecentlyDismissed() {
-  const raw = localStorage.getItem(DISMISS_STORAGE_KEY);
-  const dismissedAt = raw ? Number(raw) : Number.NaN;
-  if (Number.isNaN(dismissedAt)) {
-    return false;
-  }
-  const elapsedDays = (Date.now() - dismissedAt) / (1000 * 60 * 60 * 24);
-  return elapsedDays < DISMISS_DAYS;
-}
-
-function isRunningStandalone() {
+function isStandalone() {
   return (
     window.matchMedia("(display-mode: standalone)").matches ||
     (navigator as Navigator & { standalone?: boolean }).standalone === true
   );
 }
 
-const IOS_SAFARI_REGEX = /iphone|ipad|ipod/i;
-
-function isIosSafari() {
-  return IOS_SAFARI_REGEX.test(navigator.userAgent);
+interface InstallToastOptions {
+  description: string;
+  onInstall?: () => Promise<void>;
 }
 
-const MOBILE_UA_REGEX = /android|iphone|ipad|ipod/i;
+function showInstallToast({ description, onInstall }: InstallToastOptions) {
+  const rememberDismissal = () => {
+    localStorage.setItem(DISMISSED_KEY, "1");
+  };
 
-function isMobile() {
-  return MOBILE_UA_REGEX.test(navigator.userAgent);
+  toast.custom(
+    (toastId) => (
+      <div className="relative flex w-[calc(100vw-2rem)] max-w-97.5 items-start gap-3 rounded-(--radius) border border-border bg-popover p-3 pr-10 text-popover-foreground shadow-lg">
+        <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md bg-cf-cream/10 text-cf-cream">
+          <Download aria-hidden="true" className="size-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-bold text-sm leading-5">Install {SITE_NAME}</p>
+          <p className="mt-0.5 text-popover-foreground/70 text-xs leading-5">
+            {description}
+          </p>
+          {onInstall ? (
+            <button
+              className="mt-3 inline-flex h-8 items-center justify-center rounded-md bg-cf-cream px-3 font-bold text-primary-foreground text-xs transition hover:bg-cf-cream/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cf-cream/45"
+              onClick={onInstall}
+              type="button"
+            >
+              Install
+            </button>
+          ) : null}
+        </div>
+        <button
+          aria-label="Dismiss install prompt"
+          className="absolute top-2.5 right-2.5 inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cf-cream/45"
+          onClick={() => {
+            rememberDismissal();
+            toast.dismiss(toastId);
+          }}
+          type="button"
+        >
+          <X aria-hidden="true" className="size-4" />
+        </button>
+      </div>
+    ),
+    {
+      duration: Number.POSITIVE_INFINITY,
+      id: INSTALL_TOAST_ID,
+      onDismiss: rememberDismissal,
+      unstyled: true,
+    }
+  );
 }
 
 export function InstallPrompt() {
-  const deferredEventRef = useRef<BeforeInstallPromptEvent | null>(null);
+  const deferredPromptRef = useRef<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    if (!isMobile() || isRunningStandalone() || wasRecentlyDismissed()) {
+    const isIOS = IOS_UA_REGEX.test(navigator.userAgent);
+    const isAndroid = ANDROID_UA_REGEX.test(navigator.userAgent);
+    if (!(isIOS || isAndroid)) {
       return;
     }
 
-    function dismiss(toastId: string | number) {
-      localStorage.setItem(DISMISS_STORAGE_KEY, String(Date.now()));
-      toast.dismiss(toastId);
+    if (isStandalone() || localStorage.getItem(DISMISSED_KEY)) {
+      return;
     }
 
-    function showInstallToast(event: BeforeInstallPromptEvent) {
-      toast.custom(
-        (toastId) => (
-          <InstallToastCard
-            description="Add CoinFactory to your home screen for quick, full-screen access."
-            icon={<Download className="size-4" />}
-            onDismiss={() => dismiss(toastId)}
-            onInstall={async () => {
-              await event.prompt();
-              dismiss(toastId);
-            }}
-            primaryLabel="Install"
-          />
-        ),
-        { duration: Number.POSITIVE_INFINITY }
-      );
-    }
+    const dismiss = () => localStorage.setItem(DISMISSED_KEY, "1");
 
-    function showIosInstructionToast() {
-      toast.custom(
-        (toastId) => (
-          <InstallToastCard
-            description='Tap Share, then "Add to Home Screen" for quick, full-screen access.'
-            icon={<Share className="size-4" />}
-            onDismiss={() => dismiss(toastId)}
-          />
-        ),
-        { duration: Number.POSITIVE_INFINITY }
-      );
-    }
-
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-
-    function handleBeforeInstallPrompt(event: Event) {
+    function onBeforeInstallPrompt(event: Event) {
       event.preventDefault();
-      deferredEventRef.current = event as BeforeInstallPromptEvent;
-      timeoutId = setTimeout(() => {
-        if (deferredEventRef.current) {
-          showInstallToast(deferredEventRef.current);
-        }
-      }, SHOW_DELAY_MS);
+      deferredPromptRef.current = event as BeforeInstallPromptEvent;
     }
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    if (isIosSafari()) {
-      timeoutId = setTimeout(showIosInstructionToast, SHOW_DELAY_MS);
+    function onAppInstalled() {
+      dismiss();
+      toast.dismiss(INSTALL_TOAST_ID);
     }
+    window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    window.addEventListener("appinstalled", onAppInstalled);
+
+    const timer = setTimeout(() => {
+      if (isStandalone() || localStorage.getItem(DISMISSED_KEY)) {
+        return;
+      }
+
+      if (isIOS) {
+        showInstallToast({
+          description: 'Tap Share, then "Add to Home Screen"',
+        });
+        return;
+      }
+
+      const deferredPrompt = deferredPromptRef.current;
+      if (!deferredPrompt) {
+        return;
+      }
+
+      showInstallToast({
+        description: "Get quick access from your home screen.",
+        onInstall: async () => {
+          await deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          dismiss();
+          toast.dismiss(INSTALL_TOAST_ID);
+        },
+      });
+    }, SHOW_DELAY_MS);
 
     return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
-      clearTimeout(timeoutId);
+      clearTimeout(timer);
+      window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", onAppInstalled);
     };
   }, []);
 
   return null;
-}
-
-function InstallToastCard({
-  description,
-  icon,
-  onDismiss,
-  onInstall,
-  primaryLabel,
-}: {
-  description: string;
-  icon: ReactNode;
-  onDismiss: () => void;
-  onInstall?: () => void;
-  primaryLabel?: string;
-}) {
-  return (
-    <div className="flex w-full max-w-sm items-start gap-3 rounded-(--radius) border border-border bg-popover p-4 text-popover-foreground shadow-lg">
-      <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cf-cream/10 text-cf-cream">
-        {icon}
-      </div>
-      <div className="flex-1 space-y-2">
-        <p className="font-medium text-sm leading-snug">{description}</p>
-        <div className="flex gap-2">
-          {onInstall && (
-            <Button onClick={onInstall} size="sm">
-              {primaryLabel}
-            </Button>
-          )}
-          <Button onClick={onDismiss} size="sm" variant="ghost">
-            Not now
-          </Button>
-        </div>
-      </div>
-      <button
-        aria-label="Dismiss"
-        className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
-        onClick={onDismiss}
-        type="button"
-      >
-        <X className="size-4" />
-      </button>
-    </div>
-  );
 }

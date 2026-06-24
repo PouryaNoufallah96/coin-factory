@@ -26,6 +26,7 @@ import {
   hasIntakeSignal,
   INTAKE_SIGNAL_MESSAGE,
 } from "@/features/inquiries/schemas/intake-signal";
+import { useIsDesktop } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { useFunnelDraft } from "../hooks/use-funnel-draft";
 
@@ -33,6 +34,7 @@ const HERO_SUBLINE = "What do you want to";
 const HERO_WORD = "Tokenize?";
 const SEARCH_PLACEHOLDER =
   "e.g Oil Refinery in Indonesia, Hotel in Dubai, Gold Mine...";
+const SEARCH_PLACEHOLDER_MOBILE = "Hotel in Dubai or...";
 
 const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".doc": "Word",
@@ -44,6 +46,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
+  const isDesktop = useIsDesktop();
   const {
     assetDescription,
     files,
@@ -136,12 +139,12 @@ export function LandingPage({ children }: { children: ReactNode }) {
         </div>
         <div className="flex w-full flex-col items-center gap-8">
           <form
-            className="cf-search-container fixed inset-x-0 bottom-0 z-20 flex animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] items-center gap-3 px-(--cf-page-x) pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:px-0 sm:pb-0"
+            className="cf-search-container fixed inset-x-0 bottom-0 z-20 flex animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] items-center gap-2 px-(--cf-page-x) pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:gap-3 sm:px-0 sm:pb-0"
             onSubmit={continueToWizard}
           >
             <button
               aria-label="Attach PDF or Word document"
-              className="flex size-12 shrink-0 items-center justify-center rounded-full border border-cf-cream/60 text-cf-cream transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95 sm:hidden"
+              className="flex size-12 shrink-0 items-center justify-center rounded-full border border-cf-cream bg-cf-charcoal-900 text-cf-cream transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95 sm:hidden"
               onClick={() => {
                 if (files.length >= MAX_FILES) {
                   funnelAlert(`
@@ -156,21 +159,28 @@ export function LandingPage({ children }: { children: ReactNode }) {
             </button>
             <InputSurface
               className={cn(
+                "border-transparent",
                 files.length > 0
-                  ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-6"
-                  : "px-6 py-3"
+                  ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-4 sm:p-6"
+                  : "py-2 pr-3 pl-4 sm:px-6 sm:py-3"
               )}
               filled={assetDescription.trim().length > 0 || files.length > 0}
               focused={inputFocused}
-              style={
-                files.length === 0
+              style={{
+                border: "1px solid transparent",
+                backgroundImage:
+                  "linear-gradient(var(--cf-charcoal-900), var(--cf-charcoal-900)), linear-gradient(90deg, #FFF2D1 0%, #28303F 100%)",
+                backgroundOrigin: "border-box",
+                backgroundClip: "padding-box, border-box",
+                boxShadow: "0px 0px 200px 0px #FFFAED3D",
+                ...(files.length === 0
                   ? {
                       minHeight: inputFocused
                         ? "calc(var(--cf-search-h) * 1.2)"
                         : "var(--cf-search-h)",
                     }
-                  : undefined
-              }
+                  : {}),
+              }}
               variant="search"
             >
               <FileCardPanel files={files} onRemove={removeFile} />
@@ -205,7 +215,9 @@ export function LandingPage({ children }: { children: ReactNode }) {
                   onBlur={() => setInputFocused(false)}
                   onChange={onDescriptionChange}
                   onFocus={() => setInputFocused(true)}
-                  placeholder={SEARCH_PLACEHOLDER}
+                  placeholder={
+                    isDesktop ? SEARCH_PLACEHOLDER : SEARCH_PLACEHOLDER_MOBILE
+                  }
                   ref={descriptionRef}
                   rows={1}
                   style={{

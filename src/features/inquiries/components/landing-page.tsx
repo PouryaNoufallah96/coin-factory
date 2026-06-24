@@ -128,7 +128,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
       className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6"
       data-funnel-resume-hide
     >
-      <div className="sm:14 flex w-full flex-col items-center gap-20">
+      <div className="sm:14 flex w-full flex-col items-center gap-0 sm:gap-20">
         <div className="cf-content-container flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
             {HERO_SUBLINE}
@@ -137,7 +137,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
             {HERO_WORD}
           </h1>
         </div>
-        <div className="flex w-full flex-col items-center gap-8">
+        <div className="flex w-full flex-col items-center gap-4 sm:gap-8">
           <form
             className="cf-search-container fixed inset-x-0 bottom-0 z-20 flex animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] items-center gap-2 px-(--cf-page-x) pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:gap-3 sm:px-0 sm:pb-0"
             onSubmit={continueToWizard}
@@ -257,7 +257,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
               </div>
             </InputSurface>
           </form>
-          <div aria-hidden="true" className="h-20 shrink-0 sm:hidden" />
+          <div aria-hidden="true" className="h-3 shrink-0 sm:hidden" />
           <div className="flex w-full animate-[enter-fade-up_0.65s_cubic-bezier(0.2,0,0,1)_0.08s_both] flex-col items-center gap-8">
             {children}
           </div>
@@ -337,7 +337,7 @@ export function LandingCategoryChips({
 
   return (
     <div className="cf-chip-container scrollbar-none min-h-10 min-w-0 overscroll-x-contain pb-1 [-ms-overflow-style:none] sm:overflow-x-auto [&::-webkit-scrollbar]:hidden">
-      <div className="flex w-full flex-wrap justify-center gap-4 px-1 sm:w-max sm:min-w-full sm:flex-nowrap">
+      <div className="flex w-full flex-wrap justify-center gap-x-2 gap-y-4 px-1 sm:w-max sm:min-w-full sm:flex-nowrap sm:gap-4">
         {categories.map((category) => {
           const selected = selectedCategoryIds.includes(category.id);
           return (

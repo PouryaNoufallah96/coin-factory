@@ -187,7 +187,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
               <div
                 className={cn(
                   "flex min-h-10 w-full items-center gap-4",
-                  files.length > 0 && "pr-2 pl-2 sm:pr-0 sm:pl-0"
+                  files.length > 0 && "px-3 sm:pr-0 sm:pl-0"
                 )}
               >
                 <button

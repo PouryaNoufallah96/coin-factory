@@ -180,11 +180,7 @@
   --cf-search-surface-h-focused: 4.5rem;
   --cf-search-button-size: 2rem;
   --cf-search-affordance-size: 2.5rem;
-  --cf-search-panel-min-h: calc(
-    var(--cf-file-card-h) +
-    var(--cf-search-h) +
-    var(--cf-space-6)
-  );
+  --cf-search-panel-min-h: calc(var(--cf-file-card-h) + var(--cf-search-h));
   --cf-cta-h: 2.25rem;
   --cf-cta-w: 8rem;
   --cf-touch: 2.25rem;

@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleX, Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
 import {
@@ -159,10 +159,10 @@ export function LandingPage({ children }: { children: ReactNode }) {
             </button>
             <InputSurface
               className={cn(
-                "border-transparent max-sm:rounded-[25px]",
+                "border-transparent py-3",
                 files.length > 0
-                  ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-4 sm:p-6"
-                  : "py-2 pr-3 pl-4 sm:px-6 sm:py-3"
+                  ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) pr-0 pl-0 max-sm:rounded-[25px] sm:p-6 sm:py-4"
+                  : "pr-3 pl-4 max-sm:rounded-[60px] sm:px-6 sm:py-3"
               )}
               filled={assetDescription.trim().length > 0 || files.length > 0}
               focused={inputFocused}
@@ -184,7 +184,12 @@ export function LandingPage({ children }: { children: ReactNode }) {
               variant="search"
             >
               <FileCardPanel files={files} onRemove={removeFile} />
-              <div className="flex min-h-10 w-full items-center gap-4">
+              <div
+                className={cn(
+                  "flex min-h-10 w-full items-center gap-4",
+                  files.length > 0 && "pr-2 pl-2 sm:pr-0 sm:pl-0"
+                )}
+              >
                 <button
                   aria-label="Attach PDF or Word document"
                   className="-m-1.5 hidden size-(--cf-search-affordance-size) shrink-0 items-center justify-center rounded-full text-cf-text-primary transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:bg-cf-cream/10 active:scale-95 sm:flex"
@@ -279,7 +284,7 @@ function FileCardPanel({
   }
 
   return (
-    <div className="scrollbar-none flex w-full flex-nowrap gap-5 overflow-x-auto [-ms-overflow-style:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+    <div className="scrollbar-none flex w-full flex-nowrap gap-3 overflow-x-auto [-ms-overflow-style:none] sm:flex-wrap sm:gap-5 sm:overflow-visible [&::-webkit-scrollbar]:hidden">
       {files.map((file, index) => (
         <div
           className="relative flex h-(--cf-file-card-h) w-fit min-w-0 shrink-0 animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both] items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
@@ -305,11 +310,11 @@ function FileCardPanel({
           </div>
           <button
             aria-label={`Remove ${file.name}`}
-            className="absolute top-2 right-2 text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-cream"
+            className="absolute top-2 right-2 flex size-5 items-center justify-center rounded-full border-none bg-[#909090] text-[#232832] transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease)"
             onClick={() => onRemove(index)}
             type="button"
           >
-            <CircleX aria-hidden="true" className="size-5" />
+            <X aria-hidden="true" className="size-3" strokeWidth={3} />
           </button>
         </div>
       ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleX, FileText, Plus } from "lucide-react";
+import { CircleX, Plus } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
 import {
@@ -159,7 +159,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
             </button>
             <InputSurface
               className={cn(
-                "border-transparent",
+                "border-transparent max-sm:rounded-[25px]",
                 files.length > 0
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) p-4 sm:p-6"
                   : "py-2 pr-3 pl-4 sm:px-6 sm:py-3"
@@ -279,14 +279,21 @@ function FileCardPanel({
   }
 
   return (
-    <div className="flex w-full flex-wrap gap-5">
+    <div className="scrollbar-none flex w-full flex-nowrap gap-5 overflow-x-auto [-ms-overflow-style:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
       {files.map((file, index) => (
         <div
-          className="relative flex h-(--cf-file-card-h) w-full min-w-0 animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both] items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
+          className="relative flex h-(--cf-file-card-h) w-fit min-w-0 shrink-0 animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both] items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 sm:w-(--cf-file-card-w)"
           key={`${file.name}-${file.lastModified}-${file.size}`}
         >
           <div className="flex size-(--cf-file-card-tile) shrink-0 items-center justify-center rounded-(--cf-radius-segment) bg-cf-cream text-cf-text-on-accent">
-            <FileText aria-hidden="true" className="size-6" />
+            <Image
+              alt=""
+              aria-hidden="true"
+              className="size-6"
+              height={24}
+              src="/icons/file.svg"
+              width={24}
+            />
           </div>
           <div className="min-w-0">
             <p className="max-w-(--cf-file-card-name-w) truncate text-base text-cf-text-primary leading-none">

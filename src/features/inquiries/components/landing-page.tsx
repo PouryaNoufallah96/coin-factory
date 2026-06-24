@@ -328,8 +328,6 @@ export function LandingCategoryChips({
       return;
     }
 
-    // Chip selection is independent of the search text: picking a chip never
-    // writes its label into the input, and typing never changes the chips.
     setSelectedCategoryIds((currentIds) =>
       nextSelectedCategoryIds(currentIds, category.id)
     );
@@ -343,10 +341,10 @@ export function LandingCategoryChips({
           return (
             <Badge
               className={cn(
-                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04]",
+                "text-(length:--cf-text-base) h-(--cf-chip-h) shrink-0 rounded-full border px-4 font-normal transition-[background-color,border-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.04] max-sm:border-[#8F8F8F] max-sm:text-[#FFF2D1] max-sm:text-[0.9rem]",
                 selected
-                  ? "border-transparent bg-cf-chip-bg-active text-cf-text-on-accent"
-                  : "border-cf-border-muted bg-cf-chip-bg text-cf-text-on-accent hover:border-cf-border-active"
+                  ? "border-transparent bg-cf-chip-bg-active text-cf-text-on-accent max-sm:bg-[#FFF2D152]"
+                  : "border-cf-border-muted bg-cf-chip-bg text-cf-text-on-accent hover:border-cf-border-active max-sm:bg-[#FFFFFF14] max-sm:hover:bg-[#FFF2D152]"
               )}
               key={category.id}
               render={

@@ -287,7 +287,7 @@ function FileCardPanel({
     <div className="scrollbar-none flex w-full flex-nowrap gap-3 overflow-x-auto [-ms-overflow-style:none] sm:flex-wrap sm:gap-5 sm:overflow-visible [&::-webkit-scrollbar]:hidden">
       {files.map((file, index) => (
         <div
-          className="relative flex h-(--cf-file-card-h) w-fit min-w-0 shrink-0 animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both] items-center gap-4 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 max-sm:last:mr-3 max-sm:first:ml-3 sm:w-(--cf-file-card-w)"
+          className="relative flex h-(--cf-file-card-h) w-fit min-w-0 shrink-0 animate-[enter-pop_160ms_cubic-bezier(0.2,0,0,1)_both] items-center gap-2 rounded-(--cf-radius-card) border border-cf-border-muted bg-transparent p-2.5 max-sm:last:mr-3 max-sm:first:ml-3 sm:w-(--cf-file-card-w) sm:gap-4"
           key={`${file.name}-${file.lastModified}-${file.size}`}
         >
           <div className="flex size-(--cf-file-card-tile) shrink-0 items-center justify-center rounded-(--cf-radius-segment) bg-cf-cream text-cf-text-on-accent">

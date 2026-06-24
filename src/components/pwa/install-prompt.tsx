@@ -36,11 +36,17 @@ function isIosSafari() {
   return IOS_SAFARI_REGEX.test(navigator.userAgent);
 }
 
+const MOBILE_UA_REGEX = /android|iphone|ipad|ipod/i;
+
+function isMobile() {
+  return MOBILE_UA_REGEX.test(navigator.userAgent);
+}
+
 export function InstallPrompt() {
   const deferredEventRef = useRef<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    if (isRunningStandalone() || wasRecentlyDismissed()) {
+    if (!isMobile() || isRunningStandalone() || wasRecentlyDismissed()) {
       return;
     }
 

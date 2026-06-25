@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-
+import { SITE_DESCRIPTION } from "@/config/site";
 import { FunnelApp } from "@/features/inquiries/components/funnel-app";
 import {
   CategoryChipsSkeleton,
@@ -13,8 +13,7 @@ import {
 
 export const metadata: Metadata = {
   title: "CoinFactory",
-  description:
-    "Start a private CoinFactory tokenization inquiry for your real-world asset or business project.",
+  description: SITE_DESCRIPTION,
 };
 
 // Hero, search, and chrome need no data and stay in the static PPR shell; the

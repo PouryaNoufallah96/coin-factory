@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
+import { SerwistProvider } from "@serwist/next/react";
+import type { Metadata, Viewport } from "next";
 import { Comfortaa, IBM_Plex_Sans, Inter, Parkinsans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { InstallPrompt } from "@/components/pwa/install-prompt";
+import { Toaster } from "@/components/ui/sonner";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 // Font roles per DESIGN.md: Inter carries the UI; Parkinsans is the logo
@@ -34,11 +37,35 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "CoinFactory",
-    template: "%s | CoinFactory",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Swiss B2B lead qualification for real-world asset tokenization with CoinFactory AG.",
+  description: SITE_DESCRIPTION,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: SITE_NAME,
+  },
+  icons: {
+    apple: "/icons/pwa/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    siteName: SITE_NAME,
+    images: ["/icons/pwa/icon-512.png"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ["/icons/pwa/icon-512.png"],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#232832",
 };
 
 export default function RootLayout({
@@ -59,9 +86,30 @@ export default function RootLayout({
       lang="en"
     >
       <body>
-        <NuqsAdapter>
-          <QueryProvider>{children}</QueryProvider>
-        </NuqsAdapter>
+        <SerwistProvider
+          disable={process.env.NODE_ENV === "development"}
+          swUrl="/sw.js"
+        >
+          <NuqsAdapter>
+            <QueryProvider>{children}</QueryProvider>
+          </NuqsAdapter>
+          <InstallPrompt />
+          <Toaster
+            closeButton
+            expand
+            position="bottom-center"
+            toastOptions={{
+              classNames: {
+                toast: "w-max! max-w-[80vw]! whitespace-normal!",
+                error:
+                  "bg-cf-error! text-cf-text-on-error! border-0! rounded-(--cf-radius-alert)! min-h-14 font-medium pr-15!",
+                icon: "text-cf-text-on-error!",
+                closeButton:
+                  "!left-auto !right-2 !top-1/2 ![transform:translateY(-50%)] !size-6 [&>svg]:!size-4 bg-cf-error! border-0! text-cf-text-on-error! hover:opacity-70!",
+              },
+            }}
+          />
+        </SerwistProvider>
       </body>
     </html>
   );

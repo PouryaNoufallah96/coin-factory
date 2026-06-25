@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { SITE_DESCRIPTION } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "CoinFactory",
-  description:
-    "Start a private CoinFactory tokenization inquiry for your real-world asset or business project.",
+  description: SITE_DESCRIPTION,
 };
 
 export default function CatchAll() {

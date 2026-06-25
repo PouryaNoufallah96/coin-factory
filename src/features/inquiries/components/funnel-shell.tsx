@@ -100,7 +100,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <nav
         aria-label="Main menu"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[78vw] max-w-sm flex-col justify-between overflow-hidden bg-cf-charcoal-900 transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:top-0 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:bg-cf-charcoal-900/80 sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
+          "fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-sm flex-col justify-between overflow-hidden bg-cf-charcoal-900 transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:top-0 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:bg-cf-charcoal-900/80 sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
           menuOpen
             ? "pointer-events-auto translate-x-0 shadow-(--cf-glow-menu-mobile) sm:translate-y-0 sm:scale-50 sm:shadow-(--cf-glow-menu)"
             : "pointer-events-none translate-x-full shadow-none sm:-translate-y-2 sm:scale-50 sm:opacity-0"
@@ -116,10 +116,10 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           <X aria-hidden="true" className="size-6" />
         </button>
 
-        <div>
+        <div className="mt-15 sm:mt-0">
           {FUNNEL_MENU_ITEMS.map((item, index) => (
             <Link
-              className="group text-(length:--cf-text-field-label) flex h-30 items-center gap-8 border-cf-cream/15 border-b px-11 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8"
+              className="group text-(length:--cf-text-field-label) flex h-20 items-center gap-3 border-cf-cream/15 border-b px-5 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8 sm:h-30 sm:gap-8 sm:px-11"
               href={item.href}
               key={item.href}
               onClick={(event) => {
@@ -136,7 +136,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
                 <Image
                   alt=""
                   aria-hidden="true"
-                  className="size-10"
+                  className="size-6 sm:size-10"
                   height={40}
                   src={item.icon}
                   width={40}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,7 +11,10 @@ import {
   useState,
 } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import { FunnelFooter } from "@/features/inquiries/components/funnel-footer";
+import {
+  FunnelFooter,
+  FunnelSocialNav,
+} from "@/features/inquiries/components/funnel-footer";
 import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
 import { FunnelSpotlights } from "@/features/inquiries/components/funnel-spotlights";
 import { useFunnelHome } from "@/features/inquiries/hooks/use-funnel-home";
@@ -85,44 +88,71 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         </button>
       </header>
 
+      <div
+        aria-hidden="true"
+        className={cn(
+          "fixed inset-0 z-20 bg-cf-charcoal-900/60 backdrop-blur-sm transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:hidden",
+          menuOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        )}
+      />
       <nav
         aria-label="Main menu"
         className={cn(
-          "t-0 fixed top-0 -right-8 z-30 w-140 overflow-hidden rounded-[2rem] border border-cf-cream/10 bg-cf-charcoal-900/80 shadow-(--cf-glow-menu) backdrop-blur-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "fixed inset-y-0 right-0 z-30 flex w-[78vw] max-w-sm flex-col justify-between overflow-hidden border-cf-cream/10 border-l bg-cf-charcoal-900/95 backdrop-blur-xl transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:top-0 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:bg-cf-charcoal-900/80 sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
           menuOpen
-            ? "pointer-events-auto translate-y-0 scale-50 opacity-100"
-            : "pointer-events-none -translate-y-2 scale-50 opacity-0"
+            ? "pointer-events-auto translate-x-0 opacity-100 shadow-(--cf-glow-menu) sm:translate-y-0 sm:scale-50"
+            : "pointer-events-none translate-x-full opacity-100 shadow-none sm:-translate-y-2 sm:scale-50 sm:opacity-0"
         )}
         ref={menuPanelRef}
       >
-        {FUNNEL_MENU_ITEMS.map((item, index) => (
-          <Link
-            className="group text-(length:--cf-text-field-label) flex h-30 items-center gap-8 border-cf-cream/15 border-b px-11 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8"
-            href={item.href}
-            key={item.href}
-            onClick={(event) => {
-              setMenuOpen(false);
-              if (item.href === "/") {
-                goHome(event);
-              }
-            }}
-            style={{
-              transitionDelay: menuOpen ? `${index * 35}ms` : "0ms",
-            }}
-          >
-            <span className="flex size-10 shrink-0 items-center justify-center transition-transform duration-(--cf-dur-content) ease-(--cf-ease) group-hover:scale-105">
-              <Image
-                alt=""
-                aria-hidden="true"
-                className="size-10"
-                height={40}
-                src={item.icon}
-                width={40}
-              />
-            </span>
-            <span className="min-w-0">{item.label}</span>
-          </Link>
-        ))}
+        <button
+          aria-label="Close menu"
+          className="absolute top-4 right-4 z-10 flex size-(--cf-touch) items-center justify-center rounded-full text-cf-cream transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 active:scale-95 sm:hidden"
+          onClick={() => setMenuOpen(false)}
+          type="button"
+        >
+          <X aria-hidden="true" className="size-6" />
+        </button>
+
+        <div>
+          {FUNNEL_MENU_ITEMS.map((item, index) => (
+            <Link
+              className="group text-(length:--cf-text-field-label) flex h-30 items-center gap-8 border-cf-cream/15 border-b px-11 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8"
+              href={item.href}
+              key={item.href}
+              onClick={(event) => {
+                setMenuOpen(false);
+                if (item.href === "/") {
+                  goHome(event);
+                }
+              }}
+              style={{
+                transitionDelay: menuOpen ? `${index * 35}ms` : "0ms",
+              }}
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center transition-transform duration-(--cf-dur-content) ease-(--cf-ease) group-hover:scale-105">
+                <Image
+                  alt=""
+                  aria-hidden="true"
+                  className="size-10"
+                  height={40}
+                  src={item.icon}
+                  width={40}
+                />
+              </span>
+              <span className="min-w-0">{item.label}</span>
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex flex-col items-center gap-6 px-11 py-10 sm:hidden">
+          <FunnelSocialNav className="flex-wrap justify-center" />
+          <span className="whitespace-nowrap font-legal text-cf-cream text-sm">
+            @ 2026 CoinFactory AG
+          </span>
+        </div>
       </nav>
       <main className="relative z-10 flex min-h-0 flex-1 flex-col pt-(--cf-header-h) pb-(--cf-footer-h)">
         {children}

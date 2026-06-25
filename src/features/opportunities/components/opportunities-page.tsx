@@ -18,9 +18,12 @@ export function OpportunitiesPage() {
 
   return (
     <section className="relative flex flex-1 flex-col items-center justify-start">
-      <PageBackdrop src="/brand/q-back.svg" />
+      <PageBackdrop
+        mobileSrc="/brand/opportunity-mobile.svg"
+        src="/brand/q-back.svg"
+      />
 
-      <div className="relative z-10 flex w-full animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-20">
+      <div className="relative z-10 mt-8 flex w-full animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-20 sm:mt-0">
         <div className="flex flex-col gap-9">
           <div className="flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
             <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
@@ -29,7 +32,7 @@ export function OpportunitiesPage() {
           </div>
 
           <div className="flex flex-col text-center">
-            <p className="mx-auto max-w-[80%] font-light text-cf-cream text-lg leading-tight">
+            <p className="mx-auto max-w-[90%] font-light text-cf-cream text-sm leading-tight sm:max-w-[80%] sm:text-lg">
               Tokenization allows assets, rights, revenue streams, businesses,
               communities, and digital ecosystems to be represented as
               blockchain-based digital assets. It creates new opportunities for

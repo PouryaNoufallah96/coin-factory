@@ -263,7 +263,7 @@
 
   /* Type scale (sizes; families come from next/font vars in layout.tsx) */
   --cf-text-hero: 3.3rem;
-  --cf-text-hero-lg: 3.5rem;
+  --cf-text-hero-lg: 3rem;
   --cf-text-hero-sub: 1.4rem;
   --cf-text-question: 1.2rem;
   --cf-text-field-label: 1.05rem;

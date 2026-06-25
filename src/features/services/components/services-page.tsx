@@ -4,9 +4,12 @@ import { PageBackdrop } from "@/components/common/page-backdrop";
 export function ServicesPage() {
   return (
     <section className="relative flex min-h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] flex-1 flex-col items-center justify-start overflow-visible">
-      <PageBackdrop src="/brand/services-back.svg" />
+      <PageBackdrop
+        mobileSrc="/brand/services-back-mobile.svg"
+        src="/brand/services-back.svg"
+      />
 
-      <div className="relative z-10 w-full max-w-4xl flex-1 animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both]">
+      <div className="relative z-10 mt-8 w-full max-w-4xl flex-1 animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] px-4 sm:mt-0 sm:px-0">
         <div className="mb-12 flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
             Services
@@ -15,12 +18,12 @@ export function ServicesPage() {
 
         <div className="flex flex-col">
           {SERVICES.map(({ title, description, icon, iconAlt }, index) => (
-            <div className="group flex gap-8" key={title}>
-              <div className="flex flex-col items-center pt-4">
-                <div className="flex size-18 items-center justify-center rounded-full bg-cf-charcoal-900 shadow-(--cf-glow-icon)">
+            <div className="group flex gap-3 sm:gap-8" key={title}>
+              <div className="flex flex-col items-center pt-7 sm:pt-4">
+                <div className="flex size-15 items-center justify-center rounded-full bg-cf-charcoal-900 shadow-(--cf-glow-icon) sm:size-18">
                   <Image
                     alt={iconAlt}
-                    className="group-hover:animate-[icon-shake_0.3s_ease-in-out]"
+                    className="size-6.5 group-hover:animate-[icon-shake_0.3s_ease-in-out] sm:size-8"
                     height={32}
                     src={icon}
                     width={32}
@@ -35,11 +38,11 @@ export function ServicesPage() {
               </div>
 
               <div className="flex w-full flex-col gap-3 pt-3 pb-12">
-                <h2 className="font-semibold text-cf-cream text-xl leading-tight">
+                <h2 className="font-semibold text-cf-cream text-lg leading-tight sm:text-xl">
                   {title}
                 </h2>
-                <div className="rounded-[12px] bg-cf-cream-soft/8 px-6 py-4">
-                  <p className="text-cf-text-primary text-sm leading-(--cf-leading-body)">
+                <div className="rounded-[12px] bg-cf-cream-soft/8 px-4 py-3 sm:px-6 sm:py-4">
+                  <p className="text-cf-text-primary text-xs leading-(--cf-leading-body) sm:text-sm">
                     {description}
                   </p>
                 </div>

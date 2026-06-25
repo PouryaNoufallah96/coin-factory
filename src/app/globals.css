@@ -232,7 +232,7 @@
   --cf-stepper-segment-h: 0.45rem;
   --cf-modal-max-h: calc(100dvh - var(--cf-space-7));
   --cf-dialog-max-w: calc(100% - var(--cf-space-5));
-  --cf-drawer-handle-w: 6.25rem;
+  --cf-drawer-handle-w: 32px;
   --cf-drawer-handle-h: 0.25rem;
 
   --cf-glow-active: 0 0 12.5rem 0 rgb(255 250 237 / 0.24);

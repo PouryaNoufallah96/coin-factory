@@ -1,6 +1,7 @@
 "use client";
 
 import { PageBackdrop } from "@/components/common/page-backdrop";
+import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { OpportunityRow } from "@/features/opportunities/components/opportunity-row";
 import {
   MOBILE_ROW_ONE,
@@ -70,7 +71,7 @@ export function OpportunitiesPage() {
               displayIndex={
                 cycle.active?.row === row.id ? cycle.active.index : -1
               }
-              isPaused={cycle.isPaused}
+              isPaused={isDesktop ? cycle.isPaused : !!focusedItem}
               items={row.items}
               key={row.id}
               onCircleClick={(index) => cycle.onCircleClick(row.id, index)}
@@ -81,7 +82,7 @@ export function OpportunitiesPage() {
           ))}
         </div>
 
-        {focusedItem && (
+        {isDesktop && focusedItem && (
           <div
             className="cf-focus-panel mx-auto max-w-4xl rounded-(--cf-radius-panel) px-9 py-9 text-center backdrop-blur-sm"
             key={focusedItem.id}
@@ -97,6 +98,33 @@ export function OpportunitiesPage() {
           </div>
         )}
       </div>
+
+      {!isDesktop && (
+        <Drawer
+          onOpenChange={(open) => {
+            if (!open && cycle.active) {
+              cycle.onCircleClick(cycle.active.row, cycle.active.index);
+            }
+          }}
+          open={!!focusedItem}
+        >
+          <DrawerContent
+            className="border-none bg-cf-charcoal-900 px-9 pb-9 shadow-[0px_0px_8px_0px_#FFF2D166] data-[vaul-drawer-direction=bottom]:rounded-t-[30px]"
+            overlayClassName="bg-[#23283166] backdrop-blur-none supports-backdrop-filter:backdrop-blur-none"
+          >
+            {focusedItem && (
+              <div className="mt-7 flex flex-col items-center gap-5 text-center">
+                <DrawerTitle className="font-semibold text-cf-cream-bright text-lg">
+                  {focusedItem.title}
+                </DrawerTitle>
+                <p className="text-cf-white text-sm leading-relaxed">
+                  {focusedItem.description}
+                </p>
+              </div>
+            )}
+          </DrawerContent>
+        </Drawer>
+      )}
     </section>
   );
 }

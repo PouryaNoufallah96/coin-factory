@@ -128,7 +128,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
       className="flex flex-1 flex-col items-center justify-start px-(--cf-page-x) pt-(--cf-landing-content-top) pb-6"
       data-funnel-resume-hide
     >
-      <div className="sm:14 flex w-full flex-col items-center gap-0 sm:gap-20">
+      <div className="sm:14 flex w-full flex-col items-center gap-0 sm:gap-18">
         <div className="cf-content-container flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <p className="text-(length:--cf-text-hero-sub) font-light text-cf-text-primary leading-none">
             {HERO_SUBLINE}

@@ -230,6 +230,7 @@
     color-mix(in srgb, var(--cf-canvas-start) 88%, var(--cf-canvas-end)) 100%
   );
   --cf-landing-bg: url("/brand/landing-back-mobile.svg");
+  --cf-onboarding-bg: url("/brand/funnel-back-mobile.svg");
   --cf-landing-content-top: 4rem;
   --cf-hero-stack-gap: 1.25rem;
   --cf-wizard-step-question-gap: 2rem;
@@ -299,6 +300,7 @@
 @media (min-width: 40rem) {
   :root {
     --cf-landing-bg: url("/brand/landing-back.svg");
+    --cf-onboarding-bg: url("/brand/q-back.svg");
     --cf-header-h: 6rem;
     --cf-footer-h: 5rem;
     --cf-row-h: 4.5rem;

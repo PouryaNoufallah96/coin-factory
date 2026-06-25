@@ -24,7 +24,7 @@ export async function FunnelWizard() {
 
 export function WizardSkeleton() {
   return (
-    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-[130px]">
+    <section className="relative flex flex-1 justify-center px-(--cf-page-x) pb-32.5">
       <div className="cf-content-container flex w-full flex-col items-center">
         <div className="flex items-center gap-(--cf-stepper-gap)">
           {STEPPER_SKELETON_KEYS.map((key) => (

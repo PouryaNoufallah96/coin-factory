@@ -18,6 +18,7 @@ import {
 } from "@/features/inquiries/components/funnel-footer";
 import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
 import { FunnelSpotlights } from "@/features/inquiries/components/funnel-spotlights";
+import { useFunnelDraft } from "@/features/inquiries/hooks/use-funnel-draft";
 import { cn } from "@/lib/utils";
 
 const FUNNEL_MENU_ITEMS = [
@@ -40,8 +41,10 @@ const FUNNEL_MENU_ITEMS = [
 
 export function FunnelShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { view } = useFunnelDraft();
   const hasFooter =
-    pathname === "/" || pathname === "/services" || pathname === "/about";
+    (pathname === "/" || pathname === "/services" || pathname === "/about") &&
+    view !== "onboarding";
   const hasBottomPadding = hasFooter || pathname === "/opportunities";
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);

@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { MaskIcon } from "@/components/common/mask-icon";
+import { useFunnelDraft } from "@/features/inquiries/hooks/use-funnel-draft";
 import { cn } from "@/lib/utils";
 
 const SOCIAL_LINKS = [
@@ -15,8 +16,10 @@ const SOCIAL_LINKS = [
 
 export function FunnelFooter() {
   const pathname = usePathname();
+  const { view } = useFunnelDraft();
   const showFooter =
-    pathname === "/" || pathname === "/services" || pathname === "/about";
+    (pathname === "/" || pathname === "/services" || pathname === "/about") &&
+    view !== "onboarding";
 
   if (!showFooter) {
     return null;

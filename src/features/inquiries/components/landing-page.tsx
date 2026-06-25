@@ -159,7 +159,7 @@ export function LandingPage({ children }: { children: ReactNode }) {
             </button>
             <InputSurface
               className={cn(
-                "border-transparent py-3",
+                "border-transparent py-2 sm:py-3",
                 files.length > 0
                   ? "min-h-[calc(var(--cf-search-panel-min-h))] gap-6 rounded-(--cf-radius-panel) pr-0 pl-0 max-sm:rounded-[25px] sm:p-5 sm:py-4"
                   : "pr-3 pl-4 max-sm:rounded-[60px] sm:px-6 sm:py-3"

@@ -237,7 +237,7 @@
   --cf-wizard-question-options-gap: 3rem;
   --cf-wizard-actions-bottom: 3.5rem;
   --cf-thank-you-content-top: 11.5rem;
-  --cf-thank-you-stack-gap: 1.25rem;
+  --cf-thank-you-stack-gap: 2.3rem;
 
   /* Motion — calm, institutional; nothing bounces */
   --cf-ease: cubic-bezier(0.2, 0, 0, 1);
@@ -266,7 +266,7 @@
   --cf-text-hero-sub: 1.4rem;
   --cf-text-question: 1.2rem;
   --cf-text-field-label: 1.1rem;
-  --cf-text-lg: 0.875rem;
+  --cf-text-lg: 0.95rem;
   --cf-text-base: 0.75rem;
   --cf-text-logo: 1.3rem;
   --cf-text-thank-you-sub: 1.5rem;

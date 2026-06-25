@@ -174,7 +174,7 @@
   --cf-radius-icon: 0.75rem; /* icon-button hit area */
 
   /* Control sizes */
-  --cf-row-h: 2.75rem;
+  --cf-row-h: 3.5rem;
   --cf-search-h: 2rem;
   --cf-search-surface-h: 3.625rem;
   --cf-search-surface-h-focused: 4.5rem;
@@ -233,7 +233,7 @@
   --cf-onboarding-bg: url("/brand/funnel-back-mobile.svg");
   --cf-landing-content-top: 4rem;
   --cf-hero-stack-gap: 1.25rem;
-  --cf-wizard-step-question-gap: 2rem;
+  --cf-wizard-step-question-gap: 1.5rem;
   --cf-wizard-question-options-gap: 3rem;
   --cf-wizard-actions-bottom: 3.5rem;
   --cf-thank-you-content-top: 11.5rem;

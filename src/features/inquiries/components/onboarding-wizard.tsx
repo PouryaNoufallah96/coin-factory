@@ -211,7 +211,7 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
   }
 
   return (
-    <section className="relative flex h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] min-h-0 flex-none justify-center overflow-hidden px-(--cf-page-x)">
+    <section className="relative flex h-[calc(100dvh-var(--cf-header-h)-var(--cf-footer-h))] min-h-0 flex-none justify-center overflow-hidden px-(--cf-page-x) pt-5 sm:pt-0">
       <form
         className="cf-content-container flex h-full min-h-0 w-full flex-col items-center text-center"
         id="wizard-form"
@@ -373,7 +373,7 @@ function RadioQuestion({
           return (
             <FieldLabel
               className={cn(
-                "text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 rounded-(--cf-radius-row) border px-6 text-left font-normal transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015]",
+                "sm:text-(length:--cf-text-base) flex h-(--cf-row-h) w-full cursor-pointer items-center gap-4 rounded-(--cf-radius-row) border px-3 text-left font-normal text-sm transition-[background-color,border-color,box-shadow,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) hover:scale-[1.015] sm:px-6",
                 selected
                   ? cn(
                       "text-cf-cream-bright has-data-checked:border-cf-border-active has-data-checked:bg-cf-charcoal-900"

@@ -1,17 +1,16 @@
-export function moveOrderedId(
-  ids: readonly string[],
-  id: string,
-  delta: -1 | 1
-) {
-  const index = ids.indexOf(id);
-  const nextIndex = index + delta;
+import { arrayMove } from "@dnd-kit/sortable";
 
-  if (index < 0 || nextIndex < 0 || nextIndex >= ids.length) {
+export function reorderIds(
+  ids: readonly string[],
+  activeId: string,
+  overId: string
+) {
+  const activeIndex = ids.indexOf(activeId);
+  const overIndex = ids.indexOf(overId);
+
+  if (activeIndex < 0 || overIndex < 0 || activeIndex === overIndex) {
     return null;
   }
 
-  const next = [...ids];
-  [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
-
-  return next;
+  return arrayMove([...ids], activeIndex, overIndex);
 }

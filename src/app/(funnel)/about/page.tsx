@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
+import { SITE_DESCRIPTION } from "@/config/site";
 import { AboutPage } from "@/features/about/components/about-page";
 
 export const metadata: Metadata = {
   title: "About Us | CoinFactory",
-  description:
-    "CoinFactory is a tokenization company, helping businesses transform assets, communities, products, and ventures into blockchain-powered economies.",
+  description: SITE_DESCRIPTION,
 };
 
 export default function Page() {

@@ -6,7 +6,7 @@
   "packageManager": "pnpm@10.33.2",
   "scripts": {
     "dev": "next dev",
-    "build": "next build --turbopack",
+    "build": "next build --turbopack && serwist build",
     "email:dev": "email dev --dir src/features/inquiries/email/templates --port 3001",
     "start": "next start",
     "prepare": "husky",
@@ -26,6 +26,9 @@
     "@aws-sdk/client-s3": "3.1068.0",
     "@aws-sdk/s3-request-presigner": "3.1068.0",
     "@base-ui/react": "1.5.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "5.4.0",
     "@orpc/client": "1.14.6",
     "@orpc/server": "1.14.6",
@@ -60,6 +63,8 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
     "@react-email/ui": "6.6.0",
+    "@serwist/cli": "^9.5.11",
+    "@serwist/next": "^9.5.11",
     "@tailwindcss/postcss": "4.3.1",
     "@types/canvas-confetti": "1.9.0",
     "@types/node": "25.9.3",
@@ -68,7 +73,10 @@
     "@types/react-dom": "19.2.3",
     "babel-plugin-react-compiler": "1.0.0",
     "drizzle-kit": "1.0.0-beta.22",
+    "esbuild": "^0.28.1",
     "husky": "9.1.7",
+    "serwist": "^9.5.11",
+    "sharp": "^0.35.2",
     "tailwindcss": "4.3.1",
     "typescript": "6.0.3",
     "ultracite": "7.8.3"

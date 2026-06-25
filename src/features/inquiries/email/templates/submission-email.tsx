@@ -35,13 +35,13 @@ export default function SubmissionEmail({
         <Head />
         <Body className="m-0 bg-cf-canvas px-0 py-8 font-sans text-cf-text">
           <Preview>New CoinFactory inquiry from {inquiry.email}</Preview>
-          <Container className="mx-auto w-full max-w-[600px] rounded-[32px] border border-cf-border border-solid bg-cf-surface p-8">
+          <Container className="mx-auto w-full max-w-150 rounded-[32px] border border-cf-border border-solid bg-cf-surface p-8">
             <Text className="m-0 font-semibold text-cf-cream text-sm">
               CoinFactory
             </Text>
             <Heading
               as="h1"
-              className="mt-4 mb-3 font-semibold text-[30px] text-cf-text leading-[38px]"
+              className="mt-4 mb-3 font-semibold text-[30px] text-cf-text leading-9.5"
             >
               New tokenization inquiry
             </Heading>

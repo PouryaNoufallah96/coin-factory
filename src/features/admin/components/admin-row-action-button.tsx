@@ -3,6 +3,12 @@
 import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 interface AdminRowActionButtonProps
@@ -19,9 +25,11 @@ export function AdminRowActions({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-center justify-end gap-1", className)}>
-      {children}
-    </div>
+    <TooltipProvider delay={300}>
+      <div className={cn("flex items-center justify-end gap-1", className)}>
+        {children}
+      </div>
+    </TooltipProvider>
   );
 }
 
@@ -31,9 +39,16 @@ export function AdminRowActionButton({
   ...props
 }: AdminRowActionButtonProps) {
   return (
-    <Button size="icon-sm" title={label} type="button" {...props}>
-      {children}
-      <span className="sr-only">{label}</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button size="icon-sm" type="button" {...props}>
+            {children}
+            <span className="sr-only">{label}</span>
+          </Button>
+        }
+      />
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   );
 }

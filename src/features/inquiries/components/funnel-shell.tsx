@@ -3,6 +3,7 @@
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   type PointerEvent,
   type ReactNode,
@@ -17,7 +18,6 @@ import {
 } from "@/features/inquiries/components/funnel-footer";
 import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
 import { FunnelSpotlights } from "@/features/inquiries/components/funnel-spotlights";
-import { useFunnelHome } from "@/features/inquiries/hooks/use-funnel-home";
 import { cn } from "@/lib/utils";
 
 const FUNNEL_MENU_ITEMS = [
@@ -27,7 +27,7 @@ const FUNNEL_MENU_ITEMS = [
     label: "Services",
   },
   {
-    href: "/",
+    href: "/opportunities",
     icon: "/icons/opportunity.svg",
     label: "Tokenization Opportunities",
   },
@@ -39,10 +39,13 @@ const FUNNEL_MENU_ITEMS = [
 ] as const;
 
 export function FunnelShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const hasFooter =
+    pathname === "/" || pathname === "/services" || pathname === "/about";
+  const hasBottomPadding = hasFooter || pathname === "/opportunities";
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLElement>(null);
-  const goHome = useFunnelHome();
 
   function closeMenuFromOutside(event: PointerEvent<HTMLDivElement>) {
     if (!(menuOpen && event.target instanceof Node)) {
@@ -122,11 +125,8 @@ export function FunnelShell({ children }: { children: ReactNode }) {
               className="group text-(length:--cf-text-field-label) flex h-20 items-center gap-3 border-cf-cream/15 border-b px-5 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8 sm:h-30 sm:gap-8 sm:px-11"
               href={item.href}
               key={item.href}
-              onClick={(event) => {
+              onClick={() => {
                 setMenuOpen(false);
-                if (item.href === "/") {
-                  goHome(event);
-                }
               }}
               style={{
                 transitionDelay: menuOpen ? `${index * 35}ms` : "0ms",
@@ -154,7 +154,12 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           </span>
         </div>
       </nav>
-      <main className="relative z-10 flex min-h-0 flex-1 flex-col pt-(--cf-header-h) pb-(--cf-footer-h)">
+      <main
+        className={cn(
+          "relative z-10 flex min-h-0 flex-1 flex-col pt-(--cf-header-h)",
+          hasBottomPadding ? "pb-(--cf-footer-h)" : "pb-0"
+        )}
+      >
         {children}
       </main>
       <Suspense fallback={null}>

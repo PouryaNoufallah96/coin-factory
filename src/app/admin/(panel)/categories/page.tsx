@@ -17,9 +17,19 @@ export default function AdminCategoriesPage(
   props: PageProps<"/admin/categories">
 ) {
   return (
-    <Suspense fallback={<DataTableSkeleton columnCount={5} rowCount={6} />}>
-      <AdminCategoriesContent searchParams={props.searchParams} />
-    </Suspense>
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+      <section className="flex flex-col gap-2">
+        <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+          Categories
+        </h1>
+        <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
+          Manage the business categories used by the landing funnel.
+        </p>
+      </section>
+      <Suspense fallback={<DataTableSkeleton columnCount={5} rowCount={6} />}>
+        <AdminCategoriesContent searchParams={props.searchParams} />
+      </Suspense>
+    </div>
   );
 }
 
@@ -55,6 +65,7 @@ async function AdminCategoriesContent({
       key={rowsVersion}
       orderedIds={data.orderedIds}
       rows={data.rows}
+      showHeader={false}
       totalRows={data.totalRows}
     />
   );

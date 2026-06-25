@@ -1,15 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowDown,
-  ArrowUp,
-  Edit3,
-  Eye,
-  EyeOff,
-  RotateCcw,
-  Trash2,
-} from "lucide-react";
+import { Archive, Edit3, Eye, EyeOff, RotateCcw } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { ResponsiveModal } from "@/components/common/responsive-modal";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
@@ -25,7 +17,7 @@ import {
 } from "@/features/admin/components/admin-row-action-button";
 import { EntityStatusBadge } from "@/features/admin/components/entity-status-badge";
 import { formatAdminDate } from "@/features/admin/lib/format-admin-date";
-import { moveOrderedId } from "@/features/admin/lib/move-ordered-id";
+import { reorderIds } from "@/features/admin/lib/move-ordered-id";
 import type { AdminRowActionInput } from "@/features/admin/schemas/admin-row-action";
 import { runQuestionRowAction } from "@/features/questions/actions/admin-question-actions";
 import { QuestionForm } from "@/features/questions/components/question-form";
@@ -43,6 +35,7 @@ interface QuestionsAdminManagerProps {
   >;
   orderedIds: string[];
   rows: AdminQuestion[];
+  showHeader?: boolean;
   totalRows: number;
 }
 
@@ -57,6 +50,7 @@ export function QuestionsAdminManager({
   filters,
   orderedIds,
   rows,
+  showHeader = true,
   totalRows,
 }: QuestionsAdminManagerProps) {
   const [modal, setModal] = useState<QuestionModal>(null);
@@ -68,10 +62,10 @@ export function QuestionsAdminManager({
   );
   const rowAction = useAction(runQuestionRowAction);
   const [deleteDialog, confirmDelete] = useConfirm({
-    confirmLabel: "Delete question",
+    confirmLabel: "Archive question",
     message:
       "The question is removed from the onboarding wizard and can be restored later.",
-    title: "Delete question",
+    title: "Archive question",
     variant: "destructive",
   });
   const canReorder =
@@ -96,8 +90,8 @@ export function QuestionsAdminManager({
     applyOptimistic(action);
   }
 
-  async function moveQuestion(id: string, delta: -1 | 1) {
-    const ids = moveOrderedId(orderedIds, id, delta);
+  async function reorderQuestionRow(activeId: string, overId: string) {
+    const ids = reorderIds(orderedIds, activeId, overId);
     if (!ids) {
       return;
     }
@@ -145,17 +139,7 @@ export function QuestionsAdminManager({
         <DataTableColumnHeader column={column} title="Type" />
       ),
     },
-    {
-      accessorKey: "sortOrder",
-      cell: ({ row }) => (
-        <span className="text-cf-text-muted tabular-nums">
-          {row.original.sortOrder}
-        </span>
-      ),
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Order" />
-      ),
-    },
+
     {
       accessorKey: "active",
       cell: ({ row }) => (
@@ -181,7 +165,6 @@ export function QuestionsAdminManager({
     {
       cell: ({ row }) => {
         const question = row.original;
-        const index = orderedIds.indexOf(question.id);
         const isDeleted = Boolean(question.deletedAt);
 
         return (
@@ -189,7 +172,7 @@ export function QuestionsAdminManager({
             {isDeleted ? (
               <AdminRowActionButton
                 disabled={isRowActionPending}
-                label="Restore question"
+                label="Restore"
                 onClick={() => restoreQuestionRow(question)}
                 variant="outline"
               >
@@ -198,29 +181,8 @@ export function QuestionsAdminManager({
             ) : (
               <>
                 <AdminRowActionButton
-                  disabled={isRowActionPending || !canReorder || index <= 0}
-                  label="Move question up"
-                  onClick={() => moveQuestion(question.id, -1)}
-                  variant="ghost"
-                >
-                  <ArrowUp aria-hidden="true" />
-                </AdminRowActionButton>
-                <AdminRowActionButton
-                  disabled={
-                    isRowActionPending ||
-                    !canReorder ||
-                    index < 0 ||
-                    index >= orderedIds.length - 1
-                  }
-                  label="Move question down"
-                  onClick={() => moveQuestion(question.id, 1)}
-                  variant="ghost"
-                >
-                  <ArrowDown aria-hidden="true" />
-                </AdminRowActionButton>
-                <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Edit question"
+                  label="Edit"
                   onClick={() => setModal({ mode: "edit", question })}
                   variant="ghost"
                 >
@@ -228,11 +190,7 @@ export function QuestionsAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label={
-                    question.active
-                      ? "Deactivate question"
-                      : "Activate question"
-                  }
+                  label={question.active ? "Deactivate" : "Activate"}
                   onClick={() => setQuestionActiveRow(question)}
                   variant="ghost"
                 >
@@ -244,11 +202,11 @@ export function QuestionsAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Delete question"
+                  label="Archive"
                   onClick={() => deleteQuestion(question)}
                   variant="destructive"
                 >
-                  <Trash2 aria-hidden="true" />
+                  <Archive aria-hidden="true" />
                 </AdminRowActionButton>
               </>
             )}
@@ -271,13 +229,15 @@ export function QuestionsAdminManager({
             New question
           </AdminCreateButton>
         }
-        deletedLabel="Deleted"
+        deletedLabel="Archived"
         description="Manage the ordered questions used by the onboarding wizard."
         emptyMessage="No questions found."
-        eyebrow="Admin"
+        enableRowDrag={canReorder && !isRowActionPending}
+        onReorderRow={reorderQuestionRow}
         pending={isRowActionPending}
         rows={optimisticRows}
         searchPlaceholder="Search questions"
+        showHeader={showHeader}
         title="Questions"
         totalRows={totalRows}
       />

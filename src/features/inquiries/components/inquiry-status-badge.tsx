@@ -11,11 +11,13 @@ export function InquiryStatusBadge({ status }: InquiryStatusBadgeProps) {
   return (
     <Badge
       className={cn(
-        "whitespace-nowrap",
-        status === "new" && "border-cf-cream/50 text-cf-cream",
-        status === "closed" && "text-cf-text-muted"
+        "whitespace-nowrap border-cf-cream/30 text-cf-cream/70",
+        status === "new" && "border-cf-cream bg-cf-cream/10 text-cf-cream",
+        status === "reviewed" && "text-cf-cream/85",
+        status === "contacted" && "text-cf-cream/55",
+        status === "closed" && "border-cf-border-muted text-cf-text-muted"
       )}
-      variant={status === "new" ? "outline" : "secondary"}
+      variant="outline"
     >
       {inquiryStatusLabels[status]}
     </Badge>

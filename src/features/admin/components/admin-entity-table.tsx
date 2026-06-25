@@ -16,10 +16,12 @@ interface AdminEntityTableProps<TData extends RowData & { id: string }> {
   deletedLabel: string;
   description: string;
   emptyMessage?: string;
-  eyebrow: string;
+  enableRowDrag?: boolean;
+  onReorderRow?: (activeId: string, overId: string) => void;
   pending?: boolean;
   rows: TData[];
   searchPlaceholder: string;
+  showHeader?: boolean;
   title: string;
   totalRows: number;
 }
@@ -30,10 +32,12 @@ export function AdminEntityTable<TData extends RowData & { id: string }>({
   deletedLabel,
   description,
   emptyMessage = "No records found.",
-  eyebrow,
+  enableRowDrag = false,
+  onReorderRow,
   pending = false,
   rows,
   searchPlaceholder,
+  showHeader = true,
   title,
   totalRows,
 }: AdminEntityTableProps<TData>) {
@@ -55,22 +59,25 @@ export function AdminEntityTable<TData extends RowData & { id: string }>({
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex min-w-0 flex-col gap-2">
-          <p className="text-cf-cream text-sm">{eyebrow}</p>
-          <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
-            {title}
-          </h1>
-          <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
-            {description}
-          </p>
-        </div>
-        <div className="shrink-0">{createControl}</div>
-      </section>
+      {showHeader ? (
+        <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex min-w-0 flex-col gap-2">
+            <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+              {title}
+            </h1>
+            <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
+              {description}
+            </p>
+          </div>
+          <div className="shrink-0">{createControl}</div>
+        </section>
+      ) : null}
 
       <DataTable
         emptyMessage={emptyMessage}
+        enableRowDrag={enableRowDrag}
         isPending={tablePending}
+        onReorderRow={onReorderRow}
         table={table}
         toolbar={
           <DataTableToolbar
@@ -81,6 +88,7 @@ export function AdminEntityTable<TData extends RowData & { id: string }>({
             search={filters.search}
             searchPlaceholder={searchPlaceholder}
           >
+            {showHeader ? null : createControl}
             <Button
               aria-pressed={showDeleted}
               onClick={() => updateListFilters({ showDeleted: !showDeleted })}

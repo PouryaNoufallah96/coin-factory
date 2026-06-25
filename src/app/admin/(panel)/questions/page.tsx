@@ -23,9 +23,19 @@ export default function AdminQuestionsPage(
   props: PageProps<"/admin/questions">
 ) {
   return (
-    <Suspense fallback={<DataTableSkeleton columnCount={6} rowCount={6} />}>
-      <AdminQuestionsContent searchParams={props.searchParams} />
-    </Suspense>
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+      <section className="flex flex-col gap-2">
+        <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+          Questions
+        </h1>
+        <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
+          Manage the ordered questions used by the onboarding wizard.
+        </p>
+      </section>
+      <Suspense fallback={<DataTableSkeleton columnCount={6} rowCount={6} />}>
+        <AdminQuestionsContent searchParams={props.searchParams} />
+      </Suspense>
+    </div>
   );
 }
 
@@ -61,6 +71,7 @@ async function AdminQuestionsContent({
       key={rowsVersion}
       orderedIds={data.orderedIds}
       rows={data.rows}
+      showHeader={false}
       totalRows={data.totalRows}
     />
   );

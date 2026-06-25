@@ -29,18 +29,21 @@ const CARDS = [
 
 export function AboutPage() {
   return (
-    <section className="relative flex flex-1 flex-col items-center justify-start overflow-hidden">
-      <PageBackdrop src="/brand/about-back.svg" />
+    <section className="relative flex flex-1 flex-col items-center justify-start overflow-visible sm:overflow-hidden">
+      <PageBackdrop
+        mobileSrc="/brand/about-back-mobile.svg"
+        src="/brand/about-back.svg"
+      />
 
-      <div className="relative z-10 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-11">
+      <div className="relative z-10 mt-8 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-6 sm:mt-0 sm:gap-11">
         <div className="flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
             About Us
           </h1>
         </div>
 
-        <div className="flex flex-col gap-6 text-center">
-          <p className="font-light text-cf-text-primary text-xl leading-(--cf-leading-body)">
+        <div className="m-auto flex w-[80%] flex-col gap-6 text-center sm:w-auto">
+          <p className="font-light text-cf-text-primary text-lg leading-(--cf-leading-body) sm:text-xl">
             CoinFactory is a tokenization company, helping businesses transform
             assets,
             <br /> communities, products, and ventures into blockchain-powered
@@ -48,7 +51,7 @@ export function AboutPage() {
           </p>
         </div>
 
-        <div className="mt-4 grid grid-cols-1 gap-10 sm:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 justify-items-center gap-10 sm:mt-4 sm:grid-cols-3 sm:justify-items-stretch">
           {CARDS.map(({ title, description, Illustration, imageAlt }) => (
             <div
               className="group flex max-w-90 flex-col overflow-hidden rounded-(--cf-radius-panel) border border-cf-border-muted bg-cf-cream-soft/24"

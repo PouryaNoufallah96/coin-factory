@@ -2,7 +2,7 @@
 
 import { LoaderCircle, X } from "lucide-react";
 import type React from "react";
-import { useId, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import type { z } from "zod";
 import { funnelAlert } from "@/components/common/funnel-alert";
 import { InputSurface } from "@/components/common/input-surface";
@@ -14,8 +14,8 @@ import {
   FieldLegend,
   FieldSet,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import {
   optionalUrlSchema,
   type PublicQuestion,
@@ -283,14 +283,14 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
         </div>
       </form>
 
-      <div className="pointer-events-none fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-12.5">
+      <div className="pointer-events-none fixed right-0 bottom-0 left-0 z-20 flex h-50 items-end px-(--cf-page-x) pb-7 sm:pb-12.5">
         <div
           aria-hidden="true"
           className="mask-[linear-gradient(to_top,black_40%,transparent_100%)] absolute inset-0 -z-10 [backdrop-filter:blur(50px)]"
         />
         <div className="cf-field-container pointer-events-auto relative z-10 flex w-full flex-row items-center justify-between">
           <Button
-            className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
+            className="sm:text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) rounded-full border-cf-cream/70 bg-transparent font-cta text-cf-text-on-accent text-sm shadow-none transition-[background-color,border-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-text-on-accent active:scale-[0.97]"
             disabled={isSubmitting}
             onClick={onBack}
             type="button"
@@ -300,7 +300,7 @@ export function OnboardingWizard({ questions }: OnboardingWizardProps) {
           </Button>
           <Button
             aria-busy={isSubmitting}
-            className="text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) gap-2 rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] disabled:pointer-events-none disabled:opacity-80"
+            className="sm:text-(length:--cf-text-base) h-(--cf-cta-h) w-(--cf-cta-w) gap-2 rounded-full bg-cf-cream-bright font-cta text-cf-text-on-accent text-sm shadow-(--cf-cta-shadow) transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream active:scale-[0.97] disabled:pointer-events-none disabled:opacity-80"
             disabled={isSubmitting}
             form="wizard-form"
             type="submit"
@@ -415,9 +415,20 @@ function FunnelTextField({
   value: string;
 }) {
   const id = useId();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [focused, setFocused] = useState(false);
+  const [isMultiline, setIsMultiline] = useState(false);
   const filled = value.length > 0;
   const isPhone = type === "tel";
+
+  useLayoutEffect(() => {
+    const el = textareaRef.current;
+    if (!el) {
+      return;
+    }
+    const singleLineHeight = Number.parseFloat(getComputedStyle(el).lineHeight);
+    setIsMultiline(el.scrollHeight > singleLineHeight + 1);
+  });
 
   function handleBlur() {
     setFocused(false);
@@ -433,34 +444,44 @@ function FunnelTextField({
   return (
     <Field>
       <FieldLabel
-        className="text-(length:--cf-text-field-label) pl-2 font-light text-cf-text-primary leading-snug"
+        className="text-(length:--cf-text-field-label) pl-2 font-light text-cf-cream-bright leading-snug sm:text-cf-text-primary"
         htmlFor={id}
       >
         {label}
       </FieldLabel>
       <InputSurface
-        className="flex h-(--cf-search-h) flex-row items-center px-7"
+        className={cn(
+          "flex min-h-(--cf-search-h) flex-row px-7",
+          isMultiline
+            ? "items-start rounded-[32px] py-4"
+            : "items-center rounded-(--cf-radius-row)"
+        )}
         filled={filled}
         focused={focused}
       >
-        <Input
-          className="h-full border-0 bg-transparent px-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
+        <Textarea
+          className="cf-scrollbar-custom field-sizing-content max-h-[6em] min-h-0 resize-none border-0 bg-transparent px-0 py-0 text-cf-cream shadow-none outline-none placeholder:text-cf-text-muted focus-visible:border-0 focus-visible:ring-0"
           id={id}
           inputMode={isPhone ? "tel" : undefined}
           onBlur={handleBlur}
+          onChange={(event) => {
+            const next = event.target.value;
+            onChange(isPhone ? sanitizePhoneInput(next) : next);
+          }}
           onFocus={() => setFocused(true)}
-          onValueChange={(next) =>
-            onChange(isPhone ? sanitizePhoneInput(next) : next)
-          }
           placeholder={placeholder}
-          style={{ fontSize: "16px" }}
-          type={type}
+          ref={textareaRef}
+          rows={1}
+          style={{ fontSize: "16px", lineHeight: "1.5" }}
           value={value}
         />
         {filled ? (
           <button
             aria-label={`Clear ${label}`}
-            className="-mr-2 ml-3 flex size-11 shrink-0 items-center justify-center rounded-full text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-text-primary"
+            className={cn(
+              "-mr-2 ml-3 flex size-11 shrink-0 items-center justify-center rounded-full text-cf-border-muted transition-colors duration-(--cf-dur-feedback) ease-(--cf-ease) hover:text-cf-text-primary",
+              isMultiline && "self-center"
+            )}
             onClick={() => onChange("")}
             onMouseDown={(event) => event.preventDefault()}
             type="button"

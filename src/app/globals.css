@@ -220,6 +220,7 @@
   --cf-glow-menu:
     0 0 2rem 0 color-mix(in srgb, var(--cf-cream) 40%, transparent),
     0 0 0.5rem 0 color-mix(in srgb, var(--cf-cream) 40%, transparent);
+  --cf-glow-menu-mobile: 0px 0px 32px 0px #fff2d166, 0px 0px 8px 0px #fff2d166;
   --cf-glow-icon: 0 0 1rem 0
     color-mix(in srgb, var(--cf-cream) 60%, transparent);
   --cf-border-w: 0.0625rem;

@@ -189,3 +189,18 @@ export const ROW_TWO: Opportunity[] = [
       "Create tokenized models around professional contracts, future earnings, talent development, athlete agreements, entertainment projects, and individual economic potential. Human capital tokenization introduces innovative approaches to financing careers, performance, and personal growth.",
   },
 ];
+
+const ALL_OPPORTUNITIES = [...ROW_ONE, ...ROW_TWO];
+const MOBILE_ROW_SIZE = Math.ceil(ALL_OPPORTUNITIES.length / 3);
+
+export const MOBILE_ROW_ONE: Opportunity[] = ALL_OPPORTUNITIES.slice(
+  0,
+  MOBILE_ROW_SIZE
+);
+export const MOBILE_ROW_TWO: Opportunity[] = ALL_OPPORTUNITIES.slice(
+  MOBILE_ROW_SIZE,
+  MOBILE_ROW_SIZE * 2
+);
+export const MOBILE_ROW_THREE: Opportunity[] = ALL_OPPORTUNITIES.slice(
+  MOBILE_ROW_SIZE * 2
+);

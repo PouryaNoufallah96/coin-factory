@@ -2,19 +2,41 @@
 
 import { PageBackdrop } from "@/components/common/page-backdrop";
 import { OpportunityRow } from "@/features/opportunities/components/opportunity-row";
-import { ROW_ONE, ROW_TWO } from "@/features/opportunities/data/opportunities";
+import {
+  MOBILE_ROW_ONE,
+  MOBILE_ROW_THREE,
+  MOBILE_ROW_TWO,
+  ROW_ONE,
+  ROW_TWO,
+} from "@/features/opportunities/data/opportunities";
 import { useOpportunityCycle } from "@/features/opportunities/hooks/use-opportunity-cycle";
+import { useIsDesktop } from "@/hooks/use-media-query";
+
+const DESKTOP_ROWS = [
+  { direction: "right" as const, id: "row-one", items: ROW_ONE },
+  { direction: "left" as const, id: "row-two", items: ROW_TWO },
+];
+
+const MOBILE_ROWS = [
+  { direction: "right" as const, id: "row-one", items: MOBILE_ROW_ONE },
+  { direction: "left" as const, id: "row-two", items: MOBILE_ROW_TWO },
+  { direction: "right" as const, id: "row-three", items: MOBILE_ROW_THREE },
+];
 
 export function OpportunitiesPage() {
+  const isDesktop = useIsDesktop();
+  const rows = isDesktop ? DESKTOP_ROWS : MOBILE_ROWS;
+
   const cycle = useOpportunityCycle({
-    rowOneLength: ROW_ONE.length,
-    rowTwoLength: ROW_TWO.length,
+    rowOneLength: rows[0].items.length,
+    rowTwoLength: rows[1].items.length,
   });
 
-  const focusedItem =
-    cycle.active.row === "row-one"
-      ? ROW_ONE[cycle.active.index]
-      : ROW_TWO[cycle.active.index];
+  const focusedItem = cycle.active
+    ? (rows.find((row) => row.id === cycle.active?.row)?.items[
+        cycle.active.index
+      ] ?? null)
+    : null;
 
   return (
     <section className="relative flex flex-1 flex-col items-center justify-start">
@@ -23,8 +45,8 @@ export function OpportunitiesPage() {
         src="/brand/q-back.svg"
       />
 
-      <div className="relative z-10 mt-8 flex w-full animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-20 sm:mt-0">
-        <div className="flex flex-col gap-9">
+      <div className="relative z-10 mt-8 flex w-full animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-18 sm:mt-0 sm:gap-20">
+        <div className="flex flex-col gap-7 sm:gap-9">
           <div className="flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
             <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
               Tokenization Opportunities
@@ -42,45 +64,38 @@ export function OpportunitiesPage() {
           </div>
         </div>
         <div className="flex flex-col gap-6">
-          <OpportunityRow
-            ariaLabel="Tokenization opportunities, row one"
-            displayIndex={
-              cycle.active.row === "row-one" ? cycle.active.index : -1
-            }
-            isPaused={cycle.isPaused}
-            items={ROW_ONE}
-            onCircleClick={(index) => cycle.onCircleClick("row-one", index)}
-            onCircleEnter={(index) => cycle.onCircleEnter("row-one", index)}
-            onCircleLeave={cycle.onCircleLeave}
-            visualDirection="right"
-          />
-          <OpportunityRow
-            ariaLabel="Tokenization opportunities, row two"
-            displayIndex={
-              cycle.active.row === "row-two" ? cycle.active.index : -1
-            }
-            isPaused={cycle.isPaused}
-            items={ROW_TWO}
-            onCircleClick={(index) => cycle.onCircleClick("row-two", index)}
-            onCircleEnter={(index) => cycle.onCircleEnter("row-two", index)}
-            onCircleLeave={cycle.onCircleLeave}
-            visualDirection="left"
-          />
+          {rows.map((row, rowNumber) => (
+            <OpportunityRow
+              ariaLabel={`Tokenization opportunities, row ${rowNumber + 1}`}
+              displayIndex={
+                cycle.active?.row === row.id ? cycle.active.index : -1
+              }
+              isPaused={cycle.isPaused}
+              items={row.items}
+              key={row.id}
+              onCircleClick={(index) => cycle.onCircleClick(row.id, index)}
+              onCircleEnter={(index) => cycle.onCircleEnter(row.id, index)}
+              onCircleLeave={cycle.onCircleLeave}
+              visualDirection={row.direction}
+            />
+          ))}
         </div>
 
-        <div
-          className="cf-focus-panel mx-auto max-w-4xl rounded-(--cf-radius-panel) px-9 py-9 text-center backdrop-blur-sm"
-          key={focusedItem.id}
-        >
-          <div className="flex animate-[enter-fade-up_0.3s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-5 leading-tight">
-            <h2 className="font-semibold text-[22px] text-cf-cream-bright">
-              {focusedItem.title}
-            </h2>
-            <p className="text-[16px] text-cf-charcoal-900">
-              {focusedItem.description}
-            </p>
+        {focusedItem && (
+          <div
+            className="cf-focus-panel mx-auto max-w-4xl rounded-(--cf-radius-panel) px-9 py-9 text-center backdrop-blur-sm"
+            key={focusedItem.id}
+          >
+            <div className="flex animate-[enter-fade-up_0.3s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-5 leading-tight">
+              <h2 className="font-semibold text-[22px] text-cf-cream-bright">
+                {focusedItem.title}
+              </h2>
+              <p className="text-[16px] text-cf-charcoal-900">
+                {focusedItem.description}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

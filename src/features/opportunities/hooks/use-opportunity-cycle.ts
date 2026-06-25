@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useIsDesktop } from "@/hooks/use-media-query";
 
-export type RowId = "row-one" | "row-two";
+export type RowId = string;
 
 const RESUME_DELAY_MS = 200;
 const CIRCLE_PITCH_REM = 9.5;
@@ -20,7 +21,7 @@ interface UseOpportunityCycleOptions {
 }
 
 interface UseOpportunityCycleResult {
-  active: ActivePosition;
+  active: ActivePosition | null;
   isPaused: boolean;
   onCircleClick: (row: RowId, index: number) => void;
   onCircleEnter: (row: RowId, index: number) => void;
@@ -32,11 +33,15 @@ export function useOpportunityCycle({
   rowTwoLength,
   intervalMs = 5000,
 }: UseOpportunityCycleOptions): UseOpportunityCycleResult {
+  const isDesktop = useIsDesktop();
   const total = rowOneLength + rowTwoLength;
   const [autoStep, setAutoStep] = useState(() =>
     getCenteredRowOneStep(rowOneLength)
   );
   const [pausedStep, setPausedStep] = useState<number | null>(null);
+  const [tappedPosition, setTappedPosition] = useState<ActivePosition | null>(
+    null
+  );
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function cancelPendingResume() {
@@ -56,7 +61,7 @@ export function useOpportunityCycle({
   );
 
   useEffect(() => {
-    if (pausedStep !== null) {
+    if (!isDesktop || pausedStep !== null) {
       return;
     }
 
@@ -65,7 +70,27 @@ export function useOpportunityCycle({
     }, intervalMs);
 
     return () => clearInterval(id);
-  }, [pausedStep, total, intervalMs]);
+  }, [isDesktop, pausedStep, total, intervalMs]);
+
+  if (!isDesktop) {
+    return {
+      active: tappedPosition,
+      isPaused: false,
+      onCircleClick: (row, index) => {
+        setTappedPosition((current) =>
+          current?.row === row && current.index === index
+            ? null
+            : { row, index }
+        );
+      },
+      onCircleEnter: () => {
+        // no-op on mobile: there is no hover
+      },
+      onCircleLeave: () => {
+        // no-op on mobile: tapping is the only interaction
+      },
+    };
+  }
 
   const displayStep = pausedStep ?? autoStep;
 

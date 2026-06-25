@@ -175,7 +175,7 @@
 
   /* Control sizes */
   --cf-row-h: 3.5rem;
-  --cf-search-h: 2rem;
+  --cf-search-h: 3rem;
   --cf-search-surface-h: 3.625rem;
   --cf-search-surface-h-focused: 4.5rem;
   --cf-search-button-size: 2rem;
@@ -185,8 +185,8 @@
     var(--cf-search-h) +
     var(--cf-space-4)
   );
-  --cf-cta-h: 2.25rem;
-  --cf-cta-w: 8rem;
+  --cf-cta-h: 2.7rem;
+  --cf-cta-w: 8.5rem;
   --cf-touch: 2.25rem;
   --cf-radio-size: 1.25rem;
   --cf-radio-control-size: calc(var(--cf-radio-size) * 0.8);
@@ -264,8 +264,8 @@
   --cf-text-hero: 3.3rem;
   --cf-text-hero-lg: 3.5rem;
   --cf-text-hero-sub: 1.4rem;
-  --cf-text-question: 1.25rem;
-  --cf-text-field-label: 1.125rem;
+  --cf-text-question: 1.2rem;
+  --cf-text-field-label: 1.1rem;
   --cf-text-lg: 0.875rem;
   --cf-text-base: 0.75rem;
   --cf-text-logo: 1.3rem;

@@ -78,7 +78,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           className={cn(
             "flex size-(--cf-touch) items-center justify-center rounded-(--cf-radius-icon) text-cf-cream transition-[background-color,transform] duration-(--cf-dur-feedback) ease-(--cf-ease) hover:bg-cf-cream/10 active:scale-95",
-            menuOpen && "bg-cf-charcoal-900/40"
+            menuOpen && "bg-cf-charcoal-900/40 max-sm:hidden"
           )}
           onClick={() => setMenuOpen((open) => !open)}
           ref={menuButtonRef}
@@ -100,10 +100,10 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <nav
         aria-label="Main menu"
         className={cn(
-          "fixed inset-y-0 right-0 z-30 flex w-[78vw] max-w-sm flex-col justify-between overflow-hidden border-cf-cream/10 border-l bg-cf-charcoal-900/95 backdrop-blur-xl transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:top-0 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:bg-cf-charcoal-900/80 sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
+          "fixed inset-y-0 right-0 z-30 flex w-[78vw] max-w-sm flex-col justify-between overflow-hidden border-cf-cream/10 border-l bg-cf-charcoal-900/95 backdrop-blur-xl transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:top-0 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:bg-cf-charcoal-900/80 sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
           menuOpen
-            ? "pointer-events-auto translate-x-0 opacity-100 shadow-(--cf-glow-menu) sm:translate-y-0 sm:scale-50"
-            : "pointer-events-none translate-x-full opacity-100 shadow-none sm:-translate-y-2 sm:scale-50 sm:opacity-0"
+            ? "pointer-events-auto translate-x-0 shadow-(--cf-glow-menu) sm:translate-y-0 sm:scale-50"
+            : "pointer-events-none translate-x-full shadow-none sm:-translate-y-2 sm:scale-50 sm:opacity-0"
         )}
         ref={menuPanelRef}
       >

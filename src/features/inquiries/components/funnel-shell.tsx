@@ -103,7 +103,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <nav
         aria-label="Main menu"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-sm flex-col justify-between overflow-hidden bg-cf-charcoal-900 transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:top-0 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:bg-cf-charcoal-900/80 sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
+          "fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-sm flex-col justify-between overflow-hidden bg-cf-charcoal-900 transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:-top-5 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
           menuOpen
             ? "pointer-events-auto translate-x-0 shadow-(--cf-glow-menu-mobile) sm:translate-y-0 sm:scale-50 sm:shadow-(--cf-glow-menu)"
             : "pointer-events-none translate-x-full shadow-none sm:-translate-y-2 sm:scale-50 sm:opacity-0"
@@ -132,7 +132,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
                 transitionDelay: menuOpen ? `${index * 35}ms` : "0ms",
               }}
             >
-              <span className="flex size-10 shrink-0 items-center justify-center transition-transform duration-(--cf-dur-content) ease-(--cf-ease) group-hover:scale-105">
+              <span className="flex size-6 shrink-0 items-center justify-center transition-transform duration-(--cf-dur-content) ease-(--cf-ease) group-hover:scale-105 sm:size-10">
                 <Image
                   alt=""
                   aria-hidden="true"

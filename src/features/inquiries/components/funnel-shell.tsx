@@ -116,13 +116,13 @@ export function FunnelShell({ children }: { children: ReactNode }) {
           onClick={() => setMenuOpen(false)}
           type="button"
         >
-          <X aria-hidden="true" className="size-6" />
+          <X aria-hidden="true" className="size-5" />
         </button>
 
         <div className="mt-15 sm:mt-0">
           {FUNNEL_MENU_ITEMS.map((item, index) => (
             <Link
-              className="group text-(length:--cf-text-field-label) flex h-20 items-center gap-3 border-cf-cream/15 border-b px-5 text-left text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8 sm:h-30 sm:gap-8 sm:px-11"
+              className="group sm:text-(length:--cf-text-field-label) flex h-16 items-center gap-3 border-cf-cream/15 border-b px-5 text-left text-sm text-white transition-colors duration-(--cf-dur-content) ease-(--cf-ease) last:border-b-0 hover:bg-cf-cream/8 sm:h-30 sm:gap-8 sm:px-11"
               href={item.href}
               key={item.href}
               onClick={() => {

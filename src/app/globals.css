@@ -450,6 +450,82 @@
   transform-origin: center;
 }
 
+.cf-star {
+  transform-origin: center;
+}
+
+.cf-dot {
+  transform-origin: center;
+}
+
+.cf-orbit-group {
+  transform-origin: 191.6px 195.16px;
+}
+
+/* Touch devices have no hover state, so play the illustration
+   animations unconditionally instead of gating them on .group:hover. */
+@media (hover: none) {
+  .group .cf-country-0 {
+    animation: cf-country-swap 2.4s ease-in-out infinite;
+  }
+
+  .group .cf-country-1 {
+    animation: cf-country-swap 2.4s ease-in-out infinite 0.3s;
+  }
+
+  .group .cf-country-2 {
+    animation: cf-country-swap 2.4s ease-in-out infinite 0.6s;
+  }
+
+  .group .cf-country-3 {
+    animation: cf-country-swap 2.4s ease-in-out infinite 0.9s;
+  }
+
+  .group .cf-star-0 {
+    animation: cf-star-blink 1.6s ease-in-out infinite;
+  }
+
+  .group .cf-star-1 {
+    animation: cf-star-blink 1.6s ease-in-out infinite 0.4s;
+  }
+
+  .group .cf-star-2 {
+    animation: cf-star-blink 1.6s ease-in-out infinite 0.8s;
+  }
+
+  .group .cf-star-3 {
+    animation: cf-star-blink 1.6s ease-in-out infinite 1.2s;
+  }
+
+  .group .cf-dot-0 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite;
+  }
+
+  .group .cf-dot-1 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite 0.45s;
+  }
+
+  .group .cf-dot-2 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite 0.9s;
+  }
+
+  .group .cf-dot-3 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite 1.35s;
+  }
+
+  .group .cf-orbit-group {
+    animation: cf-orbit-spin 18s linear infinite;
+  }
+
+  .group .cf-rocket-part {
+    animation: cf-rocket-float 2.5s ease-in-out infinite;
+  }
+
+  .group .cf-cloud-group {
+    animation: cf-cloud-drift 3s ease-in-out infinite;
+  }
+}
+
 .group:hover .cf-country-0 {
   animation: cf-country-swap 2.4s ease-in-out infinite;
 }
@@ -464,10 +540,6 @@
 
 .group:hover .cf-country-3 {
   animation: cf-country-swap 2.4s ease-in-out infinite 0.9s;
-}
-
-.cf-star {
-  transform-origin: center;
 }
 
 .group:hover .cf-star-0 {
@@ -486,10 +558,6 @@
   animation: cf-star-blink 1.6s ease-in-out infinite 1.2s;
 }
 
-.cf-dot {
-  transform-origin: center;
-}
-
 .group:hover .cf-dot-0 {
   animation: cf-dot-blink 1.8s ease-in-out infinite;
 }
@@ -504,10 +572,6 @@
 
 .group:hover .cf-dot-3 {
   animation: cf-dot-blink 1.8s ease-in-out infinite 1.35s;
-}
-
-.cf-orbit-group {
-  transform-origin: 191.6px 195.16px;
 }
 
 .group:hover .cf-orbit-group {

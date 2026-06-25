@@ -31,7 +31,10 @@ export function FunnelSocialNav({ className }: { className?: string }) {
   return (
     <nav
       aria-label="CoinFactory social links"
-      className={cn("flex items-center gap-(--cf-social-gap)", className)}
+      className={cn(
+        "grid grid-cols-3 items-center gap-(--cf-social-gap) sm:flex",
+        className
+      )}
     >
       {SOCIAL_LINKS.map((link) => (
         <a

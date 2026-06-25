@@ -41,7 +41,6 @@ function ConfirmModal({
       title={title}
     >
       <div className="flex flex-col gap-4">
-        <p className="text-muted-foreground text-sm">{message}</p>
         <div className="flex w-full flex-col justify-end gap-2 sm:flex-row">
           <Button
             className="w-full sm:w-auto"

@@ -1,15 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowDown,
-  ArrowUp,
-  Edit3,
-  Eye,
-  EyeOff,
-  RotateCcw,
-  Trash2,
-} from "lucide-react";
+import { Archive, Edit3, Eye, EyeOff, RotateCcw } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { ResponsiveModal } from "@/components/common/responsive-modal";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
@@ -24,7 +16,7 @@ import {
 } from "@/features/admin/components/admin-row-action-button";
 import { EntityStatusBadge } from "@/features/admin/components/entity-status-badge";
 import { formatAdminDate } from "@/features/admin/lib/format-admin-date";
-import { moveOrderedId } from "@/features/admin/lib/move-ordered-id";
+import { reorderIds } from "@/features/admin/lib/move-ordered-id";
 import type { AdminRowActionInput } from "@/features/admin/schemas/admin-row-action";
 import { runCategoryRowAction } from "@/features/categories/actions/admin-category-actions";
 import { CategoryForm } from "@/features/categories/components/category-form";
@@ -42,6 +34,7 @@ interface CategoriesAdminManagerProps {
   >;
   orderedIds: string[];
   rows: AdminCategory[];
+  showHeader?: boolean;
   totalRows: number;
 }
 
@@ -56,6 +49,7 @@ export function CategoriesAdminManager({
   filters,
   orderedIds,
   rows,
+  showHeader = true,
   totalRows,
 }: CategoriesAdminManagerProps) {
   const [modal, setModal] = useState<CategoryModal>(null);
@@ -67,10 +61,10 @@ export function CategoriesAdminManager({
   );
   const rowAction = useAction(runCategoryRowAction);
   const [deleteDialog, confirmDelete] = useConfirm({
-    confirmLabel: "Delete category",
+    confirmLabel: "Archive category",
     message:
       "The category is removed from the landing funnel and can be restored later.",
-    title: "Delete category",
+    title: "Archive category",
     variant: "destructive",
   });
   const canReorder =
@@ -95,8 +89,8 @@ export function CategoriesAdminManager({
     applyOptimistic(action);
   }
 
-  async function moveCategory(id: string, delta: -1 | 1) {
-    const ids = moveOrderedId(orderedIds, id, delta);
+  async function reorderCategoryRow(activeId: string, overId: string) {
+    const ids = reorderIds(orderedIds, activeId, overId);
     if (!ids) {
       return;
     }
@@ -135,17 +129,7 @@ export function CategoriesAdminManager({
         <DataTableColumnHeader column={column} title="Label" />
       ),
     },
-    {
-      accessorKey: "sortOrder",
-      cell: ({ row }) => (
-        <span className="text-cf-text-muted tabular-nums">
-          {row.original.sortOrder}
-        </span>
-      ),
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Order" />
-      ),
-    },
+
     {
       accessorKey: "active",
       cell: ({ row }) => (
@@ -171,7 +155,6 @@ export function CategoriesAdminManager({
     {
       cell: ({ row }) => {
         const category = row.original;
-        const index = orderedIds.indexOf(category.id);
         const isDeleted = Boolean(category.deletedAt);
 
         return (
@@ -179,7 +162,7 @@ export function CategoriesAdminManager({
             {isDeleted ? (
               <AdminRowActionButton
                 disabled={isRowActionPending}
-                label="Restore category"
+                label="Restore"
                 onClick={() => restoreCategoryRow(category)}
                 variant="outline"
               >
@@ -188,29 +171,8 @@ export function CategoriesAdminManager({
             ) : (
               <>
                 <AdminRowActionButton
-                  disabled={isRowActionPending || !canReorder || index <= 0}
-                  label="Move category up"
-                  onClick={() => moveCategory(category.id, -1)}
-                  variant="ghost"
-                >
-                  <ArrowUp aria-hidden="true" />
-                </AdminRowActionButton>
-                <AdminRowActionButton
-                  disabled={
-                    isRowActionPending ||
-                    !canReorder ||
-                    index < 0 ||
-                    index >= orderedIds.length - 1
-                  }
-                  label="Move category down"
-                  onClick={() => moveCategory(category.id, 1)}
-                  variant="ghost"
-                >
-                  <ArrowDown aria-hidden="true" />
-                </AdminRowActionButton>
-                <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Edit category"
+                  label="Edit"
                   onClick={() => setModal({ category, mode: "edit" })}
                   variant="ghost"
                 >
@@ -218,11 +180,7 @@ export function CategoriesAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label={
-                    category.active
-                      ? "Deactivate category"
-                      : "Activate category"
-                  }
+                  label={category.active ? "Deactivate" : "Activate"}
                   onClick={() => setCategoryActiveRow(category)}
                   variant="ghost"
                 >
@@ -234,11 +192,11 @@ export function CategoriesAdminManager({
                 </AdminRowActionButton>
                 <AdminRowActionButton
                   disabled={isRowActionPending}
-                  label="Delete category"
+                  label="Archive"
                   onClick={() => deleteCategory(category)}
                   variant="destructive"
                 >
-                  <Trash2 aria-hidden="true" />
+                  <Archive aria-hidden="true" />
                 </AdminRowActionButton>
               </>
             )}
@@ -261,13 +219,15 @@ export function CategoriesAdminManager({
             New category
           </AdminCreateButton>
         }
-        deletedLabel="Deleted"
+        deletedLabel="Archived"
         description="Manage the business categories used by the landing funnel."
         emptyMessage="No categories found."
-        eyebrow="Admin"
+        enableRowDrag={canReorder && !isRowActionPending}
+        onReorderRow={reorderCategoryRow}
         pending={isRowActionPending}
         rows={optimisticRows}
         searchPlaceholder="Search categories"
+        showHeader={showHeader}
         title="Categories"
         totalRows={totalRows}
       />

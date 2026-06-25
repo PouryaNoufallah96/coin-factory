@@ -1,9 +1,9 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowRight, Eye, Send } from "lucide-react";
+import { ChevronRight, Send } from "lucide-react";
 import type { Route } from "next";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useOptimistic, useState, useTransition } from "react";
 
 import { DataTable } from "@/components/data-table/data-table";
@@ -11,6 +11,12 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { useDataTable } from "@/components/data-table/use-data-table";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { AdminActionErrorBanner } from "@/features/admin/components/admin-action-error-banner";
 import {
   AdminRowActionButton,
@@ -32,6 +38,7 @@ import { hasActiveFilterParams } from "@/lib/filter-params";
 
 interface InquiriesAdminManagerProps {
   rows: AdminInquiry[];
+  showHeader?: boolean;
   totalRows: number;
 }
 
@@ -41,8 +48,10 @@ type InquiryOptimisticAction =
 
 export function InquiriesAdminManager({
   rows,
+  showHeader = true,
   totalRows,
 }: InquiriesAdminManagerProps) {
+  const router = useRouter();
   const [actionError, setActionError] = useState<string | null>(null);
   const [isOptimisticPending, startOptimisticTransition] = useTransition();
   const [optimisticRows, applyOptimisticRows] = useOptimistic(
@@ -60,9 +69,6 @@ export function InquiriesAdminManager({
           <span className="font-medium text-cf-text-primary">
             {row.original.email}
           </span>
-          <span className="text-cf-text-muted text-xs">
-            {row.original.whatsapp}
-          </span>
         </div>
       ),
       header: ({ column }) => (
@@ -73,16 +79,59 @@ export function InquiriesAdminManager({
       accessorKey: "assetDescription",
       cell: ({ row }) => (
         <span className="line-clamp-2 max-w-lg whitespace-normal text-cf-text-muted">
-          {row.original.assetDescription ?? "No asset description"}
+          {row.original.assetDescription ?? "-"}
         </span>
       ),
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Asset" />
+        <DataTableColumnHeader column={column} title="Description" />
       ),
     },
     {
       accessorKey: "status",
-      cell: ({ row }) => <InquiryStatusBadge status={row.original.status} />,
+      cell: ({ row }) => {
+        const inquiry = row.original;
+        const nextStatus = nextInquiryStatus(inquiry.status);
+
+        if (!nextStatus) {
+          return <InquiryStatusBadge status={inquiry.status} />;
+        }
+
+        return (
+          <div className="flex items-center gap-1.5">
+            <InquiryStatusBadge status={inquiry.status} />
+            <ChevronRight
+              aria-hidden="true"
+              className="size-3 shrink-0 text-cf-text-muted"
+            />
+            <TooltipProvider delay={300}>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <button
+                      className="whitespace-nowrap rounded-4xl border border-cf-cream/30 border-dashed px-2 py-0.5 font-medium text-cf-cream/50 text-xs transition-colors hover:border-cf-cream hover:bg-cf-cream/10 hover:text-cf-cream disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-cf-cream/30 disabled:hover:bg-transparent"
+                      disabled={isRowActionPending}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        runOptimisticAction({
+                          id: inquiry.id,
+                          status: nextStatus,
+                          type: "setStatus",
+                        });
+                      }}
+                      type="button"
+                    >
+                      {inquiryStatusLabels[nextStatus]}
+                    </button>
+                  }
+                />
+                <TooltipContent>
+                  Mark {inquiryStatusLabels[nextStatus].toLowerCase()}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        );
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
       ),
@@ -108,49 +157,25 @@ export function InquiriesAdminManager({
     {
       cell: ({ row }) => {
         const inquiry = row.original;
-        const nextStatus = nextInquiryStatus(inquiry.status);
 
         return (
           <AdminRowActions>
-            {nextStatus ? (
-              <AdminRowActionButton
-                disabled={isRowActionPending}
-                label={`Mark ${inquiryStatusLabels[nextStatus].toLowerCase()}`}
-                onClick={() =>
-                  runOptimisticAction({
-                    id: inquiry.id,
-                    status: nextStatus,
-                    type: "setStatus",
-                  })
-                }
-                variant="ghost"
-              >
-                <ArrowRight aria-hidden="true" />
-              </AdminRowActionButton>
-            ) : null}
             {inquiry.notifiedAt ? null : (
               <AdminRowActionButton
                 disabled={isRowActionPending}
                 label="Resend email"
-                onClick={() =>
+                onClick={(event) => {
+                  event.stopPropagation();
                   runOptimisticAction({
                     id: inquiry.id,
                     type: "resendNotification",
-                  })
-                }
+                  });
+                }}
                 variant="ghost"
               >
                 <Send aria-hidden="true" />
               </AdminRowActionButton>
             )}
-            <AdminRowActionButton
-              label="View inquiry"
-              nativeButton={false}
-              render={<Link href={`/admin/inquiries/${inquiry.id}` as Route} />}
-              variant="ghost"
-            >
-              <Eye aria-hidden="true" />
-            </AdminRowActionButton>
           </AdminRowActions>
         );
       },
@@ -192,21 +217,23 @@ export function InquiriesAdminManager({
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
       {actionError ? <AdminActionErrorBanner message={actionError} /> : null}
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex min-w-0 flex-col gap-2">
-          <p className="text-cf-cream text-sm">Admin</p>
-          <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
-            Inquiries
-          </h1>
-          <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
-            Review founder submissions, files, and notification status.
-          </p>
-        </div>
-      </section>
+      {showHeader ? (
+        <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex min-w-0 flex-col gap-2">
+            <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+              Inquiries
+            </h1>
+            <p className="max-w-2xl text-cf-text-muted text-sm leading-6">
+              Review founder submissions, files, and notification status.
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <DataTable
         emptyMessage="No inquiries found."
         isPending={tablePending}
+        onRowClick={(row) => router.push(`/admin/inquiries/${row.id}` as Route)}
         table={table}
         toolbar={
           <DataTableToolbar

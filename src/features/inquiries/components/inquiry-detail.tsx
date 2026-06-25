@@ -5,42 +5,55 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatAdminDate } from "@/features/admin/lib/format-admin-date";
+import { CopyToClipboardButton } from "@/features/inquiries/components/copy-to-clipboard-button";
 import { InquiryDetailActions } from "@/features/inquiries/components/inquiry-detail-actions";
 import type { AdminInquiryDetail } from "@/features/inquiries/schemas/admin-inquiry";
 
 interface InquiryDetailProps {
   inquiry: AdminInquiryDetail;
+  showHeader?: boolean;
 }
 
-export function InquiryDetail({ inquiry }: InquiryDetailProps) {
+export function InquiryDetail({
+  inquiry,
+  showHeader = true,
+}: InquiryDetailProps) {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex min-w-0 flex-col gap-2">
-          <Button
-            className="mb-1 w-fit"
-            nativeButton={false}
-            render={<Link href="/admin/inquiries" />}
-            size="sm"
-            variant="ghost"
-          >
-            <ArrowLeft data-icon="inline-start" />
-            Inquiries
-          </Button>
-          <p className="text-cf-cream text-sm">Admin</p>
-          <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
-            Inquiry details
-          </h1>
-          <p className="text-cf-text-muted text-sm">
-            Submitted {formatAdminDate(inquiry.createdAt)}
-          </p>
+      {showHeader ? (
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex min-w-0 flex-col gap-2">
+            <Button
+              className="mb-1 w-fit"
+              nativeButton={false}
+              render={<Link href="/admin/inquiries" />}
+              size="sm"
+              variant="ghost"
+            >
+              <ArrowLeft data-icon="inline-start" />
+              Inquiries
+            </Button>
+            <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
+              Inquiry details
+            </h1>
+            <p className="text-cf-text-muted text-sm">
+              {formatAdminDate(inquiry.createdAt)}
+            </p>
+          </div>
+          <InquiryDetailActions inquiry={inquiry} />
         </div>
-        <InquiryDetailActions inquiry={inquiry} />
-      </div>
+      ) : (
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-cf-text-muted text-sm">
+            {formatAdminDate(inquiry.createdAt)}
+          </p>
+          <InquiryDetailActions inquiry={inquiry} />
+        </div>
+      )}
 
       <section className="grid gap-4 border-cf-border-muted/40 border-y py-5 sm:grid-cols-2">
-        <DetailItem label="Email" value={inquiry.email} />
-        <DetailItem label="WhatsApp" value={inquiry.whatsapp} />
+        <DetailItem label="Email" value={inquiry.email} withCopy />
+        <DetailItem label="WhatsApp" value={inquiry.whatsapp} withCopy />
         <DetailItem
           label="Notification"
           value={inquiry.notifiedAt ? "Sent" : "Not emailed"}
@@ -52,48 +65,12 @@ export function InquiryDetail({ inquiry }: InquiryDetailProps) {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="font-medium text-cf-text-primary text-lg">Asset</h2>
+        <h2 className="font-medium text-cf-text-primary text-lg">
+          Description
+        </h2>
         <p className="max-w-3xl whitespace-pre-wrap text-cf-text-muted text-sm leading-6">
-          {inquiry.assetDescription ?? "No asset description"}
+          {inquiry.assetDescription ?? "-"}
         </p>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <h2 className="font-medium text-cf-text-primary text-lg">Categories</h2>
-        {inquiry.categories.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
-            {inquiry.categories.map((category) => (
-              <Badge key={category.categoryId} variant="outline">
-                {category.label}
-              </Badge>
-            ))}
-          </div>
-        ) : (
-          <p className="text-cf-text-muted text-sm">No categories selected</p>
-        )}
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <h2 className="font-medium text-cf-text-primary text-lg">Answers</h2>
-        {inquiry.answers.length > 0 ? (
-          <div className="grid gap-3">
-            {inquiry.answers.map((answer) => (
-              <div
-                className="rounded-(--cf-radius-card) border border-cf-border-muted/40 bg-card p-4"
-                key={answer.questionId}
-              >
-                <p className="font-medium text-cf-text-primary text-sm">
-                  {answer.questionText}
-                </p>
-                <p className="mt-2 whitespace-pre-wrap text-cf-text-muted text-sm">
-                  {answer.value}
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-cf-text-muted text-sm">No answers saved</p>
-        )}
       </section>
 
       <section className="flex flex-col gap-3">
@@ -129,15 +106,68 @@ export function InquiryDetail({ inquiry }: InquiryDetailProps) {
           <p className="text-cf-text-muted text-sm">No files attached</p>
         )}
       </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-medium text-cf-text-primary text-lg">Categories</h2>
+        {inquiry.categories.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {inquiry.categories.map((category) => (
+              <Badge key={category.categoryId} variant="outline">
+                {category.label}
+              </Badge>
+            ))}
+          </div>
+        ) : (
+          <p className="text-cf-text-muted text-sm">No categories selected</p>
+        )}
+      </section>
+
+      <hr className="border-cf-border-muted/40" />
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-medium text-cf-text-primary text-lg">Answers</h2>
+        {inquiry.answers.length > 0 ? (
+          <div className="grid gap-3">
+            {inquiry.answers.map((answer) => (
+              <div
+                className="rounded-(--cf-radius-card) border border-cf-border-muted/40 bg-card p-4"
+                key={answer.questionId}
+              >
+                <p className="text-cf-text-muted text-xs uppercase tracking-wide">
+                  {answer.questionText}
+                </p>
+                <p className="mt-1.5 whitespace-pre-wrap font-medium text-base text-cf-text-primary leading-6">
+                  {answer.value}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-cf-text-muted text-sm">No answers saved</p>
+        )}
+      </section>
     </div>
   );
 }
 
-function DetailItem({ label, value }: { label: string; value: string }) {
+function DetailItem({
+  label,
+  value,
+  withCopy = false,
+}: {
+  label: string;
+  value: string;
+  withCopy?: boolean;
+}) {
   return (
     <div className="flex min-w-0 flex-col gap-1">
       <p className="text-cf-text-muted text-xs">{label}</p>
-      <p className="truncate text-cf-text-primary text-sm">{value}</p>
+      <div className="flex min-w-0 items-center gap-1">
+        <p className="truncate text-cf-text-primary text-sm">{value}</p>
+        {withCopy ? (
+          <CopyToClipboardButton label={label} value={value} />
+        ) : null}
+      </div>
     </div>
   );
 }

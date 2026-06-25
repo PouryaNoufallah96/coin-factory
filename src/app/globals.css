@@ -48,6 +48,24 @@
   }
 }
 
+@keyframes cf-marquee-track {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes cf-marquee-track-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 /* Kept so `dark:` utilities inside vendored shadcn components can never
    activate (no `.dark` class is ever rendered — this theme is dark-only
    by design). Without this line they would fall
@@ -143,6 +161,12 @@
   --cf-progress-on: var(--cf-cream);
   --cf-progress-off: rgb(255 242 209 / 0.2);
   --cf-glow: rgb(255 250 237 / 0.24);
+  --cf-focus-panel-gradient: linear-gradient(
+    0deg,
+    rgb(255 250 237 / 0.2) 0%,
+    rgb(89 90 90 / 0.2) 100%
+  );
+  --cf-focus-panel-shadow: 0 0 0.5rem 0 rgb(255 242 209 / 0.4);
 
   /* Spacing follows Tailwind's default rem scale. */
   --cf-space-1: 0.5rem;
@@ -211,6 +235,7 @@
 
   --cf-glow-active: 0 0 12.5rem 0 rgb(255 250 237 / 0.24);
   --cf-glow-soft: 0 0 6.25rem 0 rgb(255 250 237 / 0.24);
+  --cf-glow-circle-active: 0 0 0.74rem 0 rgb(255 242 209 / 0.4);
   --cf-cta-shadow: 0 0 0.5rem 0 rgb(0 0 0 / 0.24);
   --cf-hero-shadow:
     0 0 4px var(--cf-cream),
@@ -218,8 +243,7 @@
   --cf-glow-menu:
     0 0 2rem 0 color-mix(in srgb, var(--cf-cream) 40%, transparent),
     0 0 0.5rem 0 color-mix(in srgb, var(--cf-cream) 40%, transparent);
-  --cf-glow-icon: 0 0 1rem 0
-    color-mix(in srgb, var(--cf-cream) 60%, transparent);
+  --cf-glow-icon: 0 0 0.74rem 0 rgb(255 242 209 / 0.4);
   --cf-border-w: 0.0625rem;
   --cf-canvas-gradient-funnel: linear-gradient(
     180deg,
@@ -787,6 +811,11 @@
   .cf-spotlight--thank-you-bottom {
     inset-block-end: -24rem;
     transform: rotate(90deg);
+  }
+
+  .cf-focus-panel {
+    background: var(--cf-focus-panel-gradient);
+    box-shadow: var(--cf-focus-panel-shadow);
   }
 
   .cf-search-input::placeholder {

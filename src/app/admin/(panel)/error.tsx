@@ -19,7 +19,6 @@ export default function AdminPanelError({
   return (
     <section className="flex min-h-80 max-w-3xl flex-col justify-center gap-5">
       <div className="flex flex-col gap-2">
-        <p className="text-cf-cream text-sm">Admin</p>
         <h1 className="font-semibold text-2xl text-cf-text-primary tracking-normal sm:text-3xl">
           Something went wrong.
         </h1>

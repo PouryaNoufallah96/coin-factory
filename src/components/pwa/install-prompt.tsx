@@ -36,27 +36,26 @@ function showInstallToast({ description, onInstall }: InstallToastOptions) {
   toast.custom(
     (toastId) => (
       <div className="relative flex w-[calc(100vw-2rem)] max-w-97.5 items-start gap-3 rounded-(--radius) border border-border bg-popover p-3 pr-10 text-popover-foreground shadow-lg">
-        <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md bg-cf-cream/10 text-cf-cream">
+        {onInstall ? (
+          <button
+            aria-label={`Install ${SITE_NAME}`}
+            className="absolute inset-0 rounded-(--radius)"
+            onClick={onInstall}
+            type="button"
+          />
+        ) : null}
+        <div className="pointer-events-none mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md bg-cf-cream/10 text-cf-cream">
           <Download aria-hidden="true" className="size-4" />
         </div>
-        <div className="min-w-0 flex-1">
+        <div className="pointer-events-none min-w-0 flex-1">
           <p className="font-bold text-sm leading-5">Install {SITE_NAME}</p>
           <p className="mt-0.5 text-popover-foreground/70 text-xs leading-5">
             {description}
           </p>
-          {onInstall ? (
-            <button
-              className="mt-3 inline-flex h-8 items-center justify-center rounded-md bg-cf-cream px-3 font-bold text-primary-foreground text-xs transition hover:bg-cf-cream/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cf-cream/45"
-              onClick={onInstall}
-              type="button"
-            >
-              Install
-            </button>
-          ) : null}
         </div>
         <button
           aria-label="Dismiss install prompt"
-          className="absolute top-2.5 right-2.5 inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cf-cream/45"
+          className="absolute top-2.5 right-2.5 z-10 inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cf-cream/45"
           onClick={() => {
             rememberDismissal();
             toast.dismiss(toastId);

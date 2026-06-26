@@ -97,10 +97,11 @@ export default function RootLayout({
           <Toaster
             closeButton
             expand
-            position="bottom-center"
+            position="top-left"
             toastOptions={{
               classNames: {
-                toast: "w-max! max-w-[80vw]! whitespace-normal!",
+                toast:
+                  "w-[calc(100vw-2rem)]! max-w-[calc(100vw-2rem)]! whitespace-normal! sm:w-max! sm:max-w-[80vw]!",
                 error:
                   "bg-cf-error! text-cf-text-on-error! border-0! rounded-(--cf-radius-alert)! min-h-14 font-medium pr-15!",
                 icon: "text-cf-text-on-error!",

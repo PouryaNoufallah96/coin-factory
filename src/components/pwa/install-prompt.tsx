@@ -35,11 +35,11 @@ function showInstallToast({ description, onInstall }: InstallToastOptions) {
 
   toast.custom(
     (toastId) => (
-      <div className="relative flex w-[calc(100vw-2rem)] max-w-97.5 items-start gap-3 rounded-(--radius) border border-border bg-popover p-3 pr-10 text-popover-foreground shadow-lg">
+      <div className="relative flex w-[calc(100vw-2rem)] max-w-97.5 items-start gap-3 rounded-[30px] border border-border bg-popover p-3 pr-10 text-popover-foreground shadow-lg">
         {onInstall ? (
           <button
             aria-label={`Install ${SITE_NAME}`}
-            className="absolute inset-0 rounded-(--radius)"
+            className="absolute inset-0 rounded-[30px]"
             onClick={onInstall}
             type="button"
           />
@@ -70,6 +70,7 @@ function showInstallToast({ description, onInstall }: InstallToastOptions) {
       duration: Number.POSITIVE_INFINITY,
       id: INSTALL_TOAST_ID,
       onDismiss: rememberDismissal,
+      position: "bottom-center",
       unstyled: true,
     }
   );

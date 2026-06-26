@@ -11,7 +11,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { Toaster } from "@/components/ui/sonner";
 import {
   FunnelFooter,
   FunnelSocialNav,
@@ -168,22 +167,6 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <Suspense fallback={null}>
         <FunnelFooter />
       </Suspense>
-      <Toaster
-        closeButton
-        expand
-        position="top-left"
-        toastOptions={{
-          classNames: {
-            toast:
-              "w-[calc(100vw-2rem)]! max-w-[calc(100vw-2rem)]! whitespace-normal! sm:w-max! sm:max-w-[80vw]!",
-            error:
-              "bg-cf-error! text-cf-text-on-error! border-0! rounded-(--cf-radius-alert)! min-h-14 font-medium pr-15!",
-            icon: "text-cf-text-on-error!",
-            closeButton:
-              "!left-auto !right-2 !top-1/2 ![transform:translateY(-50%)] !size-6 [&>svg]:!size-4 bg-cf-error! border-0! text-cf-text-on-error! hover:opacity-70!",
-          },
-        }}
-      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { Toaster } from "@/components/ui/sonner";
+import { env } from "@/config/env/client";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +37,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(env.NEXT_PUBLIC_AUTH_URL),
   title: {
     default: SITE_NAME,
     template: `%s | ${SITE_NAME}`,
@@ -97,10 +99,11 @@ export default function RootLayout({
           <Toaster
             closeButton
             expand
-            position="bottom-center"
+            position="top-left"
             toastOptions={{
               classNames: {
-                toast: "w-max! max-w-[80vw]! whitespace-normal!",
+                toast:
+                  "w-[calc(100vw-2rem)]! max-w-[calc(100vw-2rem)]! whitespace-normal! sm:w-max! sm:max-w-[80vw]!",
                 error:
                   "bg-cf-error! text-cf-text-on-error! border-0! rounded-(--cf-radius-alert)! min-h-14 font-medium pr-15!",
                 icon: "text-cf-text-on-error!",

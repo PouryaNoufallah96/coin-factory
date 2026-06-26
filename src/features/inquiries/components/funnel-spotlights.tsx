@@ -19,8 +19,8 @@ function resolveVariant(view: FunnelView): FunnelSpotlightVariant {
 }
 
 const BACKGROUNDS: Record<FunnelSpotlightVariant, string> = {
-  landing: "url('/brand/landing-back.svg')",
-  onboarding: "url('/brand/q-back.svg')",
+  landing: "var(--cf-landing-bg)",
+  onboarding: "var(--cf-onboarding-bg)",
   "thank-you": "url('/brand/thankyou-back.svg')",
 };
 

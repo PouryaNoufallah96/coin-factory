@@ -178,8 +178,8 @@
   --cf-space-7: 3.5rem;
 
   /* Layout */
-  --cf-page-x: var(--cf-space-4);
-  --cf-header-h: 3.5rem;
+  --cf-page-x: var(--cf-space-3);
+  --cf-header-h: 4.1rem;
   --cf-footer-h: 3.25rem;
   --cf-content-w: 45rem;
   --cf-field-w: 32.5rem;
@@ -191,24 +191,26 @@
   /* Radius — pills everywhere */
   --cf-radius-pill: 9999rem;
   --cf-radius-row: 3.75rem; /* radio rows, search, CTA */
-  --cf-radius-panel: 2.5rem; /* expanded search panel */
+  --cf-radius-panel: 2.4rem; /* expanded search panel */
   --cf-radius-card: 1rem; /* attached file cards */
   --cf-radius-segment: 0.5rem; /* progress segments */
   --cf-radius-alert: 0.5rem; /* top error alert */
   --cf-radius-icon: 0.75rem; /* icon-button hit area */
 
   /* Control sizes */
-  --cf-row-h: 2.75rem;
-  --cf-search-h: 2rem;
+  --cf-row-h: 3.5rem;
+  --cf-search-h: 3rem;
+  --cf-search-surface-h: 3.625rem;
+  --cf-search-surface-h-focused: 4.5rem;
   --cf-search-button-size: 2rem;
   --cf-search-affordance-size: 2.5rem;
   --cf-search-panel-min-h: calc(
     var(--cf-file-card-h) +
     var(--cf-search-h) +
-    var(--cf-space-6)
+    var(--cf-space-4)
   );
-  --cf-cta-h: 2.25rem;
-  --cf-cta-w: 8rem;
+  --cf-cta-h: 2.7rem;
+  --cf-cta-w: 8.5rem;
   --cf-touch: 2.25rem;
   --cf-radio-size: 1.25rem;
   --cf-radio-control-size: calc(var(--cf-radio-size) * 0.8);
@@ -218,9 +220,9 @@
   --cf-file-card-w: 15rem;
   --cf-file-card-name-w: 8rem;
   --cf-file-card-tile: 3rem;
-  --cf-logo-mark-w: 1.375rem;
-  --cf-logo-mark-h: 1.5625rem;
-  --cf-social-size: 2rem;
+  --cf-logo-mark-w: 1.6rem;
+  --cf-logo-mark-h: 1.8rem;
+  --cf-social-size: 2.5rem;
   --cf-social-gap: 1.125rem;
   --cf-social-mark-size: 1.1rem;
   --cf-social-x-mark-w: 1rem;
@@ -230,7 +232,7 @@
   --cf-stepper-segment-h: 0.45rem;
   --cf-modal-max-h: calc(100dvh - var(--cf-space-7));
   --cf-dialog-max-w: calc(100% - var(--cf-space-5));
-  --cf-drawer-handle-w: 6.25rem;
+  --cf-drawer-handle-w: 32px;
   --cf-drawer-handle-h: 0.25rem;
 
   --cf-glow-active: 0 0 12.5rem 0 rgb(255 250 237 / 0.24);
@@ -243,6 +245,7 @@
   --cf-glow-menu:
     0 0 2rem 0 color-mix(in srgb, var(--cf-cream) 40%, transparent),
     0 0 0.5rem 0 color-mix(in srgb, var(--cf-cream) 40%, transparent);
+  --cf-glow-menu-mobile: 0px 0px 32px 0px #fff2d166, 0px 0px 8px 0px #fff2d166;
   --cf-glow-icon: 0 0 0.74rem 0 rgb(255 242 209 / 0.4);
   --cf-border-w: 0.0625rem;
   --cf-canvas-gradient-funnel: linear-gradient(
@@ -251,13 +254,15 @@
     var(--cf-canvas-start) 68%,
     color-mix(in srgb, var(--cf-canvas-start) 88%, var(--cf-canvas-end)) 100%
   );
+  --cf-landing-bg: url("/brand/landing-back-mobile.svg");
+  --cf-onboarding-bg: url("/brand/funnel-back-mobile.svg");
   --cf-landing-content-top: 4rem;
   --cf-hero-stack-gap: 1.25rem;
-  --cf-wizard-step-question-gap: 2rem;
+  --cf-wizard-step-question-gap: 1.5rem;
   --cf-wizard-question-options-gap: 3rem;
   --cf-wizard-actions-bottom: 3.5rem;
   --cf-thank-you-content-top: 11.5rem;
-  --cf-thank-you-stack-gap: 1.25rem;
+  --cf-thank-you-stack-gap: 2.3rem;
 
   /* Motion — calm, institutional; nothing bounces */
   --cf-ease: cubic-bezier(0.2, 0, 0, 1);
@@ -281,14 +286,14 @@
   --cf-vt-blur: 0.1875rem;
 
   /* Type scale (sizes; families come from next/font vars in layout.tsx) */
-  --cf-text-hero: 3rem;
-  --cf-text-hero-lg: 3.5rem;
-  --cf-text-hero-sub: 1rem;
-  --cf-text-question: 1.25rem;
-  --cf-text-field-label: 1.125rem;
-  --cf-text-lg: 0.875rem;
+  --cf-text-hero: 3.3rem;
+  --cf-text-hero-lg: 2.9rem;
+  --cf-text-hero-sub: 1.4rem;
+  --cf-text-question: 1.2rem;
+  --cf-text-field-label: 1.1rem;
+  --cf-text-lg: 0.95rem;
   --cf-text-base: 0.75rem;
-  --cf-text-logo: 1.0625rem;
+  --cf-text-logo: 1.3rem;
   --cf-text-thank-you-sub: 1.5rem;
   --cf-leading-tight: 1;
   --cf-leading-snug: 1.1;
@@ -319,10 +324,14 @@
 
 @media (min-width: 40rem) {
   :root {
+    --cf-landing-bg: url("/brand/landing-back.svg");
+    --cf-onboarding-bg: url("/brand/q-back.svg");
     --cf-header-h: 6rem;
     --cf-footer-h: 5rem;
     --cf-row-h: 4.5rem;
     --cf-search-h: 5rem;
+    --cf-search-surface-h: 5rem;
+    --cf-search-surface-h-focused: 6rem;
     --cf-cta-h: 3rem;
     --cf-cta-w: 10rem;
     --cf-touch: 3rem;
@@ -333,7 +342,7 @@
     --cf-social-mark-size: 1.1rem;
     --cf-social-x-mark-w: 1.25rem;
     --cf-social-x-mark-h: 1.125rem;
-    --cf-landing-content-top: 7.5rem;
+    --cf-landing-content-top: 6.5rem;
     --cf-hero-stack-gap: 1.875rem;
     --cf-wizard-step-question-gap: 3rem;
     --cf-wizard-question-options-gap: 4.75rem;
@@ -465,6 +474,82 @@
   transform-origin: center;
 }
 
+.cf-star {
+  transform-origin: center;
+}
+
+.cf-dot {
+  transform-origin: center;
+}
+
+.cf-orbit-group {
+  transform-origin: 191.6px 195.16px;
+}
+
+/* Touch devices have no hover state, so play the illustration
+   animations unconditionally instead of gating them on .group:hover. */
+@media (hover: none) {
+  .group .cf-country-0 {
+    animation: cf-country-swap 2.4s ease-in-out infinite;
+  }
+
+  .group .cf-country-1 {
+    animation: cf-country-swap 2.4s ease-in-out infinite 0.3s;
+  }
+
+  .group .cf-country-2 {
+    animation: cf-country-swap 2.4s ease-in-out infinite 0.6s;
+  }
+
+  .group .cf-country-3 {
+    animation: cf-country-swap 2.4s ease-in-out infinite 0.9s;
+  }
+
+  .group .cf-star-0 {
+    animation: cf-star-blink 1.6s ease-in-out infinite;
+  }
+
+  .group .cf-star-1 {
+    animation: cf-star-blink 1.6s ease-in-out infinite 0.4s;
+  }
+
+  .group .cf-star-2 {
+    animation: cf-star-blink 1.6s ease-in-out infinite 0.8s;
+  }
+
+  .group .cf-star-3 {
+    animation: cf-star-blink 1.6s ease-in-out infinite 1.2s;
+  }
+
+  .group .cf-dot-0 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite;
+  }
+
+  .group .cf-dot-1 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite 0.45s;
+  }
+
+  .group .cf-dot-2 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite 0.9s;
+  }
+
+  .group .cf-dot-3 {
+    animation: cf-dot-blink 1.8s ease-in-out infinite 1.35s;
+  }
+
+  .group .cf-orbit-group {
+    animation: cf-orbit-spin 18s linear infinite;
+  }
+
+  .group .cf-rocket-part {
+    animation: cf-rocket-float 2.5s ease-in-out infinite;
+  }
+
+  .group .cf-cloud-group {
+    animation: cf-cloud-drift 3s ease-in-out infinite;
+  }
+}
+
 .group:hover .cf-country-0 {
   animation: cf-country-swap 2.4s ease-in-out infinite;
 }
@@ -479,10 +564,6 @@
 
 .group:hover .cf-country-3 {
   animation: cf-country-swap 2.4s ease-in-out infinite 0.9s;
-}
-
-.cf-star {
-  transform-origin: center;
 }
 
 .group:hover .cf-star-0 {
@@ -501,10 +582,6 @@
   animation: cf-star-blink 1.6s ease-in-out infinite 1.2s;
 }
 
-.cf-dot {
-  transform-origin: center;
-}
-
 .group:hover .cf-dot-0 {
   animation: cf-dot-blink 1.8s ease-in-out infinite;
 }
@@ -519,10 +596,6 @@
 
 .group:hover .cf-dot-3 {
   animation: cf-dot-blink 1.8s ease-in-out infinite 1.35s;
-}
-
-.cf-orbit-group {
-  transform-origin: 191.6px 195.16px;
 }
 
 .group:hover .cf-orbit-group {

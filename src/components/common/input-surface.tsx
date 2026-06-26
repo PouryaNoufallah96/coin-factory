@@ -39,7 +39,7 @@ export function InputSurface({
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-center rounded-(--cf-radius-row) border bg-cf-charcoal-900 text-cf-cream transition-[border-color,box-shadow,border-radius,padding,min-height] duration-(--cf-dur-content) ease-(--cf-ease)",
+        "flex w-full flex-col justify-center overflow-hidden rounded-(--cf-radius-row) border bg-cf-charcoal-900 text-cf-cream transition-[border-color,box-shadow,border-radius,padding,min-height] duration-(--cf-dur-content) ease-(--cf-ease)",
         borderClass(active, variant),
         glowClass(focused, active, variant),
         className

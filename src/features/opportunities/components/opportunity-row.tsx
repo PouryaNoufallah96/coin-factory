@@ -51,10 +51,10 @@ export function OpportunityRow({
             <button
               aria-pressed={isActive}
               className={cn(
-                "mr-6 flex size-32 shrink-0 items-center justify-center rounded-full border px-4 text-center transition-[background-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease)",
+                "mr-3.5 flex size-28 shrink-0 items-center justify-center rounded-full border px-4 text-center transition-[background-color,color,transform] duration-(--cf-dur-content) ease-(--cf-ease) sm:mr-6 sm:size-32",
                 isActive
-                  ? "scale-105 border-cf-cream bg-cf-cream text-cf-charcoal-900 shadow-(--cf-glow-circle-active)"
-                  : "border-cf-cream/15 bg-cf-charcoal-900 text-cf-cream shadow-(--cf-glow-icon) hover:border-cf-cream/40"
+                  ? "scale-105 border-cf-cream bg-cf-cream text-cf-charcoal-900 shadow-[0px_0px_8px_0px_#FFF2D166] sm:shadow-(--cf-glow-circle-active)"
+                  : "border-cf-cream/15 bg-cf-charcoal-900 text-cf-cream shadow-[0px_0px_8px_0px_#FFF2D166] hover:border-cf-cream/40 sm:shadow-(--cf-glow-icon)"
               )}
               key={`${item.id}-${item.copy}`}
               onBlur={onCircleLeave}
@@ -65,7 +65,7 @@ export function OpportunityRow({
               tabIndex={item.isLeading ? 0 : -1}
               type="button"
             >
-              <span className="font-semibold text-xs leading-snug tracking-wide">
+              <span className="font-normal text-[12px] leading-snug tracking-wide sm:font-semibold sm:text-xs">
                 {item.title}
               </span>
             </button>

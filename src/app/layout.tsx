@@ -6,6 +6,7 @@ import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { Toaster } from "@/components/ui/sonner";
+import { env } from "@/config/env/client";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +37,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(env.NEXT_PUBLIC_AUTH_URL),
   title: {
     default: SITE_NAME,
     template: `%s | ${SITE_NAME}`,

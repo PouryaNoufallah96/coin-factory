@@ -134,11 +134,11 @@ export function FunnelShell({ children }: { children: ReactNode }) {
                 transitionDelay: menuOpen ? `${index * 35}ms` : "0ms",
               }}
             >
-              <span className="flex size-6 shrink-0 items-center justify-center transition-transform duration-(--cf-dur-content) ease-(--cf-ease) group-hover:scale-105 sm:size-10">
+              <span className="flex size-6 shrink-0 items-center justify-center transition-transform duration-(--cf-dur-content) ease-(--cf-ease) group-hover:scale-105 sm:size-11">
                 <Image
                   alt=""
                   aria-hidden="true"
-                  className="size-6 sm:size-10"
+                  className="size-6 sm:size-11"
                   height={40}
                   src={item.icon}
                   width={40}
@@ -151,8 +151,10 @@ export function FunnelShell({ children }: { children: ReactNode }) {
 
         <div className="flex flex-col items-center gap-6 px-11 py-6 sm:hidden">
           <FunnelSocialNav className="flex-wrap justify-center" />
-          <span className="whitespace-nowrap font-legal text-[16px] text-cf-cream">
-            @ 2026 CoinFactory AG
+          <span className="whitespace-nowrap text-center font-legal text-[16px] text-cf-white">
+            @ 2025 CoinFactory AG
+            <br />
+            <span className="text-[#A7A9AD] text-[14px]">Zug, Switzerland</span>
           </span>
         </div>
       </nav>

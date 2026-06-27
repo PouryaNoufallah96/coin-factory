@@ -66,7 +66,7 @@ export function FunnelFooterContent() {
       />
       <FunnelSocialNav />
       <span className="text-(length:--cf-text-base) whitespace-nowrap font-legal text-cf-charcoal-900">
-        @ 2026 CoinFactory AG
+        @ 2025 CoinFactory AG, Zug, Switzerland
       </span>
     </footer>
   );

@@ -152,7 +152,8 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         <div className="flex flex-col items-center gap-6 px-11 py-6 sm:hidden">
           <FunnelSocialNav className="flex-wrap justify-center" />
           <span className="whitespace-nowrap font-legal text-[16px] text-cf-cream">
-            @ 2026 CoinFactory AG
+            @ 2025 CoinFactory AG
+            <br /> Zug, Switzerland
           </span>
         </div>
       </nav>

@@ -32,8 +32,8 @@ import { useFunnelDraft } from "../hooks/use-funnel-draft";
 
 const HERO_SUBLINE = "What do you want to";
 const HERO_WORD = "Tokenize?";
-const SEARCH_PLACEHOLDER = "Tell us about your project";
-const SEARCH_PLACEHOLDER_MOBILE = "Tell us about your project";
+const SEARCH_PLACEHOLDER = "Tell us about your project...";
+const SEARCH_PLACEHOLDER_MOBILE = "Tell us about your project...";
 
 const DOCUMENT_LABEL_BY_EXTENSION: Record<string, string> = {
   ".doc": "Word",

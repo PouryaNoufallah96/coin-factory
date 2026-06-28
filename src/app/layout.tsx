@@ -55,14 +55,14 @@ export const metadata: Metadata = {
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
     siteName: SITE_NAME,
-    images: ["/icons/pwa/icon-512.png"],
+    images: [{ url: "/icons/pwa/og-banner.png", width: 1200, height: 630 }],
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
-    images: ["/icons/pwa/icon-512.png"],
+    images: ["/icons/pwa/og-banner.png"],
   },
 };
 

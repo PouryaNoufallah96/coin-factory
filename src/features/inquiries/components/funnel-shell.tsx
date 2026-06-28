@@ -70,7 +70,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className="relative isolate flex min-h-dvh flex-col overflow-x-hidden text-cf-text-primary"
+      className="relative isolate flex min-h-dvh flex-col overflow-hidden text-cf-text-primary"
       onPointerDownCapture={closeMenuFromOutside}
     >
       <Suspense fallback={null}>
@@ -114,7 +114,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <nav
         aria-label="Main menu"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-sm flex-col justify-between overflow-hidden bg-cf-charcoal-900 transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:-top-5 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
+          "fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-sm flex-col justify-between overflow-hidden bg-cf-charcoal-900 transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] sm:inset-y-auto sm:-top-3 sm:-right-8 sm:block sm:w-140 sm:max-w-none sm:rounded-[2rem] sm:border sm:shadow-(--cf-glow-menu) sm:transition-[opacity,transform]",
           menuOpen
             ? "pointer-events-auto translate-x-0 shadow-(--cf-glow-menu-mobile) sm:translate-y-0 sm:scale-50 sm:shadow-(--cf-glow-menu)"
             : "pointer-events-none translate-x-full shadow-none sm:-translate-y-2 sm:scale-50 sm:opacity-0"

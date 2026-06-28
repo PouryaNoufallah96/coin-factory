@@ -18,6 +18,7 @@ import {
 import { FunnelLogo } from "@/features/inquiries/components/funnel-logo";
 import { FunnelSpotlights } from "@/features/inquiries/components/funnel-spotlights";
 import { useFunnelDraft } from "@/features/inquiries/hooks/use-funnel-draft";
+import { useIsPageScrollable } from "@/hooks/use-is-page-scrollable";
 import { cn } from "@/lib/utils";
 
 const FUNNEL_MENU_ITEMS = [
@@ -45,6 +46,9 @@ export function FunnelShell({ children }: { children: ReactNode }) {
     (pathname === "/" || pathname === "/services" || pathname === "/about") &&
     view !== "onboarding";
   const hasBottomPadding = hasFooter || pathname === "/opportunities";
+  const isLandingFirstPage = pathname === "/" && view !== "onboarding";
+  const isPageScrollable = useIsPageScrollable();
+  const showHeaderBlur = !isLandingFirstPage || isPageScrollable;
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLElement>(null);
@@ -75,7 +79,12 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <header className="fixed top-0 right-0 left-0 z-40 flex h-(--cf-header-h) shrink-0 items-center justify-between px-(--cf-page-x)">
         <div
           aria-hidden="true"
-          className="mask-[linear-gradient(to_bottom,black_40%,transparent_100%)] pointer-events-none absolute inset-0 -z-10 [backdrop-filter:blur(50px)]"
+          className={cn(
+            "mask-[linear-gradient(to_bottom,black_40%,transparent_100%)] pointer-events-none absolute inset-0 -z-10 transition-opacity duration-300 ease-(--cf-ease)",
+            showHeaderBlur
+              ? "opacity-100 [backdrop-filter:blur(50px)]"
+              : "opacity-0"
+          )}
         />
         <FunnelLogo />
         <button

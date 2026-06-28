@@ -92,14 +92,14 @@ const SERVICES = [
     iconAlt: "Exchange icon",
   },
   {
-    title: "Exchange Listing Support",
+    title: "Security Audit Coordination",
     description:
       "Coordinate professional smart contract audits through trusted security partners.",
     icon: "/icons/shield.svg",
     iconAlt: "Launch icon",
   },
   {
-    title: "Security Audit Coordination",
+    title: "Exchange Listing Support",
     description:
       "Support token listing preparation for centralized and decentralized exchanges.",
     icon: "/icons/exchange.svg",

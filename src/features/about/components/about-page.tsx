@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { Fragment } from "react";
-import { MaskIcon } from "@/components/common/mask-icon";
 import { PageBackdrop } from "@/components/common/page-backdrop";
 import { ApproachIllustration } from "@/features/about/components/illustrations/approach-illustration";
 import { WhatIllustration } from "@/features/about/components/illustrations/what-illustration";
@@ -92,7 +92,7 @@ export function AboutPage() {
                 <h2 className="font-logo text-2xl text-cf-cream-bright text-shadow-[0px_0px_4px_var(--cf-charcoal-900)] leading-tight">
                   {title}
                 </h2>
-                <p className="text-cf-charcoal-900 text-sm leading-(--cf-leading-body)">
+                <p className="text-cf-charcoal-900 text-md leading-(--cf-leading-body) sm:text-sm">
                   {description}
                 </p>
               </div>
@@ -100,24 +100,31 @@ export function AboutPage() {
           ))}
         </div>
 
-        <div className="mx-auto mb-3 flex w-full max-w-90 flex-col gap-4 rounded-[16px] bg-cf-cream-soft/24 px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
+        <div className="mx-auto mb-3 flex w-full max-w-90 flex-col gap-5 rounded-[16px] bg-cf-cream-soft/24 px-5 py-6 sm:h-15 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:px-4 sm:py-1">
           {CONTACT.map(({ icon, label, href, mobileOrder }, index) => (
             <Fragment key={label}>
               {index > 0 && (
                 <span
                   aria-hidden="true"
-                  className="hidden h-6 w-px shrink-0 bg-[#FFF2D1] sm:block"
+                  className="hidden h-6 w-px shrink-0 bg-cf-cream sm:block"
                 />
               )}
               <a
                 className={cn(
-                  "flex items-center gap-3 text-cf-cream transition-opacity hover:opacity-70 sm:order-none",
+                  "flex items-start gap-3 text-cf-cream transition-opacity hover:opacity-70 sm:order-0 sm:items-center sm:gap-2",
                   mobileOrder
                 )}
                 href={href}
               >
-                <MaskIcon className="size-6 shrink-0" src={icon} />
-                <span className="font-normal text-base leading-(--cf-leading-body) sm:whitespace-nowrap">
+                <Image
+                  alt=""
+                  aria-hidden
+                  className="size-6 shrink-0 sm:size-5.5"
+                  height={24}
+                  src={icon}
+                  width={24}
+                />
+                <span className="font-normal text-base leading-tight sm:whitespace-nowrap">
                   {label}
                 </span>
               </a>

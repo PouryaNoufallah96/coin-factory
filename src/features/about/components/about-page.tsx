@@ -59,7 +59,7 @@ export function AboutPage() {
         src="/brand/about-back.svg"
       />
 
-      <div className="relative z-10 mt-8 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-6 sm:mt-0 sm:gap-11">
+      <div className="relative z-10 mt-8 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-6 sm:mt-0 sm:gap-10">
         <div className="flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
             About Us
@@ -78,7 +78,7 @@ export function AboutPage() {
         <div className="mt-10 grid grid-cols-1 justify-items-center gap-10 sm:mt-4 sm:grid-cols-3 sm:justify-items-stretch">
           {CARDS.map(({ title, description, Illustration, imageAlt }) => (
             <div
-              className="group flex max-w-90 flex-col overflow-hidden rounded-(--cf-radius-panel) border border-cf-border-muted bg-cf-cream-soft/24"
+              className="group flex max-w-90 flex-col overflow-hidden rounded-[20px] bg-cf-cream-soft/24"
               key={title}
             >
               <div className="w-full overflow-hidden">
@@ -100,7 +100,7 @@ export function AboutPage() {
           ))}
         </div>
 
-        <div className="mx-auto flex w-full max-w-90 flex-col gap-4 rounded-(--cf-radius-panel) border border-cf-border-muted bg-cf-cream-soft/24 px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
+        <div className="mx-auto mt-2 flex w-full max-w-90 flex-col gap-4 rounded-[16px] bg-[#23283247] px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
           {CONTACT.map(({ Icon, label, href, mobileOrder }, index) => (
             <Fragment key={label}>
               {index > 0 && (

@@ -100,7 +100,7 @@ export function AboutPage() {
           ))}
         </div>
 
-        <div className="mx-auto mt-2 flex w-full max-w-90 flex-col gap-4 rounded-[16px] bg-[#23283247] px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
+        <div className="mx-auto mt-2 flex w-full max-w-90 flex-col gap-4 rounded-[16px] bg-cf-cream-soft/24 px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
           {CONTACT.map(({ Icon, label, href, mobileOrder }, index) => (
             <Fragment key={label}>
               {index > 0 && (

@@ -59,7 +59,7 @@ export function AboutPage() {
         src="/brand/about-back.svg"
       />
 
-      <div className="relative z-10 mt-8 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-6 sm:mt-0 sm:gap-10">
+      <div className="relative z-10 mt-8 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-6 sm:mt-0 sm:gap-6">
         <div className="flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
             About Us
@@ -75,7 +75,7 @@ export function AboutPage() {
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 justify-items-center gap-10 sm:mt-4 sm:grid-cols-3 sm:justify-items-stretch">
+        <div className="grid grid-cols-1 justify-items-center gap-10 sm:mt-4 sm:grid-cols-3 sm:justify-items-stretch">
           {CARDS.map(({ title, description, Illustration, imageAlt }) => (
             <div
               className="group flex max-w-90 flex-col overflow-hidden rounded-[20px] bg-cf-cream-soft/24"
@@ -100,7 +100,7 @@ export function AboutPage() {
           ))}
         </div>
 
-        <div className="mx-auto mb-3 flex w-full max-w-90 flex-col gap-5 rounded-[16px] bg-cf-cream-soft/24 px-5 py-6 sm:h-15 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:px-4 sm:py-1">
+        <div className="mx-auto mb-3 flex w-full max-w-90 flex-col gap-5 rounded-[16px] bg-cf-cream-soft/24 px-5 py-6 sm:h-15 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:px-6 sm:py-2">
           {CONTACT.map(({ icon, label, href, mobileOrder }, index) => (
             <Fragment key={label}>
               {index > 0 && (
@@ -111,7 +111,7 @@ export function AboutPage() {
               )}
               <a
                 className={cn(
-                  "flex items-start gap-3 text-cf-cream transition-opacity hover:opacity-70 sm:order-0 sm:items-center sm:gap-2",
+                  "flex items-start gap-3 text-cf-cream transition-opacity hover:opacity-70 sm:order-0 sm:items-center sm:gap-3",
                   mobileOrder
                 )}
                 href={href}

@@ -1,5 +1,5 @@
-import { Mail, MapPin, Phone } from "lucide-react";
 import { Fragment } from "react";
+import { MaskIcon } from "@/components/common/mask-icon";
 import { PageBackdrop } from "@/components/common/page-backdrop";
 import { ApproachIllustration } from "@/features/about/components/illustrations/approach-illustration";
 import { WhatIllustration } from "@/features/about/components/illustrations/what-illustration";
@@ -32,19 +32,19 @@ const CARDS = [
 
 const CONTACT = [
   {
-    Icon: MapPin,
+    icon: "/icons/about/location.svg",
     label: "Coin Factory AG, Bellerivestrasse 241, 8008 Zürich, Switzerland",
     href: "https://www.google.com/maps/search/?api=1&query=Coin+Factory+AG+Bellerivestrasse+241+8008+Z%C3%BCrich+Switzerland",
     mobileOrder: "order-3",
   },
   {
-    Icon: Phone,
+    icon: "/icons/about/call.svg",
     label: "+41 76 460 9000",
     href: "tel:+41764609000",
     mobileOrder: "order-1",
   },
   {
-    Icon: Mail,
+    icon: "/icons/about/envelope.svg",
     label: "info@coinfactory.com",
     href: "mailto:info@coinfactory.com",
     mobileOrder: "order-2",
@@ -100,13 +100,13 @@ export function AboutPage() {
           ))}
         </div>
 
-        <div className="mx-auto mt-2 flex w-full max-w-90 flex-col gap-4 rounded-[16px] bg-cf-cream-soft/24 px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
-          {CONTACT.map(({ Icon, label, href, mobileOrder }, index) => (
+        <div className="mx-auto flex w-full max-w-90 flex-col gap-4 rounded-[16px] bg-cf-cream-soft/24 px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
+          {CONTACT.map(({ icon, label, href, mobileOrder }, index) => (
             <Fragment key={label}>
               {index > 0 && (
                 <span
                   aria-hidden="true"
-                  className="hidden h-8 w-px shrink-0 bg-cf-border-muted sm:block"
+                  className="hidden h-6 w-px shrink-0 bg-[#FFF2D1] sm:block"
                 />
               )}
               <a
@@ -116,8 +116,8 @@ export function AboutPage() {
                 )}
                 href={href}
               >
-                <Icon className="size-5 shrink-0 text-cf-cream" />
-                <span className="font-normal text-base leading-(--cf-leading-body) sm:whitespace-nowrap sm:text-lg">
+                <MaskIcon className="size-6 shrink-0" src={icon} />
+                <span className="font-normal text-base leading-(--cf-leading-body) sm:whitespace-nowrap">
                   {label}
                 </span>
               </a>

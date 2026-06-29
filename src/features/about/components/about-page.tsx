@@ -1,7 +1,10 @@
+import { Mail, MapPin, Phone } from "lucide-react";
+import { Fragment } from "react";
 import { PageBackdrop } from "@/components/common/page-backdrop";
 import { ApproachIllustration } from "@/features/about/components/illustrations/approach-illustration";
 import { WhatIllustration } from "@/features/about/components/illustrations/what-illustration";
 import { WorldIllustration } from "@/features/about/components/illustrations/world-illustration";
+import { cn } from "@/lib/utils";
 
 const CARDS = [
   {
@@ -24,6 +27,27 @@ const CARDS = [
       "We do more than create tokens. We identify opportunities, evaluate potential, and support the development of long-term token ecosystems.",
     Illustration: ApproachIllustration,
     imageAlt: "Approach illustration",
+  },
+];
+
+const CONTACT = [
+  {
+    Icon: MapPin,
+    label: "Coin Factory AG, Bellerivestrasse 241, 8008 Zürich, Switzerland",
+    href: "https://www.google.com/maps/search/?api=1&query=Coin+Factory+AG+Bellerivestrasse+241+8008+Z%C3%BCrich+Switzerland",
+    mobileOrder: "order-3",
+  },
+  {
+    Icon: Phone,
+    label: "+41 76 460 9000",
+    href: "tel:+41764609000",
+    mobileOrder: "order-1",
+  },
+  {
+    Icon: Mail,
+    label: "info@coinfactory.com",
+    href: "mailto:info@coinfactory.com",
+    mobileOrder: "order-2",
   },
 ];
 
@@ -73,6 +97,31 @@ export function AboutPage() {
                 </p>
               </div>
             </div>
+          ))}
+        </div>
+
+        <div className="mx-auto flex w-full max-w-90 flex-col gap-4 rounded-(--cf-radius-panel) border border-cf-border-muted bg-cf-cream-soft/24 px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
+          {CONTACT.map(({ Icon, label, href, mobileOrder }, index) => (
+            <Fragment key={label}>
+              {index > 0 && (
+                <span
+                  aria-hidden="true"
+                  className="hidden h-8 w-px shrink-0 bg-cf-border-muted sm:block"
+                />
+              )}
+              <a
+                className={cn(
+                  "flex items-center gap-3 text-cf-cream transition-opacity hover:opacity-70 sm:order-none",
+                  mobileOrder
+                )}
+                href={href}
+              >
+                <Icon className="size-5 shrink-0 text-cf-cream" />
+                <span className="font-normal text-base leading-(--cf-leading-body) sm:whitespace-nowrap sm:text-lg">
+                  {label}
+                </span>
+              </a>
+            </Fragment>
           ))}
         </div>
       </div>

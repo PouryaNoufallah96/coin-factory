@@ -1,24 +1,39 @@
-import type { CSSProperties } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface MaskIconProps {
-  className?: string;
+interface MaskIconProps extends ComponentPropsWithoutRef<"span"> {
   src: string;
 }
 
-export function MaskIcon({ className, src }: MaskIconProps) {
+function maskSrc(url: string) {
+  return `url("${url.replace(/"/g, '\\"')}")`;
+}
+
+export function MaskIcon({
+  src,
+  className,
+  style,
+  "aria-hidden": ariaHidden,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
+  ...props
+}: MaskIconProps) {
+  const isDecorative =
+    ariaHidden !== false && ariaLabel == null && ariaLabelledBy == null;
+
   return (
     <span
-      aria-hidden="true"
-      className={cn("block bg-current", className)}
+      aria-hidden={isDecorative ? true : ariaHidden}
+      className={cn("cf-mask-icon", className)}
       data-slot="mask-icon"
       style={
         {
-          WebkitMask: `url("${src}") center / contain no-repeat`,
-          mask: `url("${src}") center / contain no-repeat`,
-        } satisfies CSSProperties
+          "--cf-mask-src": maskSrc(src),
+          ...style,
+        } as CSSProperties
       }
+      {...props}
     />
   );
 }

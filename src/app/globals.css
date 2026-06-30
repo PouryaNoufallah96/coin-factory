@@ -891,6 +891,13 @@
     box-shadow: var(--cf-focus-panel-shadow);
   }
 
+  .cf-mask-icon {
+    display: block;
+    background-color: currentColor;
+    -webkit-mask: var(--cf-mask-src) center / contain no-repeat;
+    mask: var(--cf-mask-src) center / contain no-repeat;
+  }
+
   .cf-search-input::placeholder {
     -webkit-text-fill-color: transparent;
     background: linear-gradient(

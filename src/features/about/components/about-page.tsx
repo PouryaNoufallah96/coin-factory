@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { Fragment } from "react";
-import { MaskIcon } from "@/components/common/mask-icon";
 import { PageBackdrop } from "@/components/common/page-backdrop";
 import { ApproachIllustration } from "@/features/about/components/illustrations/approach-illustration";
 import { WhatIllustration } from "@/features/about/components/illustrations/what-illustration";
@@ -59,7 +59,7 @@ export function AboutPage() {
         src="/brand/about-back.svg"
       />
 
-      <div className="relative z-10 mt-8 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-6 sm:mt-0 sm:gap-10">
+      <div className="relative z-10 mt-8 flex animate-[enter-fade-up_0.55s_cubic-bezier(0.2,0,0,1)_both] flex-col gap-6 sm:mt-0 sm:gap-6">
         <div className="flex flex-col items-center gap-(--cf-hero-stack-gap) text-center">
           <h1 className="text-(length:--cf-text-hero-lg) font-bold text-cf-charcoal-900 text-shadow-(--cf-hero-shadow) leading-none">
             About Us
@@ -75,7 +75,7 @@ export function AboutPage() {
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 justify-items-center gap-10 sm:mt-4 sm:grid-cols-3 sm:justify-items-stretch">
+        <div className="grid grid-cols-1 justify-items-center gap-10 sm:mt-4 sm:grid-cols-3 sm:justify-items-stretch">
           {CARDS.map(({ title, description, Illustration, imageAlt }) => (
             <div
               className="group flex max-w-90 flex-col overflow-hidden rounded-[20px] bg-cf-cream-soft/24"
@@ -92,7 +92,7 @@ export function AboutPage() {
                 <h2 className="font-logo text-2xl text-cf-cream-bright text-shadow-[0px_0px_4px_var(--cf-charcoal-900)] leading-tight">
                   {title}
                 </h2>
-                <p className="text-cf-charcoal-900 text-sm leading-(--cf-leading-body)">
+                <p className="text-cf-charcoal-900 text-md leading-(--cf-leading-body) sm:text-sm">
                   {description}
                 </p>
               </div>
@@ -100,24 +100,31 @@ export function AboutPage() {
           ))}
         </div>
 
-        <div className="mx-auto mb-3 flex w-full max-w-90 flex-col gap-4 rounded-[16px] bg-cf-cream-soft/24 px-7 py-6 sm:h-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-10 sm:py-0">
+        <div className="mx-auto mb-3 flex w-full max-w-90 flex-col gap-5 rounded-[16px] bg-cf-cream-soft/24 px-5 py-6 sm:h-15 sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:px-6 sm:py-2">
           {CONTACT.map(({ icon, label, href, mobileOrder }, index) => (
             <Fragment key={label}>
               {index > 0 && (
                 <span
                   aria-hidden="true"
-                  className="hidden h-6 w-px shrink-0 bg-[#FFF2D1] sm:block"
+                  className="hidden h-6 w-px shrink-0 bg-cf-cream sm:block"
                 />
               )}
               <a
                 className={cn(
-                  "flex items-center gap-3 text-cf-cream transition-opacity hover:opacity-70 sm:order-none",
+                  "flex items-start gap-3 text-cf-cream transition-opacity hover:opacity-70 sm:order-0 sm:items-center sm:gap-3",
                   mobileOrder
                 )}
                 href={href}
               >
-                <MaskIcon className="size-6 shrink-0" src={icon} />
-                <span className="font-normal text-base leading-(--cf-leading-body) sm:whitespace-nowrap">
+                <Image
+                  alt=""
+                  aria-hidden
+                  className="size-6 shrink-0 sm:size-5.5"
+                  height={24}
+                  src={icon}
+                  width={24}
+                />
+                <span className="font-normal text-base leading-tight sm:whitespace-nowrap">
                   {label}
                 </span>
               </a>

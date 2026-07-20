@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-coin-factory}"
-# Defaults to the .env sitting next to this script; override with DEPLOY_ENV_FILE.
-DEPLOY_ENV_FILE="${DEPLOY_ENV_FILE:-$SCRIPT_DIR/.env}"
+# Defaults to .env in the current working directory. NOT $(dirname
+# "${BASH_SOURCE[0]}") - the central CI pipeline copies this script to /tmp
+# before running it (after cd-ing into the real deploy dir first), so the
+# script's own file location no longer matches the deploy directory; the
+# working directory still does.
+DEPLOY_ENV_FILE="${DEPLOY_ENV_FILE:-.env}"
 FOLLOW_LOGS="${FOLLOW_LOGS:-1}"
 
 if [[ ! -f "$DEPLOY_ENV_FILE" ]]; then

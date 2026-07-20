@@ -13,6 +13,11 @@ const SOCIAL_LINKS = [
   { href: "#", label: "Telegram", platform: "telegram" },
   { href: "#", label: "YouTube", platform: "youtube" },
   { href: "#", label: "Discord", platform: "discord" },
+  {
+    href: "https://www.linkedin.com/company/coinfactoryag",
+    label: "LinkedIn",
+    platform: "linkedin",
+  },
 ];
 
 export function FunnelFooter() {
@@ -48,6 +53,9 @@ export function FunnelSocialNav({ className }: { className?: string }) {
           className="flex size-(--cf-social-size) shrink-0 items-center justify-center rounded-full border border-cf-cream/40 text-cf-cream transition-all duration-(--cf-dur-feedback) ease-(--cf-ease) hover:scale-110 hover:border-cf-cream hover:bg-cf-cream hover:text-cf-charcoal-900 active:scale-95"
           href={link.href}
           key={link.platform}
+          {...(link.href.startsWith("http")
+            ? { rel: "noopener noreferrer", target: "_blank" }
+            : {})}
         >
           <MaskIcon
             className={"size-(--cf-social-mark-size)"}

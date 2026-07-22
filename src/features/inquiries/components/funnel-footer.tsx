@@ -9,7 +9,11 @@ import { cn } from "@/lib/utils";
 const SOCIAL_LINKS = [
   { href: "#", label: "X", platform: "x" },
   { href: "#", label: "Instagram", platform: "instagram" },
-  { href: "#", label: "WhatsApp", platform: "whatsapp" },
+  {
+    href: "https://wa.me/41764609000",
+    label: "WhatsApp",
+    platform: "whatsapp",
+  },
   { href: "#", label: "Telegram", platform: "telegram" },
   { href: "#", label: "YouTube", platform: "youtube" },
   { href: "#", label: "Discord", platform: "discord" },
